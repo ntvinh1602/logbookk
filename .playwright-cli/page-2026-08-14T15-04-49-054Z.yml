@@ -1,0 +1,39 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - img "Logo" [ref=e3]
+    - navigation [ref=e4]:
+      - list [ref=e5]:
+        - listitem [ref=e6]:
+          - link "Home" [ref=e7] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e8]:
+          - button "Investment" [ref=e9]:
+            - text: Investment
+            - img [ref=e10]
+        - listitem [ref=e12]:
+          - button "Flight" [ref=e13]:
+            - text: Flight
+            - img [ref=e14]
+  - generic [ref=e16]:
+    - heading "Dashboard" [level=1] [ref=e17]
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - button:
+          - img
+        - group [ref=e21]:
+          - button "3M" [ref=e22]
+          - button "6M" [ref=e23]
+          - button "1Y" [pressed] [ref=e24]
+          - button "All" [ref=e25]
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - generic [ref=e28]: Equity
+          - list [ref=e31]:
+            - paragraph [ref=e35]: this month
+            - separator [ref=e36]
+            - paragraph [ref=e40]: vnindex return
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - img
+          - generic [ref=e45]: Loading
+          - generic [ref=e46]: Retrieving your data...
