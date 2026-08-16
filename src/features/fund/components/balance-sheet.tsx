@@ -1,4 +1,4 @@
-"use client"
+
 import type { BSheetView } from "@/features/fund/fund.types"
 import { Box, DollarSign, HandCoins } from "lucide-react"
 import {

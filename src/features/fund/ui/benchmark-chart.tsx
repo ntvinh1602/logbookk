@@ -1,4 +1,4 @@
-"use client"
+
 
 import { formatNum, compactNum, pctNum } from "@/lib/utils"
 import { format } from "date-fns"

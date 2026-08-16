@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useMemo } from "react"
 import { useBalanceSheet } from "@/features/fund/hooks/use-dashboard-data"

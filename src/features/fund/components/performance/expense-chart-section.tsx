@@ -1,4 +1,4 @@
-'use client'
+
 
 import { useMemo } from 'react'
 import { usePerformanceYear } from './year-context'
