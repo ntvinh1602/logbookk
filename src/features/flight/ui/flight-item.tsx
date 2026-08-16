@@ -61,7 +61,7 @@ export function FlightItem({ flight, itemKey, menuSlot }: FlightItemProps) {
         >
           <ItemMedia variant="image" className="hidden sm:block">
             <img
-              src={`${process.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/airline/${flight.airline_logo}`}
+              src={`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/airline/${flight.airline_logo}`}
               alt=""
               width={44}
               height={44}

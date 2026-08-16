@@ -44,7 +44,7 @@ export function AssetItemBS({
       <ItemMedia variant="image">
         {logo_url && (
           <img
-            src={`${process.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/stock/${logo_url}`}
+            src={`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/stock/${logo_url}`}
             alt={name}
             width={44}
             height={44}
@@ -85,7 +85,7 @@ export function AssetItemTopStock({
       <ItemMedia variant="image">
         {logo_url && (
           <img
-            src={`${process.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/stock/${logo_url}`}
+            src={`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/stock/${logo_url}`}
             alt={name}
             width={44}
             height={44}
