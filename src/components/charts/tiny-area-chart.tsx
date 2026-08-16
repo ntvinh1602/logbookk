@@ -4,17 +4,15 @@ import { type ChartConfig, ChartContainer } from '@/components/ui/chart'
 type Props = {
   data: Record<string, string | number>[]
   config: ChartConfig
+  className?: string
 }
 
-export function TinyAreaChart({ data, config }: Props) {
+export function TinyAreaChart({ data, config, className }: Props) {
   const dataKeys = Object.keys(config)
 
   return (
-    <ChartContainer config={config}>
-      <AreaChart
-        data={data}
-        margin={{ top: 20, right: 0, bottom: 10, left: 0 }}
-      >
+    <ChartContainer config={config} className={className}>
+      <AreaChart data={data} margin={{ top: 20, right: 0, bottom: 20, left: 0 }}>
         <defs>
           {dataKeys.map((key) => (
             <linearGradient

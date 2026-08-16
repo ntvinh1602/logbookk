@@ -19,7 +19,7 @@ export function NetProfitCard() {
   if (!data) return null
 
   return (
-    <Card className="w-2/10 justify-between">
+    <Card className="w-full h-full justify-between">
       <CardHeader>
         <CardDescription>Net Profit</CardDescription>
       </CardHeader>

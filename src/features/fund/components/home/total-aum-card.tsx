@@ -23,7 +23,7 @@ export function TotalAUMCard() {
   const leverage = (metrics.totalAsset - metrics.equity) / metrics.equity
 
   return (
-    <Card className="w-2/10 justify-between bg-foreground">
+    <Card className="w-full h-full justify-between bg-foreground">
       <CardHeader>
         <CardDescription className="text-muted">Total AUM</CardDescription>
       </CardHeader>

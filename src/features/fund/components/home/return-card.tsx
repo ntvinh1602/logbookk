@@ -20,7 +20,7 @@ export function ReturnCard() {
   if (!data) return null
 
   return (
-    <Card className="w-2/10 justify-between">
+    <Card className="w-full h-full justify-between">
       <CardHeader>
         <CardDescription>Return</CardDescription>
       </CardHeader>

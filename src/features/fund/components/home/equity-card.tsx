@@ -6,13 +6,6 @@ import type {
   EquityRollingView,
 } from '@/features/fund/fund.types'
 import StatusLabel from '@/components/status-label'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { cn, compactNum, formatNum } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { TinyAreaChart } from '@/components/charts/tiny-area-chart'
@@ -62,15 +55,14 @@ export function EquityCard() {
   if (!chartData) return null
 
   return (
-    <div className="grid grid-cols-2 bg-card rounded-xl border items-center w-4/10">
-      <Card className="shadow-none ring-0 gap-1 h-full">
-        <CardHeader>
-          <CardDescription>Equity</CardDescription>
-          <CardTitle className="text-4xl font-semibold">
-            {formatNum(chartData.totalEquity)}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="-ml-2">
+    <div className="h-full w-full flex rounded-xl border bg-card items-center">
+      <div className="flex flex-col h-full justify-between py-6 pl-6">
+        <p className="text-muted-foreground text-sm">Equity</p>
+        <p className="text-4xl font-semibold">
+          {formatNum(chartData.totalEquity)}
+        </p>
+
+        <div className="-ml-2 flex flex-col">
           <Badge
             variant="ghost"
             className={cn(
@@ -81,6 +73,7 @@ export function EquityCard() {
             <ResolvedIcon value={chartData.pnlMtd} />
             {compactNum(chartData.pnlMtd)} this month
           </Badge>
+
           <Badge
             variant="ghost"
             className={cn(
@@ -89,17 +82,28 @@ export function EquityCard() {
             )}
           >
             <ResolvedIcon value={chartData.pnlYtd} />
-            <p className="">{compactNum(chartData.pnlYtd)} this year</p>
+            {compactNum(chartData.pnlYtd)} this year
           </Badge>
-        </CardContent>
-      </Card>
-      <TinyAreaChart
-        data={chartData.chartTimeframe}
-        config={{
-          net_equity: { label: 'Equity', color: 'var(--chart-1)' },
-          cumulative_cashflow: { label: 'Deposit', color: 'var(--chart-2)' },
-        }}
-      />
+        </div>
+      </div>
+
+      <div className="relative min-w-0 flex-1">
+        <div className="absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-card to-transparent" />
+
+        <TinyAreaChart
+          data={chartData.chartTimeframe}
+          config={{
+            net_equity: {
+              label: 'Equity',
+              color: 'var(--chart-1)',
+            },
+            cumulative_cashflow: {
+              label: 'Deposit',
+              color: 'var(--chart-2)',
+            },
+          }}
+        />
+      </div>
     </div>
   )
 }

@@ -6,13 +6,13 @@ import {
 } from '@/features/fund/components/home/chart-range-context'
 import { createFileRoute } from '@tanstack/react-router'
 import { ReturnChartSection } from '@/features/fund/components/home/return-chart-content'
-import { TradingViewWidget } from '@/features/fund/components/home/trading-view'
 import { PortfolioSection } from '@/features/fund/components/home/portfolio-section'
 import { NewsSection } from '@/features/fund/components/home/news-section'
 import { NetProfitChartSection } from '@/features/fund/components/home/netprofit-chart-content'
 import { ReturnCard } from '@/features/fund/components/home/return-card'
 import { NetProfitCard } from '@/features/fund/components/home/net-profit-card'
 import { TotalAUMCard } from '@/features/fund/components/home/total-aum-card'
+import { TradingViewMiniChart } from '@/features/fund/ui/trading-view-minichart'
 
 export const Route = createFileRoute('/_protected/')({ component: Home })
 
@@ -27,7 +27,7 @@ function DashboardContent() {
   const { dateRange, setDateRange } = useDashboardDateRange()
 
   return (
-    <div className="flex flex-col max-w-screen-xl mx-auto py-15 gap-8">
+    <div className="flex flex-col max-w-screen-2xl mx-auto py-15 gap-8">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Dashboard</h1>
       </div>
@@ -37,23 +37,54 @@ function DashboardContent() {
           onChange={setDateRange}
           options={PERIOD_OPTIONS}
         />
-        <div className="flex w-full gap-4">
-          <EquityCard />
-          <ReturnCard />
-          <NetProfitCard />
-          <TotalAUMCard />
+        <div className="flex gap-4 items-stretch">
+          <div className="flex gap-4 w-8/10 ">
+            <div className="flex w-1/2">
+              <EquityCard />
+            </div>
+            <div className="flex gap-4 w-1/2 ">
+              <ReturnCard />
+              <NetProfitCard />
+            </div>
+          </div>
+          <div className="w-2/10">
+            <TotalAUMCard />
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="flex flex-col gap-6">
-            <ReturnChartSection />
+
+        <div className="flex gap-4">
+          <div className="flex gap-4 w-8/10">
+            <div className="flex flex-col gap-4 w-1/2 ">
+              <ReturnChartSection />
+              <NetProfitChartSection />
+            </div>
+            <div className="flex flex-col gap-4 w-1/2">
+              <NewsSection />
+              <PortfolioSection />
+            </div>
           </div>
-          <div className="flex flex-col gap-6">
-            <PortfolioSection />
-            <NetProfitChartSection />
-          </div>
-          <div className="flex flex-col gap-6">
-            <NewsSection />
-            <TradingViewWidget />
+          <div className="flex flex-col gap-4 w-2/10">
+            <div className="bg-card border h-60 rounded-xl overflow-hidden">
+              <TradingViewMiniChart
+                symbol="CAPITALCOM:XAUUSD"
+                timeFrame="7D"
+                className="h-65"
+              />
+            </div>
+            <div className="bg-card border h-60 rounded-xl overflow-hidden">
+              <TradingViewMiniChart
+                symbol="BINANCE:BTCUSDT"
+                timeFrame="7D"
+                className="h-65"
+              />
+            </div>
+            <div className="bg-card border h-60 rounded-xl overflow-hidden">
+              <TradingViewMiniChart
+                symbol="TVC:UKOIL"
+                timeFrame="7D"
+                className="h-65"
+              />
+            </div>
           </div>
         </div>
       </div>

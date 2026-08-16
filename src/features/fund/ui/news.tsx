@@ -14,14 +14,14 @@ import {
   ItemContent,
   ItemDescription,
   ItemGroup,
+  ItemSeparator,
   ItemTitle,
 } from '@/components/ui/item'
-import { Skeleton } from '@/components/ui/skeleton'
-import { NewsItemSkeleton } from '@/components/skeletons/item'
 import { useState } from 'react'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import StatusLabel from '@/components/status-label'
 import { Clock, Newspaper } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 type NewsWidgetProps = {
   allNews: NewsArticle[]
@@ -34,62 +34,68 @@ function ArticleList({ articles }: { articles: NewsArticle[] }) {
   if (articles.length == 0) return <StatusLabel type="empty" />
 
   return (
-    <ItemGroup className="gap-2">
+    <ItemGroup className="gap-0">
       {articles.map((article) => (
-        <Item
-          key={article.id}
-          variant="muted"
-          size="default"
-          className="cursor-pointer hover:bg-accent transition-colors"
-          onClick={() => window.open(article.url, '_blank')}
-        >
-          <ItemContent className='w-full'>
-            <ItemTitle>
-              <Badge>{article.tickers && article.tickers[0]}</Badge>
-              {article.title}
-            </ItemTitle>
-            <ItemDescription className="text-xs">
-              {article.excerpt}
-            </ItemDescription>
-            <ItemDescription className="-ml-2">
-              <Badge variant="ghost">
-                <Newspaper />
-                {article.source}
-              </Badge>
-              <Badge variant="ghost">
-                <Clock />
-                {now &&
-                  formatDistance(new Date(article.published_at), now, {
-                    addSuffix: true,
-                  })}
-              </Badge>
-            </ItemDescription>
-          </ItemContent>
-        </Item>
+        <div>
+          <ItemSeparator />
+          <Item key={article.id} size="default" className="px-0 py-1">
+            <Button
+              variant="secondary"
+              className="self-start min-w-12 text-xs pointer-events-none"
+              size="sm"
+            >
+              {article.tickers && article.tickers[0]}
+            </Button>
+
+            <ItemContent className="w-full">
+              <ItemTitle
+                className="cursor-pointer hover:text-primary transition-colors"
+                onClick={() => window.open(article.url, '_blank')}
+              >
+                {article.title}
+              </ItemTitle>
+              <ItemDescription className="text-xs">
+                {article.excerpt}
+              </ItemDescription>
+              <ItemDescription className="-ml-2">
+                <Badge variant="ghost" className='pointer-events-none'>
+                  <Newspaper />
+                  {article.source}
+                </Badge>
+                <Badge variant="ghost" className='pointer-events-none'>
+                  <Clock />
+                  {now &&
+                    formatDistance(new Date(article.published_at), now, {
+                      addSuffix: true,
+                    })}
+                </Badge>
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </div>
       ))}
     </ItemGroup>
   )
 }
 
 export function NewsWidget({ allNews, portfolioNews }: NewsWidgetProps) {
-  const [selected, setSelected] = useState<'all' | 'portfolio'>('all')
+  const [selected, setSelected] = useState<'all' | 'related'>('all')
   const articles = selected === 'all' ? allNews : portfolioNews
 
   return (
     <Card className="h-120">
       <CardHeader>
-        <CardTitle>Market Pulse</CardTitle>
+        <CardTitle>News</CardTitle>
         <CardAction>
           <ToggleGroup
-            variant="outline"
             value={[selected]}
             onValueChange={(value) => {
-              if (value.length > 0) setSelected(value[0] as 'all' | 'portfolio')
+              if (value.length > 0) setSelected(value[0] as 'all' | 'related')
             }}
-            spacing={0}
+            spacing={1}
           >
+            <ToggleGroupItem value="related">Related</ToggleGroupItem>
             <ToggleGroupItem value="all">All news</ToggleGroupItem>
-            <ToggleGroupItem value="portfolio">Portfolio only</ToggleGroupItem>
           </ToggleGroup>
         </CardAction>
       </CardHeader>
@@ -97,27 +103,6 @@ export function NewsWidget({ allNews, portfolioNews }: NewsWidgetProps) {
         <ScrollArea className="h-full w-full">
           <ArticleList articles={articles} />
         </ScrollArea>
-      </CardContent>
-    </Card>
-  )
-}
-
-export function NewsSkeleton() {
-  return (
-    <Card className="h-120">
-      <CardHeader>
-        <CardTitle>Market Pulse</CardTitle>
-        <CardAction>
-          <Skeleton className="h-9 w-56 rounded-3xl" />
-        </CardAction>
-      </CardHeader>
-
-      <CardContent className="flex min-h-0 flex-1 flex-col gap-3">
-        <NewsItemSkeleton />
-        <NewsItemSkeleton />
-        <NewsItemSkeleton />
-        <NewsItemSkeleton />
-        <NewsItemSkeleton />
       </CardContent>
     </Card>
   )
