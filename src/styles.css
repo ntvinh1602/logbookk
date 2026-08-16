@@ -38,6 +38,8 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-positive: var(--color-green-700);
+  --color-negative: var(--color-red-700);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -65,7 +67,7 @@
 :root {
   --background: oklch(0.98 0.01 95.1);
   --foreground: oklch(0.34 0.03 95.72);
-  --card: oklch(0.99 0 0);
+  --card: oklch(99.668% 0.00526 95.189);
   --card-foreground: oklch(0.19 0 106.59);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.27 0.02 98.94);

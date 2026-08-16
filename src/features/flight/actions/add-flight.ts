@@ -1,8 +1,8 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from "@/lib/supabase/client"
 import type { FlightFormValues } from "@/features/flight/form/schema"
 
 export async function AddFlight(values: FlightFormValues) {
-  const { data, error } = await supabase
+  const { data, error } = await createClient()
     .schema("flight")
     .rpc("insert_flight_with_timezone", {
       p_departure_airport_id: values.departureAirportId,

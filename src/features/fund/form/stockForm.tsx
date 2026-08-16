@@ -10,7 +10,7 @@ import { stockSchema } from "./schema"
 import {
   searchAssets,
   type AssetSearchResult,
-} from "@/actions/search-assets"
+} from "@/features/fund/actions/search-assets"
 import { ToggleGroupField } from "@/components/form/toggle-group-field"
 import { txOperations } from "@/features/fund/ui/tx-filter"
 import { zodFieldValidator } from "@/components/form/zod-field-validator"

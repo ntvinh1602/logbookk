@@ -8,7 +8,7 @@ import {
   getProfitAllTime,
   getReturn,
   getReturnAllTime,
-} from '@/actions/get-performance'
+} from '@/features/fund/actions/get-performance'
 import type {
   CashflowView,
   StockPnl,

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from "@/lib/supabase/client"
 
 export type AssetSearchResult = {
   id: string
@@ -8,7 +8,7 @@ export type AssetSearchResult = {
 
 export async function searchAssets(query: string, assetClass: string) {
   if (!query || query.length < 3) return []
-  const { data, error } = await supabase
+  const { data, error } = await createClient()
     .from('assets')
     .select('id, ticker, name')
     .eq('asset_class', assetClass)

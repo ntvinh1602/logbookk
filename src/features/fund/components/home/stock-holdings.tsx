@@ -7,15 +7,13 @@ import {
 import type { BSheetView } from "@/features/fund/fund.types"
 import StatusLabel from "@/components/status-label"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
 import { ButtonGroup } from "@/components/ui/button-group"
 import { AssetItemBS } from "@/features/fund/ui/asset-item"
 import { ItemGroup } from "@/components/ui/item"
 import { useState } from "react"
-import { fetchPrices } from "@/actions/fetch-price"
+import { fetchPrices } from "@/features/fund/actions/fetch-price"
 import { toast } from "sonner"
 import { RefreshCw } from "lucide-react"
-import { Link } from "@tanstack/react-router"
 interface Props {
   bs: BSheetView[]
 }
@@ -61,16 +59,6 @@ export function StockHoldings({ bs }: Props) {
               <RefreshCw className={`${isRefreshing && "animate-spin"}`} />
               Refresh
             </Button>
-            <Button
-              variant="outline"
-              nativeButton={false}
-              render={
-                <Link to="/fund/balance-sheet">
-                  B. Sheet
-                  <ArrowRight />
-                </Link>
-              }
-            ></Button>
           </ButtonGroup>
         </CardAction>
       </CardHeader>

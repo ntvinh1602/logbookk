@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from "@/lib/supabase/client"
 import type {
   EquityRollingView,
   BenchmarkRollingView,
@@ -10,7 +10,7 @@ import type {
 // Pnl & Expenses
 
 export async function get1yProfit() {
-  const { data, error } = await supabase.from('pnl_expense_last1y').select()
+  const { data, error } = await createClient().from('pnl_expense_last1y').select()
 
   if (error) throw new Error(error.message)
   return (data?.[0] ?? null) as ProfitView
@@ -19,7 +19,7 @@ export async function get1yProfit() {
 // Balance Sheet & Portfolio
 
 export async function getBalanceSheet() {
-  const { data, error } = await supabase.from('balance_sheet').select()
+  const { data, error } = await createClient().from('balance_sheet').select()
 
   if (error) throw new Error(error.message)
 
@@ -58,7 +58,7 @@ export async function getBalanceSheet() {
 // News
 
 export async function getNews() {
-  const { data, error } = await supabase
+  const { data, error } = await createClient()
     .from('news_articles')
     .select('id, title, url, source, excerpt, published_at, related_stocks')
     .order('published_at', { ascending: false })
@@ -77,14 +77,14 @@ export async function getNews() {
 // Equity & Benchmark
 
 export async function getEquityRolling() {
-  const { data, error } = await supabase.from('equity_rollings').select()
+  const { data, error } = await createClient().from('equity_rollings').select()
 
   if (error) throw new Error(error.message)
   return (data?.[0] ?? null) as EquityRollingView
 }
 
 export async function getBenchmarkRolling() {
-  const { data, error } = await supabase.from('benchmark_rollings').select()
+  const { data, error } = await createClient().from('benchmark_rollings').select()
 
   if (error) throw new Error(error.message)
   return (data?.[0] ?? null) as BenchmarkRollingView

@@ -5,7 +5,7 @@ import {
   Area,
   AreaChart,
   type TooltipPayloadEntry,
-} from "recharts"
+} from 'recharts'
 import {
   type ChartConfig,
   ChartContainer,
@@ -13,10 +13,10 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { cn } from "@/lib/utils"
-import { useIsMobile } from "@/hooks/use-mobile"
-import type { ReactNode } from "react"
+} from '@/components/ui/chart'
+import { cn } from '@/lib/utils'
+import { useIsMobile } from '@/hooks/use-mobile'
+import type { ReactNode } from 'react'
 
 export type TooltipLabelFormatter = (
   label: unknown,
@@ -28,11 +28,13 @@ type Props = {
   config: ChartConfig
   className?: string
   xAxisDataKey: string
-  xAxisType?: "category" | "number"
+  xAxisType?: 'category' | 'number'
   xAxisTickFormatter?: (ms: number) => string
   yAxisTickFormatter?: (value: number) => string
   tooltipFormatter?: (value: number) => string // value formatter, unchanged
   tooltipLabelFormatter?: TooltipLabelFormatter // NEW, separate prop
+  legend?: boolean
+  axis?: boolean
 }
 
 export function Areachart({
@@ -45,6 +47,8 @@ export function Areachart({
   yAxisTickFormatter,
   tooltipFormatter,
   tooltipLabelFormatter,
+  legend = true,
+  axis = true,
 }: Props) {
   const dataKeys = Object.keys(config)
   const isMobile = useIsMobile()
@@ -75,13 +79,17 @@ export function Areachart({
             </linearGradient>
           ))}
         </defs>
-        <CartesianGrid vertical={false} />
+        <CartesianGrid vertical={false} horizontal={axis}/>
         <XAxis
           dataKey={xAxisDataKey}
-          {...(xAxisType === "number"
-            ? { type: "number", scale: "time", domain: ["dataMin", "dataMax"] }
+          {...(xAxisType === 'number'
+            ? {
+                type: 'number',
+                scale: 'time',
+                domain: ['dataMin', 'dataMax'],
+              }
             : {})}
-          tickLine={true}
+          tickLine={axis}
           axisLine={false}
           tickMargin={8}
           tickFormatter={xAxisTickFormatter}
@@ -102,10 +110,11 @@ export function Areachart({
           scale="linear"
           mirror={true}
           tick={{
-            fill: "var(--muted-foreground)",
-            className: "opacity-80",
+            fill: 'var(--muted-foreground)',
+            className: 'opacity-80',
           }}
         />
+
         {!isMobile && (
           <ChartTooltip
             cursor={true}
@@ -130,10 +139,7 @@ export function Areachart({
             dot={false}
           />
         ))}
-        <ChartLegend
-          content={<ChartLegendContent />}
-          className="gap-4 justify-center pt-3 text-muted-foreground"
-        />
+        {legend && <ChartLegend content={<ChartLegendContent />} />}
       </AreaChart>
     </ChartContainer>
   )

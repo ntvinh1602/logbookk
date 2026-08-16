@@ -1,7 +1,7 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from "@/lib/supabase/client"
 
 export async function getStockHoldings() {
-  const { data, error } = await supabase
+  const { data, error } = await createClient()
     .from('balance_sheet')
     .select('ticker')
     .eq('asset_class', 'stock')

@@ -6,7 +6,7 @@ import type { BSheetView } from "@/features/fund/fund.types"
 import StatusLabel from "@/components/status-label"
 import { Portfolio, PortfolioSkeleton } from "../../ui/portfolio"
 
-function usePortfolioMetrics(data: BSheetView[] | undefined) {
+export function usePortfolioMetrics(data: BSheetView[] | undefined) {
   return useMemo(() => {
     if (!data) return null
     const equity = data

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from "@/lib/supabase/client"
 import { type Database } from "@/types/database.types"
 
 type AircraftRow = Database["flight"]["Tables"]["aircrafts"]["Row"]
@@ -8,7 +8,7 @@ export type Aircraft = {
 }
 
 export default async function getAircrafts() {
-  const { data, error } = await supabase
+  const { data, error } = await createClient()
     .schema("flight")
     .from("aircrafts")
     .select("id, icao_code, model")

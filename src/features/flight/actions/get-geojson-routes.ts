@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from "@/lib/supabase/client"
 import type { FeatureCollection, Feature, LineString } from "geojson"
 
 export interface RoutesGeoJSONProperties {
@@ -24,7 +24,7 @@ type RoutesFeatureCollection = FeatureCollection<
 >
 
 export default async function getRoutesGeoJSON() {
-  const { data, error } = await supabase
+  const { data, error } = await createClient()
     .schema("flight")
     .from("routes_geojson")
     .select("*")

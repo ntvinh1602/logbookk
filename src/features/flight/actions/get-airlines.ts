@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from "@/lib/supabase/client"
 import { type Database } from "@/types/database.types"
 
 type AirlineRow = Database["flight"]["Tables"]["airlines"]["Row"]
@@ -8,7 +8,7 @@ export type Airline = {
 }
 
 export default async function getAirlines() {
-  const { data, error } = await supabase
+  const { data, error } = await createClient()
     .schema("flight")
     .from("airlines")
     .select("*")

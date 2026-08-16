@@ -17,9 +17,9 @@ export function ChartPeriodToggle({
       onValueChange={(values) => {
         if (values.length > 0) onChange(values[0])
       }}
-      spacing={0}
-      className="w-full"
-      variant="outline"
+      spacing={1}
+      variant="default"
+      className="w-60"
     >
       {options.map(({ value, label }) => (
         <ToggleGroupItem key={value} value={value} className="flex-1">

@@ -1,8 +1,8 @@
 import type { FlightFormValues } from "@/features/flight/form/schema"
-import { supabase } from '@/lib/supabase'
+import { createClient } from "@/lib/supabase/client"
 
 export async function EditFlight(flightId: string, values: FlightFormValues) {
-  const { error } = await supabase
+  const { error } = await createClient()
     .schema("flight")
     .rpc("update_flight_with_timezone", {
       p_flight_id: flightId,

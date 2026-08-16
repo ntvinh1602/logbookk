@@ -5,8 +5,8 @@ import {
   getBalanceSheet,
   getNews,
   get1yProfit,
-} from '@/actions/get-dashboard'
-import { getStockHoldings } from '@/actions/get-stock-holdings'
+} from '@/features/fund/actions/get-dashboard'
+import { getStockHoldings } from '@/features/fund/actions/get-stock-holdings'
 import type {
   EquityRollingView,
   BenchmarkRollingView,

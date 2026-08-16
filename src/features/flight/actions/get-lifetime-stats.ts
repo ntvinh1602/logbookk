@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from "@/lib/supabase/client"
 import { type Database } from "@/types/database.types"
 
 type StatsRow = Database["flight"]["Views"]["lifetime_stats"]["Row"]
@@ -8,7 +8,7 @@ export type LifetimeStats = {
 }
 
 export default async function getLifetimeStats(): Promise<LifetimeStats | null> {
-  const { data, error } = await supabase
+  const { data, error } = await createClient()
     .schema("flight")
     .from("lifetime_stats")
     .select()
