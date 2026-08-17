@@ -58,7 +58,7 @@ export function EquityCard() {
     <div className="h-full w-full flex rounded-xl border bg-card items-center">
       <div className="flex flex-col h-full justify-between py-6 pl-6">
         <p className="text-muted-foreground text-sm">Equity</p>
-        <p className="text-4xl font-semibold">
+        <p className="text-3xl font-semibold">
           {formatNum(chartData.totalEquity)}
         </p>
 

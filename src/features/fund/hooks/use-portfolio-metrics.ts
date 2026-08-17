@@ -1,0 +1,30 @@
+import type { BSheetView } from '@/features/fund/fund.types'
+import { useMemo } from 'react'
+
+export function usePortfolioMetrics(data: BSheetView[] | undefined) {
+  return useMemo(() => {
+    if (!data) return null
+    const equity = data
+      .filter((r) => r.asset_class === 'equity')
+      .reduce((sum, r) => sum + r.total_value, 0)
+
+    const cash = data
+      .filter((r) => r.asset_class == 'cash')
+      .reduce((sum, r) => sum + r.total_value, 0)
+
+    const stock = data
+      .filter((r) => r.asset_class == 'stock')
+      .reduce((sum, r) => sum + r.total_value, 0)
+
+    const fund = data
+      .filter((r) => r.asset_class == 'fund')
+      .reduce((sum, r) => sum + r.total_value, 0)
+
+    const normalizedCash = Math.max(cash, 0)
+    const margin = data.find((r) => r.ticker == 'MARGIN')?.total_value || 0
+    const totalAsset = normalizedCash + stock + fund
+    const debt = totalAsset - equity - margin
+
+    return { equity, normalizedCash, stock, fund, margin, totalAsset, debt }
+  }, [data])
+}

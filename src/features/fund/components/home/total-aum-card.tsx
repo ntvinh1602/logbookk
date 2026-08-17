@@ -9,8 +9,8 @@ import {
 } from '@/components/ui/card'
 import { cn, formatNum } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import { usePortfolioMetrics } from './portfolio-section'
 import { useBalanceSheet } from '../../hooks/use-dashboard-data'
+import { usePortfolioMetrics } from '../../hooks/use-portfolio-metrics'
 
 export function TotalAUMCard() {
   const { data, error, isLoading } = useBalanceSheet()

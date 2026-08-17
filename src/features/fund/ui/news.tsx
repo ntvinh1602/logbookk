@@ -34,7 +34,7 @@ function ArticleList({ articles }: { articles: NewsArticle[] }) {
   if (articles.length == 0) return <StatusLabel type="empty" />
 
   return (
-    <ItemGroup className="gap-0">
+    <ItemGroup className="gap-0 pr-2">
       {articles.map((article) => (
         <div>
           <ItemSeparator />
