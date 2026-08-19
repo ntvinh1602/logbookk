@@ -40,7 +40,7 @@ export function ReturnCard() {
       </CardContent>
       <CardFooter>
         <CardDescription className="text-xs">
-          Portfolio performance YTD
+          This year
         </CardDescription>
       </CardFooter>
     </Card>

@@ -53,7 +53,7 @@ function DashboardContent() {
   }
 
   return (
-    <div className="flex flex-col max-w-screen-2xl mx-auto py-15 gap-8">
+    <div className="flex flex-col max-w-screen-xl mx-auto py-15 gap-8">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Dashboard</h1>
       </div>
@@ -100,25 +100,25 @@ function DashboardContent() {
             </div>
           </div>
           <div className="flex flex-col gap-4 w-2/10">
-            <div className="bg-card border h-60 rounded-xl overflow-hidden">
+            <div className="bg-card border h-50 rounded-xl overflow-hidden">
               <TradingViewMiniChart
                 symbol="CAPITALCOM:XAUUSD"
                 timeFrame="7D"
-                className="h-65"
+                className="h-55"
               />
             </div>
-            <div className="bg-card border h-60 rounded-xl overflow-hidden">
+            <div className="bg-card border h-50 rounded-xl overflow-hidden">
               <TradingViewMiniChart
                 symbol="BINANCE:BTCUSDT"
                 timeFrame="7D"
-                className="h-65"
+                className="h-55"
               />
             </div>
-            <div className="bg-card border h-60 rounded-xl overflow-hidden">
+            <div className="bg-card border h-50 rounded-xl overflow-hidden">
               <TradingViewMiniChart
                 symbol="TVC:UKOIL"
                 timeFrame="7D"
-                className="h-65"
+                className="h-55"
               />
             </div>
           </div>

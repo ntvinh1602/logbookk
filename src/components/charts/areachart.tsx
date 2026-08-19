@@ -31,10 +31,7 @@ type Props = {
   xAxisType?: 'category' | 'number'
   xAxisTickFormatter?: (ms: number) => string
   yAxisTickFormatter?: (value: number) => string
-  tooltipFormatter?: (value: number) => string // value formatter, unchanged
   tooltipLabelFormatter?: TooltipLabelFormatter // NEW, separate prop
-  legend?: boolean
-  axis?: boolean
 }
 
 export function Areachart({
@@ -45,10 +42,7 @@ export function Areachart({
   xAxisType,
   xAxisTickFormatter,
   yAxisTickFormatter,
-  tooltipFormatter,
   tooltipLabelFormatter,
-  legend = true,
-  axis = true,
 }: Props) {
   const dataKeys = Object.keys(config)
   const isMobile = useIsMobile()
@@ -79,7 +73,7 @@ export function Areachart({
             </linearGradient>
           ))}
         </defs>
-        <CartesianGrid vertical={false} horizontal={axis}/>
+        <CartesianGrid vertical={false} />
         <XAxis
           dataKey={xAxisDataKey}
           {...(xAxisType === 'number'
@@ -89,7 +83,7 @@ export function Areachart({
                 domain: ['dataMin', 'dataMax'],
               }
             : {})}
-          tickLine={axis}
+          tickLine={true}
           axisLine={false}
           tickMargin={8}
           tickFormatter={xAxisTickFormatter}
@@ -121,7 +115,6 @@ export function Areachart({
             content={
               <ChartTooltipContent
                 indicator="line"
-                valueFormatter={tooltipFormatter}
                 labelFormatter={tooltipLabelFormatter}
               />
             }
@@ -139,7 +132,7 @@ export function Areachart({
             dot={false}
           />
         ))}
-        {legend && <ChartLegend content={<ChartLegendContent />} />}
+        <ChartLegend content={<ChartLegendContent className='justify-start px-2'/>} />
       </AreaChart>
     </ChartContainer>
   )

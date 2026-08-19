@@ -1,11 +1,26 @@
 import { useMemo } from 'react'
 import { useDashboardDateRange } from './chart-range-context'
-import { ReturnChart } from '@/features/fund/ui/return-chart'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card'
 import { useBenchmarkRolling } from '@/features/fund/hooks/use-dashboard-data'
 import type { BenchmarkRollingView } from '@/features/fund/fund.types'
-import { FullChartSkeleton } from '@/components/skeletons/chart-card'
 import StatusLabel from '@/components/status-label'
 import { colsToRows } from '@/features/fund/utils'
+import { CartesianGrid, XAxis, YAxis, Area, AreaChart } from 'recharts'
+import {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart'
+import { format } from 'date-fns'
+import { useIsMobile } from '@/hooks/use-mobile'
+import { compactNum } from '@/lib/utils'
 
 function useReturnChartData(
   data: BenchmarkRollingView | null | undefined,
@@ -30,39 +45,121 @@ export function ReturnChartSection() {
   const { dateRange } = useDashboardDateRange()
   const { data, error, isLoading } = useBenchmarkRolling()
   const chartData = useReturnChartData(data, dateRange)
-  const meta = { name: 'Return', stat1: 'all time', stat2: 'annualized' }
 
-  if (isLoading)
-    return (
-      <FullChartSkeleton name={meta.name} stat1={meta.stat1} stat2={meta.stat2}>
-        <StatusLabel
-          type="loading"
-          title="In progress..."
-          description="Pulling in data to draw your chart"
-          className="py-25"
-        />
-      </FullChartSkeleton>
-    )
-  if (error)
-    return (
-      <FullChartSkeleton name={meta.name} stat1={meta.stat1} stat2={meta.stat2}>
-        <StatusLabel
-          type="error"
-          description={error.message}
-          className="py-25"
-        />
-      </FullChartSkeleton>
-    )
-  if (!data || !chartData)
-    return (
-      <FullChartSkeleton name={meta.name} stat1={meta.stat1} stat2={meta.stat2}>
-        <StatusLabel
-          type="error"
-          description="Unable to get any data"
-          className="py-25"
-        />
-      </FullChartSkeleton>
-    )
+  const chartConfig = {
+    portfolio_value: { label: 'Equity', color: 'var(--chart-1)' },
+    vni_value: { label: 'VN-Index', color: 'var(--chart-2)' },
+  }
 
-  return <ReturnChart dateRange={dateRange} {...chartData} />
+  const dataKeys = Object.keys(chartConfig)
+  const isMobile = useIsMobile()
+
+  if (isLoading) return <StatusLabel type="loading" />
+  if (error) return <StatusLabel type="error" />
+  if (!data || !chartData) return <StatusLabel type="empty" />
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardDescription>Return</CardDescription>
+        <CardTitle className="text-xl sm:text-2xl flex gap-1 items-baseline">
+          {data.twr_ytd}
+          <span className="text-sm text-muted-foreground">this year</span>
+        </CardTitle>
+      </CardHeader>
+      <ChartContainer config={chartConfig}>
+        <AreaChart data={chartData.chartTimeframe} margin={{}}>
+          <defs>
+            {dataKeys.map((key) => (
+              <linearGradient
+                key={key}
+                id={`fill-${key}`}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop
+                  offset="0%"
+                  stopColor={`var(--color-${key})`}
+                  stopOpacity={0.5}
+                />
+                <stop
+                  offset="100%"
+                  stopColor={`var(--color-${key})`}
+                  stopOpacity={0}
+                />
+              </linearGradient>
+            ))}
+          </defs>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey={'t'}
+            {...{
+              type: 'number',
+              scale: 'time',
+              domain: ['dataMin', 'dataMax'],
+            }}
+            tickLine={true}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={(ms: number) =>
+              ['last_1y', 'all'].includes(dateRange)
+                ? format(new Date(ms), 'MMM yyyy')
+                : format(new Date(ms), 'dd MMM')
+            }
+            interval="preserveEnd"
+            minTickGap={60}
+          />
+          <YAxis
+            orientation="left"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={0}
+            tickFormatter={(v) => compactNum(v)}
+            domain={[
+              (dataMin: number) => Number(dataMin) * 1,
+              (dataMax: number) => Number(dataMax) * 1.05,
+            ]}
+            allowDataOverflow={false}
+            scale="linear"
+            mirror={true}
+            tick={{
+              fill: 'var(--muted-foreground)',
+              className: 'opacity-80',
+            }}
+          />
+
+          {!isMobile && (
+            <ChartTooltip
+              cursor={true}
+              content={
+                <ChartTooltipContent
+                  indicator="line"
+                  labelFormatter={(_label, payload) => {
+                    const ms = payload?.[0]?.payload?.t as number | undefined
+                    if (ms == null) return ''
+                    return format(new Date(ms), 'yyyy-MM-dd')
+                  }}
+                />
+              }
+            />
+          )}
+          {dataKeys.map((key) => (
+            <Area
+              key={key}
+              dataKey={key}
+              type="natural"
+              connectNulls={true}
+              stroke={`var(--color-${key})`}
+              strokeWidth={1.5}
+              fill={`url(#fill-${key})`}
+              dot={false}
+            />
+          ))}
+          <ChartLegend content={<ChartLegendContent />} />
+        </AreaChart>
+      </ChartContainer>
+    </Card>
+  )
 }

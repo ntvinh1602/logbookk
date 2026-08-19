@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, LabelList } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, LabelList } from 'recharts'
 import {
   type ChartConfig,
   ChartContainer,
@@ -6,9 +6,9 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { compactNum } from "@/lib/utils"
-import { useIsMobile } from "@/hooks/use-mobile"
+} from '@/components/ui/chart'
+import { compactNum } from '@/lib/utils'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export function ChartBarStacked<
   TData extends Record<string, string | number | undefined>,
@@ -20,7 +20,6 @@ export function ChartBarStacked<
   xAxisDataKey,
   xAxisTickFormatter,
   yAxisTickFormatter,
-  tooltipFormatter,
 }: {
   data: TData[]
   config: ChartConfig
@@ -56,25 +55,19 @@ export function ChartBarStacked<
           mirror={true}
           tickFormatter={yAxisTickFormatter}
           tick={{
-            fill: "var(--muted-foreground)",
-            className: "opacity-80",
+            fill: 'var(--muted-foreground)',
+            className: 'opacity-80',
           }}
         />
         {!isMobile && (
-          <ChartTooltip
-            cursor={true}
-            content={<ChartTooltipContent valueFormatter={tooltipFormatter} />}
-          />
+          <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
         )}
-        <ChartLegend
-          content={<ChartLegendContent />}
-          className="justify-center pt-3 gap-4 text-muted-foreground"
-        />
+        <ChartLegend content={<ChartLegendContent />} />
         {dataKeys.map((key, index) => (
           <Bar
             key={key}
             dataKey={key}
-            stackId={key === "revenue" ? undefined : "a"}
+            stackId={key === 'revenue' ? undefined : 'a'}
             fill={`var(--color-${key})`}
           >
             {labelKey && index === dataKeys.length - 1 && (

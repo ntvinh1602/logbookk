@@ -27,7 +27,7 @@ export function PortfolioCard() {
   if (isLoading) return <StatusLabel type="loading" />
   if (error) return <StatusLabel type="error" />
   if (!data || !metrics) return <StatusLabel type="error" />
-  
+
   const sortedStocks = [...data]
     .filter((a) => a.asset_class == 'stock' || a.asset_class == 'fund')
     .sort((a, b) => b.total_value - a.total_value)
