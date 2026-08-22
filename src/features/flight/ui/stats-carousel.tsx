@@ -1,4 +1,4 @@
-import { formatNum } from "@/lib/utils"
+import { formatNum } from '@/lib/utils'
 import {
   Clock,
   Earth,
@@ -6,82 +6,64 @@ import {
   PlaneTakeoff,
   Route,
   TicketsPlane,
-} from "lucide-react"
-import type { LifetimeStats } from "@/features/flight/actions/get-lifetime-stats"
+} from 'lucide-react'
+import type { LifetimeStats } from '@/features/flight/actions/get-lifetime-stats'
 import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemMedia,
   ItemTitle,
-} from "@/components/ui/item"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel"
+} from '@/components/ui/item'
 
 export default function StatsCarousel({ stats }: { stats: LifetimeStats }) {
   const statItems = [
     {
-      title: "Flights",
+      title: 'Flights',
       figure: stats.flights_count,
       icon: TicketsPlane,
     },
     {
-      title: "Airports",
+      title: 'Airports',
       figure: stats.airports_count,
       icon: PlaneTakeoff,
     },
     {
-      title: "Countries",
+      title: 'Countries',
       figure: stats.country_count,
       icon: Earth,
     },
     {
-      title: "Aircraft Types",
+      title: 'Aircraft Types',
       figure: stats.type_count,
       icon: Plane,
     },
     {
-      title: "Distance",
+      title: 'Distance',
       figure: `${formatNum(stats.total_distance)} km`,
       icon: Route,
     },
     {
-      title: "Duration",
+      title: 'Duration',
       figure: `${stats.total_duration} hours`,
       icon: Clock,
     },
   ]
 
   return (
-    <Carousel
-      opts={{
-        align: "start",
-        loop: true,
-      }}
-    >
-      <CarouselContent>
-        {statItems.map((stat) => (
-          <CarouselItem
-            key={stat.title}
-            className="basis-1/2 xl:basis-1/4 2xl:basis-1/6"
-          >
-            <Item variant="outline">
-              <ItemMedia variant="icon">
-                <stat.icon />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle className="text-xl xl:text-2xl">
-                  {stat.figure}
-                </ItemTitle>
-                <ItemDescription>{stat.title}</ItemDescription>
-              </ItemContent>
-            </Item>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+    <ItemGroup className='flex-row gap-2'>
+      {statItems.map((stat) => (
+        <Item variant="outline">
+          <ItemMedia variant="icon">
+            <stat.icon />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle className="text-xl xl:text-2xl">{stat.figure}</ItemTitle>
+            <ItemDescription>{stat.title}</ItemDescription>
+          </ItemContent>
+        </Item>
+      ))}
+    </ItemGroup>
   )
 }

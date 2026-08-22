@@ -1,11 +1,17 @@
-import "leaflet/dist/leaflet.css"
+import 'leaflet/dist/leaflet.css'
 
-import { useRef } from "react"
-import { MapContainer, TileLayer, GeoJSON, CircleMarker, Popup } from "react-leaflet"
-import type { FeatureCollection, LineString } from "geojson"
-import type { RoutesGeoJSONProperties } from "@/features/flight/actions/get-geojson-routes"
-import type { Airport } from "@/features/flight/actions/get-airports"
-import L from "leaflet"
+import { useRef } from 'react'
+import {
+  MapContainer,
+  TileLayer,
+  GeoJSON,
+  CircleMarker,
+  Popup,
+} from 'react-leaflet'
+import type { FeatureCollection, LineString } from 'geojson'
+import type { RoutesGeoJSONProperties } from '@/features/flight/actions/get-geojson-routes'
+import type { Airport } from '@/features/flight/actions/get-airports'
+import L from 'leaflet'
 
 type RoutesGeoJSON = FeatureCollection<LineString, RoutesGeoJSONProperties>
 
@@ -37,7 +43,9 @@ function getColor(freq: number, max: number) {
 }
 
 export default function LeafletMap({ routes, airports }: Props) {
-  const frequencies = routes.features.map(f => f.properties?.route_frequency ?? 1)
+  const frequencies = routes.features.map(
+    (f) => f.properties?.route_frequency ?? 1,
+  )
   const maxFreq = Math.max(...frequencies, 1)
 
   const mapKeyRef = useRef<string | null>(null)
@@ -47,14 +55,19 @@ export default function LeafletMap({ routes, airports }: Props) {
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      <MapContainer key={mapKeyRef.current} center={[15, 105]} zoom={4} className="h-full w-full">
+      <MapContainer
+        key={mapKeyRef.current}
+        center={[15, 105]}
+        zoom={4}
+        className="h-full w-full"
+      >
         <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png" />
 
         <GeoJSON
           data={routes}
           style={() => ({
-            color: "transparent",
-            weight: 14,     // 👈 big hitbox
+            color: 'transparent',
+            weight: 14, // 👈 big hitbox
             opacity: 0,
           })}
           onEachFeature={(feature, layer) => {
@@ -72,40 +85,41 @@ export default function LeafletMap({ routes, airports }: Props) {
               distance_km,
             } = feature.properties
 
-            let flightsHtml = ""
+            let flightsHtml = ''
 
             if (flights_by_direction) {
-              const directions =
-                flights_by_direction as Record<
-                  string,
-                  Record<string, string[]>
-                >
+              const directions = flights_by_direction as Record<
+                string,
+                Record<string, string[]>
+              >
 
               for (const [direction, airlines] of Object.entries(directions)) {
                 flightsHtml += `<strong>${direction}</strong><br/>`
 
-                for (const [airline, flightNumbers] of Object.entries(airlines)) {
+                for (const [airline, flightNumbers] of Object.entries(
+                  airlines,
+                )) {
                   flightsHtml += `
                     &nbsp;&nbsp;${airline}: 
-                    ${flightNumbers?.join(", ") ?? ""}
+                    ${flightNumbers?.join(', ') ?? ''}
                     <br/>
                   `
                 }
 
-                flightsHtml += "<br/>"
+                flightsHtml += '<br/>'
               }
             }
 
             layer.bindPopup(`
               <div style="font-size:14px; line-height:1.5;">
                 <strong>${airport_a_iata} ↔ ${airport_b_iata}</strong><br/>
-                ${airport_a_name} (${airport_a_city ?? ""})<br/>
-                ${airport_b_name} (${airport_b_city ?? ""})<br/></br>
+                ${airport_a_name} (${airport_a_city ?? ''})<br/>
+                ${airport_b_name} (${airport_b_city ?? ''})<br/></br>
 
                 <strong>Total Flights:</strong> ${route_frequency}<br/>
-                <strong>Distance:</strong> ${distance_km ?? "N/A"} km<br/><br/>
+                <strong>Distance:</strong> ${distance_km ?? 'N/A'} km<br/><br/>
 
-                ${flightsHtml || "No airline data"}
+                ${flightsHtml || 'No airline data'}
               </div>
             `)
           }}
@@ -116,10 +130,10 @@ export default function LeafletMap({ routes, airports }: Props) {
             const freq = feature?.properties.route_frequency ?? 1
             return {
               color: getColor(freq, maxFreq),
-              weight: 2,              // 👈 stays thin
-              lineCap: "round",
-              lineJoin: "round",
-              interactive: false,     // 👈 IMPORTANT
+              weight: 2, // 👈 stays thin
+              lineCap: 'round',
+              lineJoin: 'round',
+              interactive: false, // 👈 IMPORTANT
             }
           }}
         />
@@ -130,9 +144,9 @@ export default function LeafletMap({ routes, airports }: Props) {
             center={[airport.lat, airport.lng]}
             radius={4}
             pathOptions={{
-              color: "#111",
+              color: '#111',
               weight: 1,
-              fillColor: "#2563eb",
+              fillColor: '#2563eb',
               fillOpacity: 0.7,
             }}
           >
