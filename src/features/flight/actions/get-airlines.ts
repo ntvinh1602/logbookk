@@ -11,7 +11,7 @@ export default async function getAirlines() {
   const { data, error } = await createClient()
     .schema("flight")
     .from("airlines")
-    .select("*")
+    .select()
     .order("name")
 
   if (error) throw new Error(error.message)

@@ -8,13 +8,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { ConfirmDialog } from "@/components/confirm-dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { FormDialogWrapper } from "@/components/form/form-wrapper"
 import FlightForm from "@/features/flight/form/flightsForm"
 import { useFlightsOptions } from "./flights-options-context"
 import { useFlightsData } from "./flights-data-context"
 import { useFlightFormAdapter } from "@/features/flight/hooks/use-flight-form-adapter"
-import { MoreVertical, Pencil, Trash2 } from "lucide-react"
+import { MoreVertical, Pencil, Trash2, Loader2 } from "lucide-react"
 import type { Flight } from "@/features/flight/ui/flight-config"
 
 interface FlightItemMenuProps {
@@ -24,8 +33,9 @@ interface FlightItemMenuProps {
 export function FlightItemMenu({ flight }: FlightItemMenuProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [editing, setEditing] = useState(false)
+  const [confirming, setConfirming] = useState(false)
   const {
-    actions: { deleteFlight, triggerRefresh },
+    actions: { deleteFlight, triggerRefresh, isDeleting },
   } = useFlightsData()
 
   const handleEdit = () => {
@@ -33,9 +43,9 @@ export function FlightItemMenu({ flight }: FlightItemMenuProps) {
     setEditing(true)
   }
 
-  const handleDelete = () => {
-    setDropdownOpen(false)
-    void deleteFlight(flight.id)
+  const handleDelete = async () => {
+    setConfirming(false)
+    await deleteFlight(flight.id)
   }
 
   return (
@@ -58,20 +68,42 @@ export function FlightItemMenu({ flight }: FlightItemMenuProps) {
             <Pencil className="size-4" />
             Edit Flight
           </DropdownMenuItem>
-          <ConfirmDialog
-            message="Are you sure you want to delete this flight? This action cannot be undone."
-            onConfirm={handleDelete}
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => {
+              setDropdownOpen(false)
+              setConfirming(true)
+            }}
+            disabled={isDeleting}
           >
-            <DropdownMenuItem
-              variant="destructive"
-              onSelect={(e) => e.preventDefault()}
-            >
+            {isDeleting ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
               <Trash2 className="size-4" />
-              Delete Flight
-            </DropdownMenuItem>
-          </ConfirmDialog>
+            )}
+            {isDeleting ? "Deleting..." : "Delete Flight"}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <AlertDialog open={confirming} onOpenChange={setConfirming}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmation</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this flight? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <EditFlightDialog
         flight={flight}
         open={editing}

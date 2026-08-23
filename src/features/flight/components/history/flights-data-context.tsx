@@ -20,6 +20,7 @@ interface FlightsDataContextValue {
     deleteFlight: (flightId: string) => Promise<void>
     setFilters: ReturnType<typeof useFlightsFilters>['setFilters']
     triggerRefresh: () => void
+    isDeleting: boolean
   }
   meta: {
     trailingQueryKey: string
@@ -40,7 +41,7 @@ export function FlightsDataProvider({
     trailingQueryKey,
     triggerRefresh,
   } = useFlightsFilters()
-  const deleteFlight = useDeleteFlight(triggerRefresh)
+  const { deleteFlight, isPending } = useDeleteFlight(triggerRefresh)
 
   const {
     data: flights,
@@ -77,6 +78,7 @@ export function FlightsDataProvider({
         deleteFlight,
         setFilters,
         triggerRefresh,
+        isDeleting: isPending,
       },
       meta: {
         trailingQueryKey,
@@ -95,6 +97,7 @@ export function FlightsDataProvider({
       deleteFlight,
       setFilters,
       triggerRefresh,
+      isPending,
       trailingQueryKey,
     ],
   )

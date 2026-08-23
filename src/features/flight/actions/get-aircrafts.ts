@@ -11,7 +11,7 @@ export default async function getAircrafts() {
   const { data, error } = await createClient()
     .schema("flight")
     .from("aircrafts")
-    .select("id, icao_code, model")
+    .select()
     .order("icao_code")
 
   if (error) throw new Error(error.message)

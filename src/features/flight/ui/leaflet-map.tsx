@@ -74,8 +74,8 @@ export default function LeafletMap({ routes, airports }: Props) {
             if (!(layer instanceof L.Path)) return
 
             const {
-              airport_a_iata,
-              airport_b_iata,
+              airport_a_code,
+              airport_b_code,
               airport_a_name,
               airport_b_name,
               airport_a_city,
@@ -112,7 +112,7 @@ export default function LeafletMap({ routes, airports }: Props) {
 
             layer.bindPopup(`
               <div style="font-size:14px; line-height:1.5;">
-                <strong>${airport_a_iata} ↔ ${airport_b_iata}</strong><br/>
+                <strong>${airport_a_code} ↔ ${airport_b_code}</strong><br/>
                 ${airport_a_name} (${airport_a_city ?? ''})<br/>
                 ${airport_b_name} (${airport_b_city ?? ''})<br/></br>
 
@@ -140,7 +140,7 @@ export default function LeafletMap({ routes, airports }: Props) {
 
         {airports.map((airport) => (
           <CircleMarker
-            key={airport.id}
+            key={airport.iata_code}
             center={[airport.lat, airport.lng]}
             radius={4}
             pathOptions={{

@@ -7,39 +7,174 @@ export type Json =
   | Json[]
 
 export type Database = {
+  dim: {
+    Tables: {
+      assets: {
+        Row: {
+          asset_class: Database["dim"]["Enums"]["asset_class"]
+          currency_code: string
+          id: number
+          logo_url: string | null
+          name: string
+          ticker: string
+        }
+        Insert: {
+          asset_class: Database["dim"]["Enums"]["asset_class"]
+          currency_code: string
+          id?: number
+          logo_url?: string | null
+          name: string
+          ticker: string
+        }
+        Update: {
+          asset_class?: Database["dim"]["Enums"]["asset_class"]
+          currency_code?: string
+          id?: number
+          logo_url?: string | null
+          name?: string
+          ticker?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assets_currency_code_fkey"
+            columns: ["currency_code"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
+      currencies: {
+        Row: {
+          code: string
+          name: string
+        }
+        Insert: {
+          code: string
+          name: string
+        }
+        Update: {
+          code?: string
+          name?: string
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      asset_class: "cash" | "stock" | "fund" | "equity" | "liability" | "index"
+      cashflow_ops: "deposit" | "withdraw" | "income" | "expense"
+      dnse_order_status:
+        | "Pending"
+        | "PendingNew"
+        | "New"
+        | "PartiallyFilled"
+        | "Filled"
+        | "PendingReplace"
+        | "PendingCancel"
+        | "Canceled"
+        | "Rejected"
+        | "Expired"
+        | "DoneForDay"
+      stock_ops: "buy" | "sell"
+      tx_category: "stock" | "cashflow" | "borrow" | "repay"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+  dwd: {
+    Tables: {
+      tx_entries: {
+        Row: {
+          category: Database["dim"]["Enums"]["tx_category"]
+          created_at: string
+          id: number
+          memo: string
+          user_id: string | null
+        }
+        Insert: {
+          category: Database["dim"]["Enums"]["tx_category"]
+          created_at: string
+          id?: number
+          memo: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: Database["dim"]["Enums"]["tx_category"]
+          created_at?: string
+          id?: number
+          memo?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+  dws: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   flight: {
     Tables: {
       aircrafts: {
         Row: {
           icao_code: string
-          id: string
           model: string | null
         }
         Insert: {
           icao_code: string
-          id?: string
           model?: string | null
         }
         Update: {
           icao_code?: string
-          id?: string
           model?: string | null
         }
         Relationships: []
       }
       airlines: {
         Row: {
-          id: string
+          icao_code: string
           logo: string | null
           name: string
         }
         Insert: {
-          id?: string
+          icao_code: string
           logo?: string | null
           name: string
         }
         Update: {
-          id?: string
+          icao_code?: string
           logo?: string | null
           name?: string
         }
@@ -49,10 +184,8 @@ export type Database = {
         Row: {
           city: string
           country: string
-          geom: unknown
           iata_code: string
           icao_code: string | null
-          id: string
           lat: number
           lng: number
           name: string
@@ -61,10 +194,8 @@ export type Database = {
         Insert: {
           city: string
           country: string
-          geom?: unknown
           iata_code: string
           icao_code?: string | null
-          id?: string
           lat: number
           lng: number
           name: string
@@ -73,10 +204,8 @@ export type Database = {
         Update: {
           city?: string
           country?: string
-          geom?: unknown
           iata_code?: string
           icao_code?: string | null
-          id?: string
           lat?: number
           lng?: number
           name?: string
@@ -86,12 +215,12 @@ export type Database = {
       }
       flights: {
         Row: {
-          aircraft_id: string | null
-          airline_id: string | null
-          arrival_airport_id: string
+          aircraft_type: string | null
+          airline_code: string | null
+          arr_airport_iata: string | null
           arrival_time: string | null
-          departure_airport_id: string
           departure_time: string | null
+          dept_airport_iata: string | null
           flight_number: string | null
           id: string
           notes: string | null
@@ -102,12 +231,12 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
-          aircraft_id?: string | null
-          airline_id?: string | null
-          arrival_airport_id: string
+          aircraft_type?: string | null
+          airline_code?: string | null
+          arr_airport_iata?: string | null
           arrival_time?: string | null
-          departure_airport_id: string
           departure_time?: string | null
+          dept_airport_iata?: string | null
           flight_number?: string | null
           id?: string
           notes?: string | null
@@ -118,12 +247,12 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
-          aircraft_id?: string | null
-          airline_id?: string | null
-          arrival_airport_id?: string
+          aircraft_type?: string | null
+          airline_code?: string | null
+          arr_airport_iata?: string | null
           arrival_time?: string | null
-          departure_airport_id?: string
           departure_time?: string | null
+          dept_airport_iata?: string | null
           flight_number?: string | null
           id?: string
           notes?: string | null
@@ -135,60 +264,88 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "flights_aircrafts_id_fkey"
-            columns: ["aircraft_id"]
+            foreignKeyName: "flights_aircraft_type_fkey"
+            columns: ["aircraft_type"]
             isOneToOne: false
             referencedRelation: "aircrafts"
-            referencedColumns: ["id"]
+            referencedColumns: ["icao_code"]
           },
           {
-            foreignKeyName: "flights_airlines_id_fkey"
-            columns: ["airline_id"]
+            foreignKeyName: "flights_airline_code_fkey"
+            columns: ["airline_code"]
             isOneToOne: false
             referencedRelation: "airlines"
-            referencedColumns: ["id"]
+            referencedColumns: ["icao_code"]
           },
           {
-            foreignKeyName: "flights_arrival_airport_id_fkey"
-            columns: ["arrival_airport_id"]
+            foreignKeyName: "flights_arr_airport_iata_fkey"
+            columns: ["arr_airport_iata"]
             isOneToOne: false
             referencedRelation: "airports"
-            referencedColumns: ["id"]
+            referencedColumns: ["iata_code"]
           },
           {
-            foreignKeyName: "flights_arrival_airport_id_fkey"
-            columns: ["arrival_airport_id"]
+            foreignKeyName: "flights_arr_airport_iata_fkey"
+            columns: ["arr_airport_iata"]
+            isOneToOne: false
+            referencedRelation: "flights_summary"
+            referencedColumns: ["arrival_code"]
+          },
+          {
+            foreignKeyName: "flights_arr_airport_iata_fkey"
+            columns: ["arr_airport_iata"]
+            isOneToOne: false
+            referencedRelation: "flights_summary"
+            referencedColumns: ["departure_code"]
+          },
+          {
+            foreignKeyName: "flights_arr_airport_iata_fkey"
+            columns: ["arr_airport_iata"]
             isOneToOne: false
             referencedRelation: "routes_geojson"
-            referencedColumns: ["airport_a_id"]
+            referencedColumns: ["airport_a_code"]
           },
           {
-            foreignKeyName: "flights_arrival_airport_id_fkey"
-            columns: ["arrival_airport_id"]
+            foreignKeyName: "flights_arr_airport_iata_fkey"
+            columns: ["arr_airport_iata"]
             isOneToOne: false
             referencedRelation: "routes_geojson"
-            referencedColumns: ["airport_b_id"]
+            referencedColumns: ["airport_b_code"]
           },
           {
-            foreignKeyName: "flights_departure_airport_id_fkey"
-            columns: ["departure_airport_id"]
+            foreignKeyName: "flights_dept_airport_iata_fkey"
+            columns: ["dept_airport_iata"]
             isOneToOne: false
             referencedRelation: "airports"
-            referencedColumns: ["id"]
+            referencedColumns: ["iata_code"]
           },
           {
-            foreignKeyName: "flights_departure_airport_id_fkey"
-            columns: ["departure_airport_id"]
+            foreignKeyName: "flights_dept_airport_iata_fkey"
+            columns: ["dept_airport_iata"]
             isOneToOne: false
-            referencedRelation: "routes_geojson"
-            referencedColumns: ["airport_a_id"]
+            referencedRelation: "flights_summary"
+            referencedColumns: ["arrival_code"]
           },
           {
-            foreignKeyName: "flights_departure_airport_id_fkey"
-            columns: ["departure_airport_id"]
+            foreignKeyName: "flights_dept_airport_iata_fkey"
+            columns: ["dept_airport_iata"]
+            isOneToOne: false
+            referencedRelation: "flights_summary"
+            referencedColumns: ["departure_code"]
+          },
+          {
+            foreignKeyName: "flights_dept_airport_iata_fkey"
+            columns: ["dept_airport_iata"]
             isOneToOne: false
             referencedRelation: "routes_geojson"
-            referencedColumns: ["airport_b_id"]
+            referencedColumns: ["airport_a_code"]
+          },
+          {
+            foreignKeyName: "flights_dept_airport_iata_fkey"
+            columns: ["dept_airport_iata"]
+            isOneToOne: false
+            referencedRelation: "routes_geojson"
+            referencedColumns: ["airport_b_code"]
           },
         ]
       }
@@ -234,14 +391,12 @@ export type Database = {
       routes_geojson: {
         Row: {
           airport_a_city: string | null
+          airport_a_code: string | null
           airport_a_country: string | null
-          airport_a_iata: string | null
-          airport_a_id: string | null
           airport_a_name: string | null
           airport_b_city: string | null
+          airport_b_code: string | null
           airport_b_country: string | null
-          airport_b_iata: string | null
-          airport_b_id: string | null
           airport_b_name: string | null
           distance_km: number | null
           flights_by_direction: Json | null
@@ -253,6 +408,10 @@ export type Database = {
       }
     }
     Functions: {
+      haversine_distance_km: {
+        Args: { lat1: number; lat2: number; lng1: number; lng2: number }
+        Returns: number
+      }
       insert_flight_with_timezone: {
         Args: {
           p_aircraft_id?: string
@@ -1316,6 +1475,33 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  dim: {
+    Enums: {
+      asset_class: ["cash", "stock", "fund", "equity", "liability", "index"],
+      cashflow_ops: ["deposit", "withdraw", "income", "expense"],
+      dnse_order_status: [
+        "Pending",
+        "PendingNew",
+        "New",
+        "PartiallyFilled",
+        "Filled",
+        "PendingReplace",
+        "PendingCancel",
+        "Canceled",
+        "Rejected",
+        "Expired",
+        "DoneForDay",
+      ],
+      stock_ops: ["buy", "sell"],
+      tx_category: ["stock", "cashflow", "borrow", "repay"],
+    },
+  },
+  dwd: {
+    Enums: {},
+  },
+  dws: {
+    Enums: {},
+  },
   flight: {
     Enums: {
       seat_position: ["window", "middle", "aisle"],

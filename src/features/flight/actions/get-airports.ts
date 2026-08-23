@@ -11,7 +11,7 @@ export default async function getAirports() {
   const { data, error } = await createClient()
     .schema("flight")
     .from("airports")
-    .select("id, iata_code, name, lat, lng")
+    .select()
 
   if (error) throw new Error(error.message)
   return data as Airport[]

@@ -3,10 +3,8 @@ import type { FeatureCollection, Feature, LineString } from "geojson"
 
 export interface RoutesGeoJSONProperties {
   id: string
-  airport_a_id: string
-  airport_b_id: string
-  airport_a_iata: string
-  airport_b_iata: string
+  airport_a_code: string
+  airport_b_code: string
   airport_a_name: string
   airport_b_name: string
   airport_a_city: string
@@ -27,7 +25,7 @@ export default async function getRoutesGeoJSON() {
   const { data, error } = await createClient()
     .schema("flight")
     .from("routes_geojson")
-    .select("*")
+    .select()
 
   if (error) throw new Error(error.message)
 

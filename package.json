@@ -11,7 +11,8 @@
     "format": "prettier --write . && eslint --fix",
     "check": "prettier --check .",
     "db:types": "npx supabase gen types typescript --local > src/types/database.types.ts",
-    "db:seed": "npx supabase db dump --data-only -s public,flight -f supabase/.seeds/data.sql"
+    "db:remote-dump": "npx supabase db dump --data-only -s public,flight,dim,dwd,dws -f supabase/.seeds/data.sql",
+    "db:local-dump": "npx supabase db dump --data-only --local -s public,flight,dim,dwd,dws -f supabase/.seeds/data.sql"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -19,6 +20,7 @@
     "@supabase/supabase-js": "^2.112.3",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/match-sorter-utils": "latest",
+    "@tanstack/react-db": "^0.3.2",
     "@tanstack/react-form": "latest",
     "@tanstack/react-query": "latest",
     "@tanstack/react-router": "latest",
@@ -57,7 +59,7 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "^9.20.0",
+    "eslint": "^10.9.0",
     "prettier": "^3.8.1",
     "typescript": "^6.0.2",
     "vite": "^8.0.0"
