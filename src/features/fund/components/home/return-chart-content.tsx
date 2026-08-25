@@ -9,7 +9,7 @@ import {
 import { useBenchmarkRolling } from '@/features/fund/hooks/use-dashboard-data'
 import type { BenchmarkRollingView } from '@/features/fund/fund.types'
 import StatusLabel from '@/components/status-label'
-import { colsToRows } from '@/features/fund/utils'
+import { BenchmarkChartConvert } from '@/features/fund/utils'
 import { CartesianGrid, XAxis, YAxis, Area, AreaChart } from 'recharts'
 import {
   ChartContainer,
@@ -33,7 +33,7 @@ function useReturnChartData(
       chartData[dateRange as keyof typeof chartData] ?? chartData.last_1y
     if (!cols?.d) return null
     return {
-      chartTimeframe: colsToRows(cols),
+      chartTimeframe: BenchmarkChartConvert(cols),
       twrYtd: data.twr_ytd,
       twrAll: data.twr_all,
       cagr: data.cagr,

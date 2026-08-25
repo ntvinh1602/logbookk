@@ -9,10 +9,10 @@ export type Json =
 export type Database = {
   dim: {
     Tables: {
-      assets: {
+      asset: {
         Row: {
           asset_class: Database["dim"]["Enums"]["asset_class"]
-          currency_code: string
+          currency_id: number
           id: number
           logo_url: string | null
           name: string
@@ -20,7 +20,7 @@ export type Database = {
         }
         Insert: {
           asset_class: Database["dim"]["Enums"]["asset_class"]
-          currency_code: string
+          currency_id: number
           id?: number
           logo_url?: string | null
           name: string
@@ -28,7 +28,7 @@ export type Database = {
         }
         Update: {
           asset_class?: Database["dim"]["Enums"]["asset_class"]
-          currency_code?: string
+          currency_id?: number
           id?: number
           logo_url?: string | null
           name?: string
@@ -36,26 +36,50 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "assets_currency_code_fkey"
-            columns: ["currency_code"]
+            foreignKeyName: "assets_currency_fkey"
+            columns: ["currency_id"]
             isOneToOne: false
-            referencedRelation: "currencies"
-            referencedColumns: ["code"]
+            referencedRelation: "currency"
+            referencedColumns: ["id"]
           },
         ]
       }
-      currencies: {
+      currency: {
         Row: {
-          code: string
-          name: string
+          id: number
+          iso_code: string
         }
         Insert: {
-          code: string
-          name: string
+          id?: number
+          iso_code: string
         }
         Update: {
-          code?: string
-          name?: string
+          id?: number
+          iso_code?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          avatar: string | null
+          display_name: string | null
+          dnse_account_id: string | null
+          inception_date: string
+          user_id: string
+        }
+        Insert: {
+          avatar?: string | null
+          display_name?: string | null
+          dnse_account_id?: string | null
+          inception_date?: string
+          user_id: string
+        }
+        Update: {
+          avatar?: string | null
+          display_name?: string | null
+          dnse_account_id?: string | null
+          inception_date?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -85,41 +109,304 @@ export type Database = {
       tx_category: "stock" | "cashflow" | "borrow" | "repay"
     }
     CompositeTypes: {
-      [_ in never]: never
+      benchmark_point: {
+        snapshot_date: string | null
+        portfolio_value: number | null
+        vni_value: number | null
+      }
+      equity_point: {
+        snapshot_date: string | null
+        total_cashflow: number | null
+        total_equity: number | null
+      }
     }
   }
   dwd: {
     Tables: {
+      daily_asset_close: {
+        Row: {
+          asset_id: number
+          close: number
+          date: string
+        }
+        Insert: {
+          asset_id: number
+          close: number
+          date: string
+        }
+        Update: {
+          asset_id?: number
+          close?: number
+          date?: string
+        }
+        Relationships: []
+      }
+      daily_fxrate_close: {
+        Row: {
+          close: number
+          currency_id: number
+          date: string
+        }
+        Insert: {
+          close: number
+          currency_id: number
+          date: string
+        }
+        Update: {
+          close?: number
+          currency_id?: number
+          date?: string
+        }
+        Relationships: []
+      }
+      tx_borrow: {
+        Row: {
+          lender: string
+          principal: number
+          rate: number
+          tx_id: number
+        }
+        Insert: {
+          lender: string
+          principal: number
+          rate: number
+          tx_id: number
+        }
+        Update: {
+          lender?: string
+          principal?: number
+          rate?: number
+          tx_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tx_borrow_tx_id_fkey"
+            columns: ["tx_id"]
+            isOneToOne: true
+            referencedRelation: "tx_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tx_cashflow: {
+        Row: {
+          asset_id: number
+          fx_rate: number
+          net_proceed: number
+          operation: Database["dim"]["Enums"]["cashflow_ops"]
+          quantity: number
+          tx_id: number
+        }
+        Insert: {
+          asset_id: number
+          fx_rate?: number
+          net_proceed?: number
+          operation: Database["dim"]["Enums"]["cashflow_ops"]
+          quantity: number
+          tx_id: number
+        }
+        Update: {
+          asset_id?: number
+          fx_rate?: number
+          net_proceed?: number
+          operation?: Database["dim"]["Enums"]["cashflow_ops"]
+          quantity?: number
+          tx_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tx_cashflow_tx_id_fkey"
+            columns: ["tx_id"]
+            isOneToOne: false
+            referencedRelation: "tx_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tx_entries: {
         Row: {
           category: Database["dim"]["Enums"]["tx_category"]
           created_at: string
           id: number
           memo: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           category: Database["dim"]["Enums"]["tx_category"]
-          created_at: string
+          created_at?: string
           id?: number
           memo: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           category?: Database["dim"]["Enums"]["tx_category"]
           created_at?: string
           id?: number
           memo?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
+      }
+      tx_legs: {
+        Row: {
+          asset_id: number
+          credit: number
+          debit: number
+          quantity: number
+          tx_id: number
+        }
+        Insert: {
+          asset_id: number
+          credit: number
+          debit: number
+          quantity: number
+          tx_id: number
+        }
+        Update: {
+          asset_id?: number
+          credit?: number
+          debit?: number
+          quantity?: number
+          tx_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tx_legs_tx_id_fkey"
+            columns: ["tx_id"]
+            isOneToOne: false
+            referencedRelation: "tx_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tx_repay: {
+        Row: {
+          borrow_tx: number
+          interest: number
+          net_proceed: number
+          principal: number
+          tx_id: number
+        }
+        Insert: {
+          borrow_tx: number
+          interest: number
+          net_proceed?: number
+          principal: number
+          tx_id: number
+        }
+        Update: {
+          borrow_tx?: number
+          interest?: number
+          net_proceed?: number
+          principal?: number
+          tx_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tx_repay_borrow_tx_fkey"
+            columns: ["borrow_tx"]
+            isOneToOne: false
+            referencedRelation: "tx_borrow"
+            referencedColumns: ["tx_id"]
+          },
+          {
+            foreignKeyName: "tx_repay_tx_id_fkey"
+            columns: ["tx_id"]
+            isOneToOne: true
+            referencedRelation: "tx_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tx_stock: {
+        Row: {
+          fee: number
+          net_proceed: number
+          operation: Database["dim"]["Enums"]["stock_ops"]
+          price: number
+          quantity: number
+          stock_id: number
+          tax: number
+          tx_id: number
+        }
+        Insert: {
+          fee: number
+          net_proceed?: number
+          operation: Database["dim"]["Enums"]["stock_ops"]
+          price?: number
+          quantity: number
+          stock_id: number
+          tax?: number
+          tx_id: number
+        }
+        Update: {
+          fee?: number
+          net_proceed?: number
+          operation?: Database["dim"]["Enums"]["stock_ops"]
+          price?: number
+          quantity?: number
+          stock_id?: number
+          tax?: number
+          tx_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tx_stock_tx_id_fkey"
+            columns: ["tx_id"]
+            isOneToOne: true
+            referencedRelation: "tx_entries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      add_borrow_event: {
+        Args: {
+          p_created_at?: string
+          p_lender: string
+          p_principal: number
+          p_rate: number
+        }
+        Returns: undefined
+      }
+      add_cashflow_event: {
+        Args: {
+          p_asset_id: number
+          p_created_at?: string
+          p_fx_rate: number
+          p_memo: string
+          p_operation: string
+          p_quantity: number
+          p_user_id?: string
+        }
+        Returns: undefined
+      }
+      add_repay_event: {
+        Args: { p_created_at?: string; p_interest: number; p_repay_tx: number }
+        Returns: undefined
+      }
+      add_stock_event: {
+        Args: {
+          p_created_at?: string
+          p_fee: number
+          p_price: number
+          p_quantity: number
+          p_side: string
+          p_tax?: number
+          p_ticker: string
+          p_user_id?: string
+        }
+        Returns: undefined
+      }
+      process_tx_borrow: { Args: { p_tx_id: number }; Returns: undefined }
+      process_tx_cashflow: { Args: { p_tx_id: number }; Returns: undefined }
+      process_tx_repay: { Args: { p_tx_id: number }; Returns: undefined }
+      process_tx_stock: { Args: { p_tx_id: number }; Returns: undefined }
+      rebuild_ledger: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
@@ -130,13 +417,71 @@ export type Database = {
   }
   dws: {
     Tables: {
-      [_ in never]: never
+      daily_snapshots: {
+        Row: {
+          intraday_cashflow: number | null
+          intraday_fee: number | null
+          intraday_interest: number | null
+          intraday_pnl: number | null
+          intraday_return: number | null
+          intraday_tax: number | null
+          snapshot_date: string
+          total_cashflow: number | null
+          total_equity: number | null
+          user_id: string
+        }
+        Insert: {
+          intraday_cashflow?: number | null
+          intraday_fee?: number | null
+          intraday_interest?: number | null
+          intraday_pnl?: number | null
+          intraday_return?: number | null
+          intraday_tax?: number | null
+          snapshot_date: string
+          total_cashflow?: number | null
+          total_equity?: number | null
+          user_id: string
+        }
+        Update: {
+          intraday_cashflow?: number | null
+          intraday_fee?: number | null
+          intraday_interest?: number | null
+          intraday_pnl?: number | null
+          intraday_return?: number | null
+          intraday_tax?: number | null
+          snapshot_date?: string
+          total_cashflow?: number | null
+          total_equity?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      active_stock_tickers: { Args: never; Returns: Json }
+      calculate_pnl: {
+        Args: { p_end_date: string; p_start_date: string }
+        Returns: number
+      }
+      calculate_twr: {
+        Args: { p_end_date: string; p_start_date: string }
+        Returns: number
+      }
+      get_equity_chart: {
+        Args: { p_end_date: string; p_start_date: string; p_threshold?: number }
+        Returns: Json
+      }
+      get_return_chart: {
+        Args: { p_end_date: string; p_start_date: string; p_threshold?: number }
+        Returns: Json
+      }
+      recompute_daily_snapshots: {
+        Args: { p_from_date?: string; p_user_id?: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
@@ -457,23 +802,128 @@ export type Database = {
       [_ in never]: never
     }
   }
-  graphql_public: {
+  ods: {
     Tables: {
-      [_ in never]: never
+      dnse_m1_close: {
+        Row: {
+          close: number
+          last_updated: string
+          received_at: string
+          symbol: string
+          volume: number
+        }
+        Insert: {
+          close: number
+          last_updated: string
+          received_at?: string
+          symbol: string
+          volume: number
+        }
+        Update: {
+          close?: number
+          last_updated?: string
+          received_at?: string
+          symbol?: string
+          volume?: number
+        }
+        Relationships: []
+      }
+      dnse_order_events: {
+        Row: {
+          account_no: string
+          avg_price: number | null
+          canceled_quantity: number
+          fee: number | null
+          fill_quantity: number
+          id: number
+          leave_quantity: number
+          loan_package_id: number | null
+          modified_date: string
+          order_status: string
+          order_type: string
+          price: number
+          quantity: number
+          received_at: string
+          side: string
+          symbol: string
+          tax: number | null
+        }
+        Insert: {
+          account_no: string
+          avg_price?: number | null
+          canceled_quantity?: number
+          fee?: number | null
+          fill_quantity?: number
+          id: number
+          leave_quantity?: number
+          loan_package_id?: number | null
+          modified_date: string
+          order_status: string
+          order_type: string
+          price: number
+          quantity: number
+          received_at?: string
+          side: string
+          symbol: string
+          tax?: number | null
+        }
+        Update: {
+          account_no?: string
+          avg_price?: number | null
+          canceled_quantity?: number
+          fee?: number | null
+          fill_quantity?: number
+          id?: number
+          leave_quantity?: number
+          loan_package_id?: number | null
+          modified_date?: string
+          order_status?: string
+          order_type?: string
+          price?: number
+          quantity?: number
+          received_at?: string
+          side?: string
+          symbol?: string
+          tax?: number | null
+        }
+        Relationships: []
+      }
+      news_articles: {
+        Row: {
+          excerpt: string | null
+          id: number
+          published_at: string | null
+          related_stocks: string[] | null
+          source: string
+          title: string
+          url: string
+        }
+        Insert: {
+          excerpt?: string | null
+          id?: number
+          published_at?: string | null
+          related_stocks?: string[] | null
+          source: string
+          title: string
+          url: string
+        }
+        Update: {
+          excerpt?: string | null
+          id?: number
+          published_at?: string | null
+          related_stocks?: string[] | null
+          source?: string
+          title?: string
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
@@ -1509,7 +1959,7 @@ export const Constants = {
       ticket_class: ["eco", "biz"],
     },
   },
-  graphql_public: {
+  ods: {
     Enums: {},
   },
   public: {

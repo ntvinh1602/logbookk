@@ -9,7 +9,7 @@ import type {
 } from '@/features/fund/fund.types'
 import { FullChartSkeleton } from '@/components/skeletons/chart-card'
 import StatusLabel from '@/components/status-label'
-import { colsToRows } from '@/features/fund/utils'
+import { BenchmarkChartConvert } from '@/features/fund/utils'
 import { BenchmarkChart } from '../../ui/benchmark-chart'
 
 function useBenchmarkChartData(data: BenchmarkView | undefined) {
@@ -20,7 +20,7 @@ function useBenchmarkChartData(data: BenchmarkView | undefined) {
     return {
       equityReturn: data.equity_ret,
       vnIndexReturn: data.vn_ret,
-      chartRows: colsToRows(returnChart),
+      chartRows: BenchmarkChartConvert(returnChart),
     }
   }, [data])
 }

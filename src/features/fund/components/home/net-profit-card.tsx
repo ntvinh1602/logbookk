@@ -9,14 +9,17 @@ import {
 } from '@/components/ui/card'
 import { cn, compactNum } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import { use1yProfit } from '../../hooks/use-dashboard-data'
+import { useQuery } from '@tanstack/react-query'
+import { dashboard } from '../../queries/dashboard'
 
 export function NetProfitCard() {
-  const { data, error, isLoading } = use1yProfit()
+  const { data, isLoading, error } = useQuery(dashboard.pnlLast12m())
 
-  if (isLoading) return <StatusLabel type="loading"/>
-  if (error) return <StatusLabel type="error"/>
+  if (isLoading) return <StatusLabel type="loading" />
+  if (error) return <StatusLabel type="error" />
   if (!data) return null
+
+  const avgPnl = data / 12
 
   return (
     <Card className="w-full h-full justify-between">
@@ -25,22 +28,20 @@ export function NetProfitCard() {
       </CardHeader>
       <CardContent>
         <CardTitle className="text-3xl font-semibold">
-          {compactNum(data.total_pnl)}
+          {compactNum(data)}
         </CardTitle>
         <Badge
           variant="ghost"
           className={cn(
-            data.avg_profit > 0 ? 'text-positive' : 'text-negative',
-            '-ml-2',
+            avgPnl > 0 ? 'text-positive' : 'text-negative',
+            '-ml-2 pointer-events-none',
           )}
         >
-          avg. monthly profit {compactNum(data.avg_profit)}
+          avg. monthly profit {compactNum(avgPnl)}
         </Badge>
       </CardContent>
       <CardFooter>
-        <CardDescription className="text-xs">
-          Last 12 months
-        </CardDescription>
+        <CardDescription className="text-xs">Last 12 months</CardDescription>
       </CardFooter>
     </Card>
   )
