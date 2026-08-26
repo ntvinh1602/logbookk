@@ -1,6 +1,6 @@
 
 
-import { formatNum, compactNum, pctNum } from "@/lib/utils"
+import { compactNum, pctNum } from "@/lib/utils"
 import { format } from "date-fns"
 import { Areachart } from "@/components/charts/areachart"
 import { Card } from "@/components/ui/card"
@@ -58,7 +58,6 @@ export function BenchmarkChart({
         className="h-full w-full"
         xAxisTickFormatter={xAxisTickFormatter}
         yAxisTickFormatter={(v) => compactNum(v)}
-        tooltipFormatter={(v: number) => formatNum(v, 2)}
         tooltipLabelFormatter={tooltipLabelFormatter}
       />
     </Card>

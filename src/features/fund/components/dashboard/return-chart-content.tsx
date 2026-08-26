@@ -1,15 +1,11 @@
-import { useMemo } from 'react'
-import { useDashboardDateRange } from './chart-range-context'
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
+  CardAction,
 } from '@/components/ui/card'
-import { useBenchmarkRolling } from '@/features/fund/hooks/use-dashboard-data'
-import type { BenchmarkRollingView } from '@/features/fund/fund.types'
 import StatusLabel from '@/components/status-label'
-import { BenchmarkChartConvert } from '@/features/fund/utils'
 import { CartesianGrid, XAxis, YAxis, Area, AreaChart } from 'recharts'
 import {
   ChartContainer,
@@ -20,31 +16,25 @@ import {
 } from '@/components/ui/chart'
 import { format } from 'date-fns'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { compactNum } from '@/lib/utils'
+import { cn, compactNum, pctNum } from '@/lib/utils'
+import { BenchmarkChartConvert } from '../../utils'
+import { Badge } from '@/components/ui/badge'
+import type { BenchmarkChartCols } from '@/features/fund/fund.types'
 
-function useReturnChartData(
-  data: BenchmarkRollingView | null | undefined,
-  dateRange: string,
-) {
-  return useMemo(() => {
-    if (!data) return null
-    const chartData = data.returnchart
-    const cols =
-      chartData[dateRange as keyof typeof chartData] ?? chartData.last_1y
-    if (!cols?.d) return null
-    return {
-      chartTimeframe: BenchmarkChartConvert(cols),
-      twrYtd: data.twr_ytd,
-      twrAll: data.twr_all,
-      cagr: data.cagr,
-    }
-  }, [data, dateRange])
+interface ReturnChartSectionProps {
+  benchmarkChart: BenchmarkChartCols | undefined
+  twrYtd: number | undefined
+  vniYtd: number | undefined
+  isLoading: boolean
 }
 
-export function ReturnChartSection() {
-  const { dateRange } = useDashboardDateRange()
-  const { data, error, isLoading } = useBenchmarkRolling()
-  const chartData = useReturnChartData(data, dateRange)
+export function ReturnChartSection({
+  benchmarkChart,
+  twrYtd,
+  vniYtd,
+  isLoading,
+}: ReturnChartSectionProps) {
+  const isMobile = useIsMobile()
 
   const chartConfig = {
     portfolio_value: { label: 'Equity', color: 'var(--chart-1)' },
@@ -52,23 +42,37 @@ export function ReturnChartSection() {
   }
 
   const dataKeys = Object.keys(chartConfig)
-  const isMobile = useIsMobile()
 
   if (isLoading) return <StatusLabel type="loading" />
-  if (error) return <StatusLabel type="error" />
-  if (!data || !chartData) return <StatusLabel type="empty" />
+
+  const benchmarkChartData = BenchmarkChartConvert(
+    benchmarkChart ?? ({} as BenchmarkChartCols),
+  )
 
   return (
     <Card>
       <CardHeader>
-        <CardDescription>Return</CardDescription>
-        <CardTitle className="text-xl sm:text-2xl flex gap-1 items-baseline">
-          {data.twr_ytd}
-          <span className="text-sm text-muted-foreground">this year</span>
+        <CardDescription>Performance</CardDescription>
+        <CardTitle className="text-2xl flex gap-1 items-baseline">
+          {pctNum(twrYtd ?? 0)}
+          <Badge
+            variant="ghost"
+            className={cn(
+              (twrYtd ?? 0) > (vniYtd ?? 0)
+                ? 'text-positive'
+                : 'text-negative',
+              '-ml-2 pointer-events-none',
+            )}
+          >
+            vs VN-Index {pctNum(vniYtd ?? 0)}
+          </Badge>
         </CardTitle>
+        <CardAction className="flex flex-col">
+          <span className="text-xs text-muted-foreground">This year</span>
+        </CardAction>
       </CardHeader>
       <ChartContainer config={chartConfig}>
-        <AreaChart data={chartData.chartTimeframe} margin={{}}>
+        <AreaChart data={benchmarkChartData} margin={{}}>
           <defs>
             {dataKeys.map((key) => (
               <linearGradient
@@ -100,14 +104,10 @@ export function ReturnChartSection() {
               scale: 'time',
               domain: ['dataMin', 'dataMax'],
             }}
-            tickLine={true}
+            tickLine={false}
             axisLine={false}
             tickMargin={8}
-            tickFormatter={(ms: number) =>
-              ['last_1y', 'all'].includes(dateRange)
-                ? format(new Date(ms), 'MMM yyyy')
-                : format(new Date(ms), 'dd MMM')
-            }
+            tickFormatter={(ms: number) => format(new Date(ms), 'MMM')}
             interval="preserveEnd"
             minTickGap={60}
           />
@@ -137,7 +137,7 @@ export function ReturnChartSection() {
                 <ChartTooltipContent
                   indicator="line"
                   labelFormatter={(_label, payload) => {
-                    const ms = payload?.[0]?.payload?.t as number | undefined
+                    const ms = payload[0]?.payload.t as number | undefined
                     if (ms == null) return ''
                     return format(new Date(ms), 'yyyy-MM-dd')
                   }}

@@ -2,10 +2,18 @@ import { cn, compactNum, formatNum } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { TinyAreaChart } from '@/components/charts/tiny-area-chart'
 import { MoveDownLeft, MoveUpRight } from 'lucide-react'
-import { useQueries } from '@tanstack/react-query'
-import { dashboard } from '../../queries/dashboard'
 import StatusLabel from '@/components/status-label'
 import { EquityChartConvert } from '../../utils'
+import type { BSheetView, EquityChartCols } from '@/features/fund/fund.types'
+
+interface EquityCardProps {
+  balanceSheet: BSheetView[] | undefined
+  equity: number | undefined
+  pnlMtd: number | undefined
+  pnlYtd: number | undefined
+  equityChart: EquityChartCols | undefined
+  isLoading: boolean
+}
 
 function PnlBadge({
   value,
@@ -28,38 +36,26 @@ function PnlBadge({
   )
 }
 
-export function EquityCard() {
-  const results = useQueries({
-    queries: [
-      dashboard.totalEquity(),
-      dashboard.pnlMtd(),
-      dashboard.pnlYtd(),
-      dashboard.equityChart(),
-    ],
-  })
-
-  const [equityQuery, pnlMtdQuery, pnlYtdQuery, equityChartQuery] = results
-
-  const isLoading = results.some((query) => query.isPending)
-  const isError = results.some((query) => query.isError)
-
+export function EquityCard({
+  balanceSheet,
+  equity,
+  pnlMtd,
+  pnlYtd,
+  equityChart,
+  isLoading,
+}: EquityCardProps) {
   if (isLoading) return <StatusLabel type="loading" />
-  if (isError) return <StatusLabel type="error" />
-
-  const equity = equityQuery.data || 0
-  const pnlMtd = pnlMtdQuery.data || 0
-  const pnlYtd = pnlYtdQuery.data || 0
-  const equityChart = equityChartQuery.data || {}
+  if (!balanceSheet) return null
 
   return (
-    <div className="h-full w-full flex rounded-xl border bg-card items-center">
+    <div className="h-50 w-full flex rounded-xl border bg-card items-center">
       <div className="flex flex-col h-full justify-between py-6 pl-6">
         <p className="text-muted-foreground text-sm">Equity</p>
-        <p className="text-3xl font-semibold">{formatNum(equity)}</p>
+        <p className="text-3xl font-semibold">{formatNum(equity ?? 0)}</p>
 
         <div className="-ml-2 flex flex-col">
-          <PnlBadge value={pnlMtd} period="month" />
-          <PnlBadge value={pnlYtd} period="year" />
+          <PnlBadge value={pnlMtd ?? 0} period="month" />
+          <PnlBadge value={pnlYtd ?? 0} period="year" />
         </div>
       </div>
 
@@ -67,7 +63,7 @@ export function EquityCard() {
         <div className="absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-card to-transparent" />
 
         <TinyAreaChart
-          data={EquityChartConvert(equityChart)}
+          data={EquityChartConvert(equityChart ?? ({} as EquityChartCols))}
           config={{
             net_equity: {
               label: 'Equity',

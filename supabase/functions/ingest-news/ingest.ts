@@ -1,6 +1,6 @@
-import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2"
-import { NEWS_SOURCES, type NormalizedArticle } from "./sources.ts"
-import { extractTickers } from "./utils.ts"
+import type { SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { NEWS_SOURCES, type NormalizedArticle } from './sources.ts'
+import { extractTickers } from './utils.ts'
 
 export async function ingestAllSources(supabase: SupabaseClient) {
   let totalInserted = 0
@@ -43,16 +43,22 @@ export async function ingestAllSources(supabase: SupabaseClient) {
     if (allTickers.size === 0) continue
 
     const { data: assets } = await supabase
-      .from("assets")
-      .select("id, ticker")
-      .in("ticker", [...allTickers])
-      .eq("asset_class", "stock")
+      .schema('dim')
+      .from('asset')
+      .select('id, ticker')
+      .in('ticker', [...allTickers])
+      .eq('asset_class', 'stock')
 
     if (!assets?.length) continue
 
-    const validTickers = new Set(assets.map((a: { id: string; ticker: string }) => a.ticker))
+    const validTickers = new Set(
+      assets.map((a: { id: string; ticker: string }) => a.ticker),
+    )
 
-    const articlesWithTickers: { article: NormalizedArticle; tickers: string[] }[] = []
+    const articlesWithTickers: {
+      article: NormalizedArticle
+      tickers: string[]
+    }[] = []
 
     for (const [url, { article, tickers }] of articleTickerMap.entries()) {
       const matched = tickers.filter((t) => validTickers.has(t))
@@ -68,9 +74,10 @@ export async function ingestAllSources(supabase: SupabaseClient) {
     }))
 
     const { data: insertedArticles, error } = await supabase
-      .from("news_articles")
-      .upsert(upsertRows, { onConflict: "url" })
-      .select("id")
+      .schema('ods')
+      .from('news_articles')
+      .upsert(upsertRows, { onConflict: 'url' })
+      .select('id')
 
     if (error || !insertedArticles?.length) continue
 

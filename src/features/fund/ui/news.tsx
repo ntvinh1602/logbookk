@@ -83,7 +83,7 @@ export function NewsWidget({ allNews, portfolioNews }: NewsWidgetProps) {
   const articles = selected === 'all' ? allNews : portfolioNews
 
   return (
-    <Card className="h-120">
+    <Card className="h-140">
       <CardHeader>
         <CardTitle>News</CardTitle>
         <CardAction>

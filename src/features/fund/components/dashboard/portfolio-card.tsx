@@ -1,4 +1,3 @@
-import { useBalanceSheet } from '@/features/fund/hooks/use-dashboard-data'
 import {
   Card,
   CardAction,
@@ -8,27 +7,33 @@ import {
 } from '@/components/ui/card'
 import StatusLabel from '@/components/status-label'
 import { ButtonGroup } from '@/components/ui/button-group'
-import { ItemGroup } from '@/components/ui/item'
-import { Progress } from '@/components/ui/progress'
 import {
+  ItemGroup,
   Item,
   ItemMedia,
   ItemContent,
   ItemTitle,
   ItemDescription,
 } from '@/components/ui/item'
+import { Progress } from '@/components/ui/progress'
 import { cn, compactNum, formatNum, pctNum } from '@/lib/utils'
-import { usePortfolioMetrics } from '../../hooks/use-portfolio-metrics'
+import type { BSheetView } from '@/features/fund/fund.types'
 
-export function PortfolioCard() {
-  const { data, error, isLoading } = useBalanceSheet()
-  const metrics = usePortfolioMetrics(data)
+interface PortfolioCardProps {
+  balanceSheet: BSheetView[]
+  totalAsset: number
+  isLoading: boolean
+}
 
+export function PortfolioCard({
+  balanceSheet,
+  totalAsset,
+  isLoading,
+}: PortfolioCardProps) {
   if (isLoading) return <StatusLabel type="loading" />
-  if (error) return <StatusLabel type="error" />
-  if (!data || !metrics) return <StatusLabel type="error" />
+  if (!balanceSheet) return null
 
-  const sortedStocks = [...data]
+  const sortedStocks = [...balanceSheet]
     .filter((a) => a.asset_class == 'stock' || a.asset_class == 'fund')
     .sort((a, b) => b.total_value - a.total_value)
 
@@ -74,7 +79,7 @@ export function PortfolioCard() {
                     </ItemDescription>
                   </ItemContent>
                   <Progress
-                    value={(bs.total_value / metrics.totalAsset) * 100}
+                    value={(bs.total_value / totalAsset) * 100}
                     className="w-full"
                   />
                 </Item>

@@ -1,5 +1,11 @@
 import { createClient } from '@/lib/supabase/client'
-import type { BSheetView, EquityChartCols } from '../fund.types'
+import type {
+  BenchmarkChartCols,
+  BSheetView,
+  EquityChartCols,
+  NewsArticle,
+  ProfitChartCols,
+} from '../fund.types'
 
 export async function getCurrentEquity() {
   const supabase = createClient()
@@ -72,6 +78,34 @@ export async function getEquityChart(startDate: string, endDate: string) {
   return data ?? ({} as EquityChartCols)
 }
 
+export async function getBenchmarkChart(startDate: string, endDate: string) {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.schema('dws').rpc('get_return_chart', {
+    p_start_date: startDate,
+    p_end_date: endDate,
+  })
+
+  if (error) throw new Error(error.message)
+
+  return data ?? ({} as BenchmarkChartCols)
+}
+
+export async function getMonthlyPnlChart(startDate: string, endDate: string) {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dws')
+    .rpc('get_monthly_pnl_chart', {
+      p_start_date: startDate,
+      p_end_date: endDate,
+    })
+
+  if (error) throw new Error(error.message)
+
+  return data ?? ({} as ProfitChartCols)
+}
+
 export async function getBalanceSheet() {
   const supabase = createClient()
 
@@ -114,4 +148,21 @@ export async function getBalanceSheet() {
   })
 
   return bsData
+}
+
+export async function getNews() {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('ods')
+    .from('news_articles')
+    .select('id, title, url, source, excerpt, published_at, related_stocks')
+    .order('published_at', { ascending: false })
+
+  if (error) throw new Error(error.message)
+
+  return (data?.map((article) => ({
+    ...article,
+    tickers: article.related_stocks ?? [],
+  })) ?? []) as NewsArticle[]
 }
