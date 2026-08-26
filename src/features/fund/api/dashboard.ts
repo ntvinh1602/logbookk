@@ -110,7 +110,7 @@ export async function getBalanceSheet() {
   const supabase = createClient()
 
   const { data, error } = await supabase
-    .schema('public')
+    .schema('dws')
     .from('balance_sheet')
     .select()
 
