@@ -8,14 +8,16 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import { Link, useNavigate } from '@tanstack/react-router'
+import { Moon, Sun } from 'lucide-react'
 
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import logo from '@/assets/logo.webp'
-import { LogOut } from 'lucide-react'
+import { useTheme } from '@/components/theme-provider'
 
 export function NavBar() {
   const navigate = useNavigate()
+  const { theme, toggleTheme } = useTheme()
   const handleLogout = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
@@ -23,7 +25,7 @@ export function NavBar() {
   }
   return (
     <header className="sticky top-0 z-50 flex h-14 backdrop-blur-xl bg-transparent">
-      <div className="flex w-full max-w-screen-2xl mx-auto items-center backdrop-blur-xl bg-transparent gap-4">
+      <div className="flex w-full max-w-screen-xl mx-auto items-center backdrop-blur-xl bg-transparent gap-4">
         <img src={logo} alt="Logo" className="h-10 w-auto" />
         <NavigationMenu>
           <NavigationMenuList>
@@ -108,10 +110,14 @@ export function NavBar() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <Button variant="ghost" onClick={handleLogout} className="ml-auto">
-          <LogOut />
-          Log out
-        </Button>
+        <div className="ml-auto flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={toggleTheme}>
+            {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
+          </Button>
+          <Button variant="ghost" onClick={handleLogout}>
+            Log out
+          </Button>
+        </div>
       </div>
     </header>
   )

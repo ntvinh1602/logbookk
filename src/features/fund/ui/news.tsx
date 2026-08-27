@@ -34,11 +34,11 @@ function ArticleList({ articles }: { articles: NewsArticle[] }) {
   if (articles.length == 0) return <StatusLabel type="empty" />
 
   return (
-    <ItemGroup className="gap-0 pr-2">
-      {articles.map((article) => (
+    <ItemGroup className="gap-0 pt-2">
+      {articles.map((article, index) => (
         <div>
-          <ItemSeparator />
-          <Item key={article.id} size="default" className="px-0 py-1">
+          {index > 0 && <ItemSeparator />}
+          <Item key={article.id} className="py-2">
             <Button
               variant="secondary"
               className="self-start min-w-12 text-xs pointer-events-none"
@@ -58,11 +58,11 @@ function ArticleList({ articles }: { articles: NewsArticle[] }) {
                 {article.excerpt}
               </ItemDescription>
               <ItemDescription className="-ml-2">
-                <Badge variant="ghost" className='pointer-events-none'>
+                <Badge variant="ghost" className="pointer-events-none">
                   <Newspaper />
                   {article.source}
                 </Badge>
-                <Badge variant="ghost" className='pointer-events-none'>
+                <Badge variant="ghost" className="pointer-events-none">
                   <Clock />
                   {now &&
                     formatDistance(new Date(article.published_at), now, {
@@ -83,8 +83,8 @@ export function NewsWidget({ allNews, portfolioNews }: NewsWidgetProps) {
   const articles = selected === 'all' ? allNews : portfolioNews
 
   return (
-    <Card className="h-140">
-      <CardHeader>
+    <Card className="h-140 pb-0 gap-0">
+      <CardHeader className="border-b">
         <CardTitle>News</CardTitle>
         <CardAction>
           <ToggleGroup
@@ -99,7 +99,7 @@ export function NewsWidget({ allNews, portfolioNews }: NewsWidgetProps) {
           </ToggleGroup>
         </CardAction>
       </CardHeader>
-      <CardContent className="flex min-h-0 flex-1 flex-col">
+      <CardContent className="px-0 flex min-h-0 flex-1 flex-col">
         <ScrollArea className="h-full w-full">
           <ArticleList articles={articles} />
         </ScrollArea>

@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import StatusLabel from '@/components/status-label'
-import { ButtonGroup } from '@/components/ui/button-group'
 import {
   ItemGroup,
   Item,
@@ -14,10 +13,13 @@ import {
   ItemContent,
   ItemTitle,
   ItemDescription,
+  ItemSeparator,
 } from '@/components/ui/item'
 import { Progress } from '@/components/ui/progress'
 import { cn, compactNum, formatNum, pctNum } from '@/lib/utils'
 import type { BSheetView } from '@/features/fund/fund.types'
+import { Button } from '@/components/ui/button'
+import { ListOrdered } from 'lucide-react'
 
 interface PortfolioCardProps {
   balanceSheet: BSheetView[]
@@ -38,19 +40,22 @@ export function PortfolioCard({
     .sort((a, b) => b.total_value - a.total_value)
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className='gap-0 pb-3'>
+      <CardHeader className="border-b">
         <CardTitle>Portfolio</CardTitle>
         <CardAction>
-          <ButtonGroup></ButtonGroup>
+          <Button variant="outline" size="icon-sm">
+            <ListOrdered/>
+          </Button>
         </CardAction>
       </CardHeader>
-      <CardContent>
+      <CardContent className='px-0'>
         {sortedStocks.length > 0 ? (
-          <ItemGroup className="gap-0">
-            {sortedStocks.map((bs) => (
+          <ItemGroup className="gap-0 pt-2">
+            {sortedStocks.map((bs, index) => (
               <div className="flex flex-col w-full">
-                <Item className="px-0">
+                {index > 0 && <ItemSeparator />}
+                <Item className="py-2">
                   <ItemMedia variant="image">
                     {bs.logo_url && (
                       <img
