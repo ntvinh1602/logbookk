@@ -10,7 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
-import { Route as ProtectedIndexRouteImport } from './routes/_protected/index'
+import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as AuthConfirmRouteImport } from './routes/auth/confirm'
 import { Route as AuthErrorRouteImport } from './routes/auth/error'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
@@ -20,7 +20,6 @@ import { Route as AuthSignUpSuccessRouteImport } from './routes/auth/sign-up-suc
 import { Route as AuthUpdatePasswordRouteImport } from './routes/auth/update-password'
 import { Route as ProtectedFlightHistoryRouteImport } from './routes/_protected/flight/history'
 import { Route as ProtectedFlightMapRouteImport } from './routes/_protected/flight/map'
-import { Route as ProtectedFundBalanceSheetRouteImport } from './routes/_protected/fund/balance-sheet'
 import { Route as ProtectedFundEventsRouteImport } from './routes/_protected/fund/events'
 import { Route as ProtectedFundPerformanceRouteImport } from './routes/_protected/fund/performance'
 
@@ -28,9 +27,9 @@ const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
   id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const AuthConfirmRoute = AuthConfirmRouteImport.update({
@@ -78,12 +77,6 @@ const ProtectedFlightMapRoute = ProtectedFlightMapRouteImport.update({
   path: '/flight/map',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
-const ProtectedFundBalanceSheetRoute =
-  ProtectedFundBalanceSheetRouteImport.update({
-    id: '/fund/balance-sheet',
-    path: '/fund/balance-sheet',
-    getParentRoute: () => ProtectedRouteRoute,
-  } as any)
 const ProtectedFundEventsRoute = ProtectedFundEventsRouteImport.update({
   id: '/fund/events',
   path: '/fund/events',
@@ -97,7 +90,8 @@ const ProtectedFundPerformanceRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof ProtectedIndexRoute
+  '/': typeof ProtectedRouteRouteWithChildren
+  '/dashboard': typeof ProtectedDashboardRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/auth/error': typeof AuthErrorRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -107,11 +101,12 @@ export interface FileRoutesByFullPath {
   '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/flight/history': typeof ProtectedFlightHistoryRoute
   '/flight/map': typeof ProtectedFlightMapRoute
-  '/fund/balance-sheet': typeof ProtectedFundBalanceSheetRoute
   '/fund/events': typeof ProtectedFundEventsRoute
   '/fund/performance': typeof ProtectedFundPerformanceRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof ProtectedRouteRouteWithChildren
+  '/dashboard': typeof ProtectedDashboardRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/auth/error': typeof AuthErrorRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -119,16 +114,15 @@ export interface FileRoutesByTo {
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/sign-up-success': typeof AuthSignUpSuccessRoute
   '/auth/update-password': typeof AuthUpdatePasswordRoute
-  '/': typeof ProtectedIndexRoute
   '/flight/history': typeof ProtectedFlightHistoryRoute
   '/flight/map': typeof ProtectedFlightMapRoute
-  '/fund/balance-sheet': typeof ProtectedFundBalanceSheetRoute
   '/fund/events': typeof ProtectedFundEventsRoute
   '/fund/performance': typeof ProtectedFundPerformanceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_protected': typeof ProtectedRouteRouteWithChildren
+  '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/auth/confirm': typeof AuthConfirmRoute
   '/auth/error': typeof AuthErrorRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -136,10 +130,8 @@ export interface FileRoutesById {
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/sign-up-success': typeof AuthSignUpSuccessRoute
   '/auth/update-password': typeof AuthUpdatePasswordRoute
-  '/_protected/': typeof ProtectedIndexRoute
   '/_protected/flight/history': typeof ProtectedFlightHistoryRoute
   '/_protected/flight/map': typeof ProtectedFlightMapRoute
-  '/_protected/fund/balance-sheet': typeof ProtectedFundBalanceSheetRoute
   '/_protected/fund/events': typeof ProtectedFundEventsRoute
   '/_protected/fund/performance': typeof ProtectedFundPerformanceRoute
 }
@@ -147,6 +139,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/dashboard'
     | '/auth/confirm'
     | '/auth/error'
     | '/auth/forgot-password'
@@ -156,11 +149,12 @@ export interface FileRouteTypes {
     | '/auth/update-password'
     | '/flight/history'
     | '/flight/map'
-    | '/fund/balance-sheet'
     | '/fund/events'
     | '/fund/performance'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
+    | '/dashboard'
     | '/auth/confirm'
     | '/auth/error'
     | '/auth/forgot-password'
@@ -168,15 +162,14 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/auth/sign-up-success'
     | '/auth/update-password'
-    | '/'
     | '/flight/history'
     | '/flight/map'
-    | '/fund/balance-sheet'
     | '/fund/events'
     | '/fund/performance'
   id:
     | '__root__'
     | '/_protected'
+    | '/_protected/dashboard'
     | '/auth/confirm'
     | '/auth/error'
     | '/auth/forgot-password'
@@ -184,10 +177,8 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/auth/sign-up-success'
     | '/auth/update-password'
-    | '/_protected/'
     | '/_protected/flight/history'
     | '/_protected/flight/map'
-    | '/_protected/fund/balance-sheet'
     | '/_protected/fund/events'
     | '/_protected/fund/performance'
   fileRoutesById: FileRoutesById
@@ -212,11 +203,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_protected/': {
-      id: '/_protected/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof ProtectedIndexRouteImport
+    '/_protected/dashboard': {
+      id: '/_protected/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof ProtectedDashboardRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
     '/auth/confirm': {
@@ -282,13 +273,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedFlightMapRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
-    '/_protected/fund/balance-sheet': {
-      id: '/_protected/fund/balance-sheet'
-      path: '/fund/balance-sheet'
-      fullPath: '/fund/balance-sheet'
-      preLoaderRoute: typeof ProtectedFundBalanceSheetRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
     '/_protected/fund/events': {
       id: '/_protected/fund/events'
       path: '/fund/events'
@@ -307,19 +291,17 @@ declare module '@tanstack/react-router' {
 }
 
 interface ProtectedRouteRouteChildren {
-  ProtectedIndexRoute: typeof ProtectedIndexRoute
+  ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedFlightHistoryRoute: typeof ProtectedFlightHistoryRoute
   ProtectedFlightMapRoute: typeof ProtectedFlightMapRoute
-  ProtectedFundBalanceSheetRoute: typeof ProtectedFundBalanceSheetRoute
   ProtectedFundEventsRoute: typeof ProtectedFundEventsRoute
   ProtectedFundPerformanceRoute: typeof ProtectedFundPerformanceRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
-  ProtectedIndexRoute: ProtectedIndexRoute,
+  ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedFlightHistoryRoute: ProtectedFlightHistoryRoute,
   ProtectedFlightMapRoute: ProtectedFlightMapRoute,
-  ProtectedFundBalanceSheetRoute: ProtectedFundBalanceSheetRoute,
   ProtectedFundEventsRoute: ProtectedFundEventsRoute,
   ProtectedFundPerformanceRoute: ProtectedFundPerformanceRoute,
 }

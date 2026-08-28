@@ -34,10 +34,10 @@ function ArticleList({ articles }: { articles: NewsArticle[] }) {
   if (articles.length == 0) return <StatusLabel type="empty" />
 
   return (
-    <ItemGroup className="gap-0 pt-2">
-      {articles.map((article, index) => (
+    <ItemGroup className="gap-0">
+      {articles.map((article) => (
         <div>
-          {index > 0 && <ItemSeparator />}
+          <ItemSeparator />
           <Item key={article.id} className="py-2">
             <Button
               variant="secondary"
@@ -83,8 +83,8 @@ export function NewsWidget({ allNews, portfolioNews }: NewsWidgetProps) {
   const articles = selected === 'all' ? allNews : portfolioNews
 
   return (
-    <Card className="h-140 pb-0 gap-0">
-      <CardHeader className="border-b">
+    <Card className="h-140 pb-0 gap-3">
+      <CardHeader>
         <CardTitle>News</CardTitle>
         <CardAction>
           <ToggleGroup

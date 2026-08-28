@@ -10,6 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 
 const compactFormatter = new Intl.NumberFormat("en-US", {
   notation: "compact",
+  maximumSignificantDigits: 3,
   compactDisplay: "short",
 })
 const percentageFormatter = new Intl.NumberFormat("en-US", {

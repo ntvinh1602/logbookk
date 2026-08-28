@@ -50,7 +50,7 @@ export function ReturnChartSection({
   )
 
   return (
-    <Card>
+    <Card className="gap-3 pb-0">
       <CardHeader>
         <CardDescription>Performance</CardDescription>
         <CardTitle className="text-2xl flex gap-1 items-baseline">
@@ -58,9 +58,7 @@ export function ReturnChartSection({
           <Badge
             variant="ghost"
             className={cn(
-              (twrYtd ?? 0) > (vniYtd ?? 0)
-                ? 'text-positive'
-                : 'text-negative',
+              (twrYtd ?? 0) > (vniYtd ?? 0) ? 'text-positive' : 'text-negative',
               '-ml-2 pointer-events-none',
             )}
           >
@@ -106,7 +104,7 @@ export function ReturnChartSection({
             }}
             tickLine={false}
             axisLine={false}
-            tickMargin={8}
+            tickMargin={4}
             tickFormatter={(ms: number) => format(new Date(ms), 'MMM')}
             interval="preserveEnd"
             minTickGap={60}
@@ -157,7 +155,10 @@ export function ReturnChartSection({
               dot={false}
             />
           ))}
-          <ChartLegend content={<ChartLegendContent />} />
+          <ChartLegend
+            content={<ChartLegendContent className="p-2" />}
+            position="insideBottomLeft"
+          />
         </AreaChart>
       </ChartContainer>
     </Card>

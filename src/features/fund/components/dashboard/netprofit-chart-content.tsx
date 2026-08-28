@@ -57,7 +57,7 @@ export function NetProfitChartSection({
   const dataKeys = Object.keys(chartConfig)
 
   return (
-    <Card>
+    <Card className='gap-3 pb-0'>
       <CardHeader>
         <CardDescription>Net Profit</CardDescription>
         <CardTitle className="text-xl sm:text-2xl flex gap-1 items-baseline">
@@ -88,7 +88,7 @@ export function NetProfitChartSection({
             dataKey="snapshot_date"
             type="category"
             tickLine={false}
-            tickMargin={8}
+            tickMargin={4}
             axisLine={false}
             tickFormatter={(v: string) => format(new Date(v), 'MMM')}
             interval="preserveEnd"
@@ -110,7 +110,10 @@ export function NetProfitChartSection({
           {!isMobile && (
             <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
           )}
-          <ChartLegend content={<ChartLegendContent />} />
+          <ChartLegend
+            content={<ChartLegendContent className="p-2" />}
+            position="insideBottomLeft"
+          />
           {dataKeys.map((key) => (
             <Bar
               key={key}

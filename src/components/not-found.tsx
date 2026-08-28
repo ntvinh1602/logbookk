@@ -24,7 +24,7 @@ export default function NotFound() {
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button nativeButton={false} render={<Link to="/">Go back home</Link>} />
+        <Button nativeButton={false} render={<Link to="/dashboard">Go back home</Link>} />
       </EmptyContent>
     </Empty>
   )

@@ -25,57 +25,33 @@ export function NavBar() {
   }
   return (
     <header className="sticky top-0 z-50 flex h-14 backdrop-blur-xl bg-transparent">
-      <div className="flex w-full max-w-screen-xl mx-auto items-center backdrop-blur-xl bg-transparent gap-4">
+      <div className="flex w-full max-w-screen-2xl mx-auto items-center backdrop-blur-xl bg-transparent gap-4">
         <img src={logo} alt="Logo" className="h-10 w-auto" />
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuLink
-                render={<Link to="/" />}
+                render={<Link to="/dashboard" />}
                 className={navigationMenuTriggerStyle()}
               >
-                Home
+                Dashboard
               </NavigationMenuLink>
             </NavigationMenuItem>
-
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Investment</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[200px]">
-                  <li>
-                    <NavigationMenuLink
-                      render={
-                        <Link
-                          to="/fund/balance-sheet"
-                          className="flex-row items-center gap-2"
-                        >
-                          Balance Sheet
-                        </Link>
-                      }
-                    />
-                    <NavigationMenuLink
-                      render={
-                        <Link
-                          to="/fund/performance"
-                          className="flex-row items-center gap-2"
-                        >
-                          Performance
-                        </Link>
-                      }
-                    />
-                    <NavigationMenuLink
-                      render={
-                        <Link
-                          to="/fund/events"
-                          className="flex-row items-center gap-2"
-                        >
-                          Events
-                        </Link>
-                      }
-                    />
-                  </li>
-                </ul>
-              </NavigationMenuContent>
+              <NavigationMenuLink
+                render={<Link to="/fund/performance" />}
+                className={navigationMenuTriggerStyle()}
+              >
+                Performance
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                render={<Link to="/fund/events" />}
+                className={navigationMenuTriggerStyle()}
+              >
+                Events
+              </NavigationMenuLink>
             </NavigationMenuItem>
 
             <NavigationMenuItem>

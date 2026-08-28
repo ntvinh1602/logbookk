@@ -2,6 +2,7 @@ import {
   Card,
   CardAction,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -20,18 +21,33 @@ import { cn, compactNum, formatNum, pctNum } from '@/lib/utils'
 import type { BSheetView } from '@/features/fund/fund.types'
 import { Button } from '@/components/ui/button'
 import { ListOrdered } from 'lucide-react'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
+import { useState } from 'react'
+import BalanceSheet from '@/features/fund/ui/balance-sheet'
+import { Badge } from '@/components/ui/badge'
 
 interface PortfolioCardProps {
   balanceSheet: BSheetView[]
-  totalAsset: number
+  equity: number
+  liability: number
   isLoading: boolean
 }
 
 export function PortfolioCard({
   balanceSheet,
-  totalAsset,
+  equity,
+  liability,
   isLoading,
 }: PortfolioCardProps) {
+  const [open, setOpen] = useState(false)
+
   if (isLoading) return <StatusLabel type="loading" />
   if (!balanceSheet) return null
 
@@ -39,23 +55,59 @@ export function PortfolioCard({
     .filter((a) => a.asset_class == 'stock' || a.asset_class == 'fund')
     .sort((a, b) => b.total_value - a.total_value)
 
+  const asset = equity + liability
+  const leverage = (asset - equity) / equity
+
   return (
-    <Card className='gap-0 pb-3'>
-      <CardHeader className="border-b">
-        <CardTitle>Portfolio</CardTitle>
+    <Card className="pb-3 gap-3">
+      <CardHeader>
+        <CardDescription>Assets</CardDescription>
+        <CardTitle className="text-2xl gap-2 flex items-baseline">
+          {compactNum(asset)}
+          <Badge
+            variant="ghost"
+            className={cn(
+              leverage < 1 ? 'text-positive' : 'text-negative',
+              '-ml-2 pointer-events-none',
+            )}
+          >
+            {formatNum(leverage, 2)} leverage
+          </Badge>
+        </CardTitle>
         <CardAction>
-          <Button variant="outline" size="icon-sm">
-            <ListOrdered/>
-          </Button>
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger
+              render={
+                <Button variant="outline" size="sm">
+                  <ListOrdered />
+                  Balance
+                </Button>
+              }
+            />
+            <SheetContent side="right" showCloseButton={false}>
+              <SheetHeader>
+                <SheetTitle>Balance Sheet</SheetTitle>
+                <SheetDescription>
+                  A breakdown of your assets, liabilities, and equity.
+                </SheetDescription>
+              </SheetHeader>
+              <BalanceSheet
+                bsData={balanceSheet}
+                asset={asset}
+                liability={liability}
+                equity={equity}
+              />
+            </SheetContent>
+          </Sheet>
         </CardAction>
       </CardHeader>
-      <CardContent className='px-0'>
+      <CardContent className="px-0">
         {sortedStocks.length > 0 ? (
-          <ItemGroup className="gap-0 pt-2">
-            {sortedStocks.map((bs, index) => (
-              <div className="flex flex-col w-full">
-                {index > 0 && <ItemSeparator />}
-                <Item className="py-2">
+          <ItemGroup className="gap-0">
+            {sortedStocks.map((bs) => (
+              <div>
+                <ItemSeparator />
+                <Item>
                   <ItemMedia variant="image">
                     {bs.logo_url && (
                       <img
@@ -84,7 +136,7 @@ export function PortfolioCard({
                     </ItemDescription>
                   </ItemContent>
                   <Progress
-                    value={(bs.total_value / totalAsset) * 100}
+                    value={(bs.total_value / asset) * 100}
                     className="w-full"
                   />
                 </Item>
