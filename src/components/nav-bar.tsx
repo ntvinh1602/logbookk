@@ -31,7 +31,7 @@ export function NavBar() {
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuLink
-                render={<Link to="/dashboard" />}
+                render={<Link to="/fund/dashboard" />}
                 className={navigationMenuTriggerStyle()}
               >
                 Dashboard
@@ -39,7 +39,7 @@ export function NavBar() {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink
-                render={<Link to="/fund/performance" />}
+                render={<Link to="/fund/performance/$year" params={{ year: new Date().getFullYear().toString() }} />}
                 className={navigationMenuTriggerStyle()}
               >
                 Performance

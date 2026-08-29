@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/chart'
 import { format } from 'date-fns'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { cn, compactNum, pctNum } from '@/lib/utils'
+import { cn, formatNum, pctNum } from '@/lib/utils'
 import { BenchmarkChartConvert } from '../../utils'
 import { Badge } from '@/components/ui/badge'
 import type { BenchmarkChartCols } from '@/features/fund/fund.types'
@@ -52,7 +52,7 @@ export function ReturnChartSection({
   return (
     <Card className="gap-3 pb-0">
       <CardHeader>
-        <CardDescription>Performance</CardDescription>
+        <CardDescription>Return</CardDescription>
         <CardTitle className="text-2xl flex gap-1 items-baseline">
           {pctNum(twrYtd ?? 0)}
           <Badge
@@ -94,7 +94,7 @@ export function ReturnChartSection({
               </linearGradient>
             ))}
           </defs>
-          <CartesianGrid vertical={false} />
+          <CartesianGrid vertical={false} horizontal={false} />
           <XAxis
             dataKey={'t'}
             {...{
@@ -104,7 +104,7 @@ export function ReturnChartSection({
             }}
             tickLine={false}
             axisLine={false}
-            tickMargin={4}
+            tickMargin={0}
             tickFormatter={(ms: number) => format(new Date(ms), 'MMM')}
             interval="preserveEnd"
             minTickGap={60}
@@ -114,17 +114,16 @@ export function ReturnChartSection({
             tickLine={false}
             axisLine={false}
             tickMargin={0}
-            tickFormatter={(v) => compactNum(v)}
+            tickFormatter={(v) => formatNum(v)}
             domain={[
-              (dataMin: number) => Number(dataMin) * 1,
-              (dataMax: number) => Number(dataMax) * 1.05,
+              (dataMin: number) => Number(dataMin),
+              (dataMax: number) => Number(dataMax) * 1.02,
             ]}
             allowDataOverflow={false}
             scale="linear"
             mirror={true}
             tick={{
-              fill: 'var(--muted-foreground)',
-              className: 'opacity-80',
+              fontSize: 10,
             }}
           />
 
@@ -134,10 +133,10 @@ export function ReturnChartSection({
               content={
                 <ChartTooltipContent
                   indicator="line"
+                  labelKey="t"
                   labelFormatter={(_label, payload) => {
-                    const ms = payload[0]?.payload.t as number | undefined
-                    if (ms == null) return ''
-                    return format(new Date(ms), 'yyyy-MM-dd')
+                    const date = payload?.[0]?.payload?.t as string | undefined
+                    return date ? format(new Date(date), 'dd MMM yyyy') : ''
                   }}
                 />
               }

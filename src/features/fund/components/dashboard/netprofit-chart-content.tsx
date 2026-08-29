@@ -57,7 +57,7 @@ export function NetProfitChartSection({
   const dataKeys = Object.keys(chartConfig)
 
   return (
-    <Card className='gap-3 pb-0'>
+    <Card className="gap-3 pb-0">
       <CardHeader>
         <CardDescription>Net Profit</CardDescription>
         <CardTitle className="text-xl sm:text-2xl flex gap-1 items-baseline">
@@ -77,18 +77,13 @@ export function NetProfitChartSection({
         </CardAction>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full">
-        <BarChart
-          accessibilityLayer
-          data={chartRows}
-          layout="horizontal"
-          margin={{}}
-        >
-          <CartesianGrid vertical={false} />
+        <BarChart data={chartRows} layout="horizontal" margin={{}}>
+          <CartesianGrid vertical={false} horizontal={false} />
           <XAxis
             dataKey="snapshot_date"
             type="category"
             tickLine={false}
-            tickMargin={4}
+            tickMargin={0}
             axisLine={false}
             tickFormatter={(v: string) => format(new Date(v), 'MMM')}
             interval="preserveEnd"
@@ -103,12 +98,23 @@ export function NetProfitChartSection({
             mirror={true}
             tickFormatter={(v) => compactNum(v)}
             tick={{
-              fill: 'var(--muted-foreground)',
-              className: 'opacity-80',
+              fontSize: 10,
             }}
           />
           {!isMobile && (
-            <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
+            <ChartTooltip
+              cursor={true}
+              content={
+                <ChartTooltipContent
+                  labelKey="snapshot_date"
+                  labelFormatter={(_label, payload) => {
+                    const date = payload?.[0]?.payload?.snapshot_date as
+                      string | undefined
+                    return date ? format(new Date(date), 'MMM yyyy') : ''
+                  }}
+                />
+              }
+            />
           )}
           <ChartLegend
             content={<ChartLegendContent className="p-2" />}

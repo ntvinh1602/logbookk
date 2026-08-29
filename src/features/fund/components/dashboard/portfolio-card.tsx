@@ -13,8 +13,7 @@ import {
   ItemMedia,
   ItemContent,
   ItemTitle,
-  ItemDescription,
-  ItemSeparator,
+  ItemDescription
 } from '@/components/ui/item'
 import { Progress } from '@/components/ui/progress'
 import { cn, compactNum, formatNum, pctNum } from '@/lib/utils'
@@ -101,13 +100,12 @@ export function PortfolioCard({
           </Sheet>
         </CardAction>
       </CardHeader>
-      <CardContent className="px-0">
+      <CardContent>
         {sortedStocks.length > 0 ? (
           <ItemGroup className="gap-0">
             {sortedStocks.map((bs) => (
               <div>
-                <ItemSeparator />
-                <Item>
+                <Item className='px-0'>
                   <ItemMedia variant="image">
                     {bs.logo_url && (
                       <img

@@ -1,10 +1,11 @@
 
 
-import { createContext, useState, use } from "react"
+import { createContext, use } from "react"
+import { useNavigate } from "@tanstack/react-router"
 
 interface PerformanceYearContextValue {
-  year: number | null
-  setYear: React.Dispatch<React.SetStateAction<number | null>>
+  year: number
+  setYear: (year: number) => void
   startYear: number
 }
 
@@ -14,15 +15,21 @@ const PerformanceYearContext = createContext<PerformanceYearContextValue | null>
 
 export function PerformanceYearProvider({
   startYear,
+  initialYear,
   children,
 }: {
   startYear: number
+  initialYear: number
   children: React.ReactNode
 }) {
-  const [year, setYear] = useState<number | null>(() => new Date().getFullYear())
+  const navigate = useNavigate()
+
+  const setYear = (year: number) => {
+    navigate({ to: '/fund/performance/$year', params: { year: year.toString() } })
+  }
 
   return (
-    <PerformanceYearContext.Provider value={{ year, setYear, startYear }}>
+    <PerformanceYearContext.Provider value={{ year: initialYear, setYear, startYear }}>
       {children}
     </PerformanceYearContext.Provider>
   )

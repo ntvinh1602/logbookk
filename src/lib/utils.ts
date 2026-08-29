@@ -1,5 +1,5 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -8,30 +8,39 @@ export function cn(...inputs: ClassValue[]) {
 // Creating Intl.NumberFormat is expensive — cache by config key to avoid
 // re-instantiating on every call (these are called on every render tick).
 
-const compactFormatter = new Intl.NumberFormat("en-US", {
-  notation: "compact",
-  maximumSignificantDigits: 3,
-  compactDisplay: "short",
-})
-const percentageFormatter = new Intl.NumberFormat("en-US", {
-  style: "percent",
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-})
 const numberFormatters = [
-  new Intl.NumberFormat("en-US", {
+  new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }),
-  new Intl.NumberFormat("en-US", {
+  new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
   }),
-  new Intl.NumberFormat("en-US", {
+  new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }),
 ]
+
+const compactFormatter = [
+  new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumSignificantDigits: 3,
+    compactDisplay: 'short',
+  }),
+  new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumSignificantDigits: 4,
+    compactDisplay: 'short',
+  }),
+]
+
+const percentageFormatter = new Intl.NumberFormat('en-US', {
+  style: 'percent',
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+})
 
 // Format number based decimal places
 export function formatNum(amount: number, fractionDigits: 0 | 1 | 2 = 0) {
@@ -39,8 +48,8 @@ export function formatNum(amount: number, fractionDigits: 0 | 1 | 2 = 0) {
 }
 
 // Compact number format (10K, 10M etc.)
-export function compactNum(amount: number) {
-  return compactFormatter.format(amount)
+export function compactNum(amount: number, significant: 3 | 4 = 3) {
+  return compactFormatter[significant - 3].format(amount)
 }
 
 // Percentage number format

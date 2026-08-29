@@ -1,13 +1,27 @@
-
-
-import { useMemo } from "react"
-import { usePerformanceYear } from "./year-context"
-import { useStockPnl } from "@/features/fund/hooks/use-performance-data"
-import { AssetItemTopStock } from "@/features/fund/ui/asset-item"
-import StatusLabel from "@/components/status-label"
-import type { StockPnl } from "@/features/fund/fund.types"
-import { ItemGroup } from "@/components/ui/item"
-import { TopStocks } from "../../ui/top-stocks"
+import { useMemo } from 'react'
+import { usePerformanceYear } from './year-context'
+import { useStockPnl } from '@/features/fund/hooks/use-performance-data'
+import {
+  Item,
+  ItemMedia,
+  ItemContent,
+  ItemTitle,
+  ItemDescription,
+  ItemSeparator,
+} from '@/components/ui/item'
+import StatusLabel from '@/components/status-label'
+import type { StockPnl } from '@/features/fund/fund.types'
+import { ItemGroup } from '@/components/ui/item'
+import { formatNum } from '@/lib/utils'
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardAction,
+  CardContent,
+} from '@/components/ui/card'
+import { Trophy } from 'lucide-react'
 
 function useTopPerformers(data: StockPnl[] | undefined) {
   return useMemo(() => {
@@ -21,46 +35,45 @@ export function TopStocksSection() {
   const { data, error, isLoading } = useStockPnl(year)
   const topPerformers = useTopPerformers(data)
 
-  if (isLoading)
-    return (
-      <TopStocks>
-        <StatusLabel
-          type="loading"
-          title="Counting pennies..."
-          description={`Looking for your best performed stocks in ${year != 9999 ? year : "all time"}`}
-        />
-      </TopStocks>
-    )
-  if (error)
-    return (
-      <TopStocks>
-        <StatusLabel type="error" description={error.message} />
-      </TopStocks>
-    )
-  if (!data || !topPerformers)
-    return (
-      <TopStocks>
-        <StatusLabel
-          type="empty"
-          title="No stocks available"
-          description="No realized loss or profit recorded in the period"
-        />
-      </TopStocks>
-    )
+  if (isLoading) return <StatusLabel type="loading" />
+  if (error) return <StatusLabel type="error" description={error.message} />
+  if (!data || !topPerformers) return <StatusLabel type="empty" />
 
   return (
-    <TopStocks>
-      <ItemGroup className="gap-2">
-        {topPerformers.map((stock) => (
-          <AssetItemTopStock
-            key={stock.ticker}
-            ticker={stock.ticker}
-            name={stock.name}
-            logo_url={stock.logo_url}
-            total_value={stock.total_pnl}
-          />
-        ))}
-      </ItemGroup>
-    </TopStocks>
+    <Card className='pb-4'>
+      <CardHeader>
+        <CardTitle>Top Performers</CardTitle>
+        <CardDescription>Based on total realized P/L</CardDescription>
+        <CardAction>
+          <Trophy className="stroke-1" />
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <ItemGroup className="gap-0">
+          {topPerformers.map((stock) => (
+            <div>
+              <ItemSeparator />
+              <Item size="xs" className='px-0'>
+                <ItemMedia variant="image">
+                  {stock.logo_url && (
+                    <img
+                      src={`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/stock/${stock.logo_url}`}
+                      loading="eager"
+                    />
+                  )}
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>{stock.name}</ItemTitle>
+                  <ItemDescription>{stock.ticker}</ItemDescription>
+                </ItemContent>
+                <ItemContent className="items-end">
+                  <ItemTitle>{formatNum(stock.total_pnl)}</ItemTitle>
+                </ItemContent>
+              </Item>
+            </div>
+          ))}
+        </ItemGroup>
+      </CardContent>
+    </Card>
   )
 }

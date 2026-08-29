@@ -1,4 +1,4 @@
-import { SelectAllEnabled } from '@/components/filter/select-options'
+import { SingleOptionSelect } from '@/components/filter/select-options'
 import { BenchmarkSection } from '@/features/fund/components/performance/benchmark-section'
 import { CashflowSection } from '@/features/fund/components/performance/cashflow-section'
 import { ExpenseChartSection } from '@/features/fund/components/performance/expense-chart-section'
@@ -11,7 +11,7 @@ import {
 import { createFileRoute } from '@tanstack/react-router'
 import { Calendar } from 'lucide-react'
 
-export const Route = createFileRoute('/_protected/fund/performance')({
+export const Route = createFileRoute('/_protected/fund/performance/$year')({
   component: RouteComponent,
 })
 
@@ -29,31 +29,32 @@ function PerformanceContent() {
   }))
 
   return (
-    <div className="flex flex-col max-w-screen-xl mx-auto py-15 gap-8">
+    <div className="flex flex-col max-w-screen-2xl mx-auto py-15 gap-8">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Annual Performance</h1>
         <div className="w-50">
-          <SelectAllEnabled
+          <SingleOptionSelect
             icon={Calendar}
             placeholder="Select year"
-            value={year?.toString() ?? null}
-            onValueChange={(v) => setYear(v === null ? null : Number(v))}
-            allLabel="All Years"
+            value={year.toString()}
+            onValueChange={(v) => setYear(Number(v))}
             options={yearOptions}
           />
         </div>
       </div>
 
-      <div className="grid xl:grid-cols-2 gap-4 xl:gap-6">
-        <div className="flex flex-col flex-1 gap-4">
-          <NetProfitSection />
-          <BenchmarkSection />
+      <div className="flex gap-4">
+        <div className="flex flex-col w-1/3 gap-4">
+          <CashflowSection />
+          <ExpenseChartSection />
         </div>
-        <div className="flex flex-col gap-4">
-          <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 h-fit">
-            <CashflowSection />
-            <ExpenseChartSection />
-          </div>
+
+        <div className="flex flex-col w-1/3 gap-4">
+          <BenchmarkSection />
+          <NetProfitSection />
+        </div>
+
+        <div className="flex flex-col w-1/3 gap-4">
           <TopStocksSection />
         </div>
       </div>
@@ -62,8 +63,10 @@ function PerformanceContent() {
 }
 
 function RouteComponent() {
+  const { year } = Route.useParams()
+
   return (
-    <PerformanceYearProvider startYear={2021}>
+    <PerformanceYearProvider startYear={2021} initialYear={Number(year)}>
       <PerformanceContent />
     </PerformanceYearProvider>
   )

@@ -13,7 +13,7 @@ import { useQueries } from '@tanstack/react-query'
 import { dashboard } from '@/features/fund/queries/dashboard'
 import { TradingViewTickerTape } from '@/lib/trading-view/ticker-tape'
 
-export const Route = createFileRoute('/_protected/dashboard')({
+export const Route = createFileRoute('/_protected/fund/dashboard')({
   component: Home,
 })
 
