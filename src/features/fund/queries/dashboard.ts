@@ -17,7 +17,16 @@ import {
   getPnl,
   getTwr,
   getVniReturn,
-} from '@/features/fund/api/dashboard'
+} from '@/features/fund/api/supabase'
+
+const today = new Date()
+const formatDate = (date: Date) => format(date, 'yyyy-MM-dd')
+
+const now = formatDate(today)
+const last1y = formatDate(subYears(today, 1))
+const last12m = formatDate(startOfMonth(subMonths(today, 11)))
+const mtd = formatDate(startOfMonth(today))
+const ytd = formatDate(startOfYear(today))
 
 export const dashboardKeys = {
   all: ['dashboard'] as const,
@@ -42,10 +51,6 @@ export const dashboardKeys = {
   vniYtd: () => [...dashboardKeys.vni(), 'ytd'] as const,
 }
 
-const today = () => new Date()
-
-const formatDate = (date: Date) => format(date, 'yyyy-MM-dd')
-
 export const dashboard = {
   totalEquity: () =>
     queryOptions({
@@ -62,28 +67,19 @@ export const dashboard = {
   equityChart: () =>
     queryOptions({
       queryKey: dashboardKeys.equityChart(),
-      queryFn: () =>
-        getEquityChart(formatDate(subYears(today(), 1)), formatDate(today())),
+      queryFn: () => getEquityChart(last1y, now),
     }),
 
   benchmarkChart: () =>
     queryOptions({
       queryKey: dashboardKeys.benchmarkChart(),
-      queryFn: () =>
-        getBenchmarkChart(
-          formatDate(subYears(today(), 1)),
-          formatDate(today()),
-        ),
+      queryFn: () => getBenchmarkChart(last1y, now),
     }),
 
   monthlyPnlChart: () =>
     queryOptions({
       queryKey: dashboardKeys.monthlyPnlChart(),
-      queryFn: () =>
-        getMonthlyPnlChart(
-          formatDate(startOfMonth(subMonths(today(), 11))),
-          formatDate(today()),
-        ),
+      queryFn: () => getMonthlyPnlChart(last12m, now),
     }),
 
   news: () =>
@@ -95,45 +91,36 @@ export const dashboard = {
   pnlMtd: () =>
     queryOptions({
       queryKey: dashboardKeys.pnlMtd(),
-      queryFn: () =>
-        getPnl(formatDate(startOfMonth(today())), formatDate(today())),
+      queryFn: () => getPnl(mtd, now),
     }),
 
   pnlYtd: () =>
     queryOptions({
       queryKey: dashboardKeys.pnlYtd(),
-      queryFn: () =>
-        getPnl(formatDate(startOfYear(today())), formatDate(today())),
+      queryFn: () => getPnl(ytd, now),
     }),
 
   pnlLast12m: () =>
     queryOptions({
       queryKey: dashboardKeys.pnlLast12m(),
-      queryFn: () =>
-        getPnl(
-          formatDate(startOfMonth(subMonths(today(), 11))),
-          formatDate(today()),
-        ),
+      queryFn: () => getPnl(last12m, now),
     }),
 
   twrYtd: () =>
     queryOptions({
       queryKey: dashboardKeys.twrYtd(),
-      queryFn: () =>
-        getTwr(formatDate(startOfYear(today())), formatDate(today())),
+      queryFn: () => getTwr(ytd, now),
     }),
 
   twrLast1y: () =>
     queryOptions({
       queryKey: dashboardKeys.twrLast1y(),
-      queryFn: () =>
-        getTwr(formatDate(subYears(today(), 1)), formatDate(today())),
+      queryFn: () => getTwr(last1y, now),
     }),
 
   vniYtd: () =>
     queryOptions({
       queryKey: dashboardKeys.vniYtd(),
-      queryFn: () =>
-        getVniReturn(formatDate(startOfYear(today())), formatDate(today())),
+      queryFn: () => getVniReturn(ytd, now),
     }),
 }

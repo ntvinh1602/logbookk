@@ -458,7 +458,32 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      balance_sheet: {
+        Row: {
+          asset_class: Database["dim"]["Enums"]["asset_class"] | null
+          cost_basis: number | null
+          currency_id: number | null
+          logo_url: string | null
+          mkt_price: number | null
+          name: string | null
+          net_profit: number | null
+          quantity: number | null
+          ticker: string | null
+          total_value: number | null
+        }
+        Relationships: []
+      }
+      outstanding_debts: {
+        Row: {
+          accrued_interest: number | null
+          created_at: string | null
+          lender: string | null
+          principal: number | null
+          rate: number | null
+          tx_id: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       active_stock_tickers: { Args: never; Returns: Json }
@@ -470,8 +495,23 @@ export type Database = {
         Args: { p_end_date: string; p_start_date: string }
         Returns: number
       }
+      calculate_vnindex_return: {
+        Args: { p_end_date: string; p_start_date: string }
+        Returns: number
+      }
+      get_cashflow_summary: {
+        Args: { p_end_date: string; p_start_date: string }
+        Returns: {
+          deposits: number
+          withdrawals: number
+        }[]
+      }
       get_equity_chart: {
         Args: { p_end_date: string; p_start_date: string; p_threshold?: number }
+        Returns: Json
+      }
+      get_monthly_pnl_chart: {
+        Args: { p_end_date: string; p_start_date: string }
         Returns: Json
       }
       get_return_chart: {

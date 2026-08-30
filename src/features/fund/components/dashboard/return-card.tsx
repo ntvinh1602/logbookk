@@ -28,7 +28,7 @@ interface ReturnChartSectionProps {
   isLoading: boolean
 }
 
-export function ReturnChartSection({
+export function ReturnCard({
   benchmarkChart,
   twrYtd,
   vniYtd,

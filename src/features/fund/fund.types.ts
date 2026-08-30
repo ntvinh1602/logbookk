@@ -39,30 +39,6 @@ export type BenchmarkChartCols = {
   v: number[] // vni_value (normalized, 2dp)
 }
 
-export type EquityRollingView = {
-  pnl_ytd: number
-  pnl_mtd: number
-  total_equity: number
-  equitychart: {
-    last_1y: EquityChartCols
-    last_3m: EquityChartCols
-    last_6m: EquityChartCols
-    all: EquityChartCols
-  }
-}
-
-export type BenchmarkRollingView = {
-  twr_ytd: number
-  twr_all: number
-  cagr: number
-  returnchart: {
-    last_1y: BenchmarkChartCols
-    last_3m: BenchmarkChartCols
-    last_6m: BenchmarkChartCols
-    all: BenchmarkChartCols
-  }
-}
-
 export interface BSheetView {
   ticker: string
   name: string
@@ -85,8 +61,14 @@ export type NewsArticle = {
   tickers?: string[]
 }
 
-export interface ChartMeta {
+export interface CashflowSummary {
+  deposits: number
+  withdrawals: number
+}
+
+export interface TopStocks {
+  ticker: string
   name: string
-  stat1: string | null
-  stat2: string | null
+  logo_url: string
+  total_pnl: number
 }

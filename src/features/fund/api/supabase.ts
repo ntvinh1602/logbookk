@@ -2,9 +2,11 @@ import { createClient } from '@/lib/supabase/client'
 import type {
   BenchmarkChartCols,
   BSheetView,
+  CashflowSummary,
   EquityChartCols,
   NewsArticle,
   ProfitChartCols,
+  StockPnl,
 } from '../fund.types'
 
 export async function getCurrentEquity() {
@@ -165,4 +167,45 @@ export async function getNews() {
     ...article,
     tickers: article.related_stocks ?? [],
   })) ?? []) as NewsArticle[]
+}
+
+export async function getCashflow(
+  startDate: string,
+  endDate: string,
+): Promise<CashflowSummary> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dws')
+    .rpc('get_cashflow_summary', {
+      p_start_date: startDate,
+      p_end_date: endDate,
+    })
+
+  if (error) throw new Error(error.message)
+
+  const row = data?.[0]
+
+  return {
+    deposits: Number(row?.deposits ?? 0),
+    withdrawals: Number(row?.withdrawals ?? 0),
+  }
+}
+
+export async function getTopStocks(
+  startDate: string,
+  endDate: string,
+): Promise<StockPnl[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dws')
+    .rpc('get_top_stocks', {
+      p_start_date: startDate,
+      p_end_date: endDate,
+    })
+
+  if (error) throw new Error(error.message)
+
+  return (data ?? []) as StockPnl[]
 }

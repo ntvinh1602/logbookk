@@ -25,7 +25,7 @@ interface NetProfitChartSectionProps {
   isLoading: boolean
 }
 
-export function NetProfitChartSection({
+export function NetProfitCard({
   monthlyPnlChart,
   isLoading,
 }: NetProfitChartSectionProps) {

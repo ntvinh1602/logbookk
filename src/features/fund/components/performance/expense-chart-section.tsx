@@ -1,6 +1,3 @@
-import { useMemo } from 'react'
-import { usePerformanceYear } from './year-context'
-import { useProfit } from '@/features/fund/hooks/use-performance-data'
 import type { ProfitChartCols } from '@/features/fund/fund.types'
 import StatusLabel from '@/components/status-label'
 import {
@@ -22,34 +19,22 @@ import {
 const sum = (xs: number[] | null) =>
   (xs ?? []).reduce((acc, n) => acc + (n || 0), 0)
 
-function useExpenseChartData(profitChart: ProfitChartCols | undefined): {
-  totalExpenses: number
-  tax: number
-  fee: number
-  interest: number
-} | null {
-  return useMemo(() => {
-    if (!profitChart) return null
-    const tax = -sum(profitChart.tax)
-    const fee = -sum(profitChart.fee)
-    const interest = -sum(profitChart.interest)
-    const totalExpenses = tax + fee + interest
-    return { totalExpenses, tax, fee, interest }
-  }, [profitChart])
+interface ExpenseChartSectionProps {
+  monthlyPnlChart: ProfitChartCols | undefined
+  isLoading: boolean
 }
 
-export function ExpenseChartSection() {
-  const { year } = usePerformanceYear()
-  const { data, error, isLoading } = useProfit(year)
-  const expenseData = useExpenseChartData(
-    data?.profit_chart as ProfitChartCols | undefined,
-  )
-
+export function ExpenseChartSection({
+  monthlyPnlChart,
+  isLoading,
+}: ExpenseChartSectionProps) {
   if (isLoading) return <StatusLabel type="loading" />
-  if (error) return <StatusLabel type="error" description={error.message} />
-  if (!data || !expenseData) return null
+  if (!monthlyPnlChart) return null
 
-  const { totalExpenses, tax, fee, interest } = expenseData
+  const tax = -sum(monthlyPnlChart.tax)
+  const fee = -sum(monthlyPnlChart.fee)
+  const interest = -sum(monthlyPnlChart.interest)
+  const totalExpenses = tax + fee + interest
 
   const expenses = [
     { label: 'Tax', value: tax },
@@ -66,7 +51,7 @@ export function ExpenseChartSection() {
           <Receipt className="stroke-1" />
         </CardAction>
       </CardHeader>
-      <CardContent className='flex flex-col gap-6'>
+      <CardContent className="flex flex-col gap-6">
         {expenses.map(({ label, value }) => (
           <Progress
             key={label}

@@ -1,10 +1,4 @@
-import { useMemo } from 'react'
-import { usePerformanceYear } from './year-context'
-import { useBenchmark } from '@/features/fund/hooks/use-performance-data'
-import type {
-  BenchmarkView,
-  BenchmarkChartCols,
-} from '@/features/fund/fund.types'
+import type { BenchmarkChartCols } from '@/features/fund/fund.types'
 import { BenchmarkChartConvert } from '@/features/fund/utils'
 import {
   Card,
@@ -27,20 +21,19 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { cn, formatNum, pctNum } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 
-function useBenchmarkChartData(data: BenchmarkView | undefined) {
-  return useMemo(() => {
-    if (!data) return null
-    const returnChart = data.return_chart as BenchmarkChartCols | null
-    if (!returnChart?.d) return null
-    return {
-      equityReturn: data.equity_ret,
-      vnIndexReturn: data.vn_ret,
-      chartRows: BenchmarkChartConvert(returnChart),
-    }
-  }, [data])
+interface BenchmarkSectionProps {
+  benchmarkChart: BenchmarkChartCols | undefined
+  twrYear: number | undefined
+  vniYear: number | undefined
+  isLoading: boolean
 }
 
-export function BenchmarkSection() {
+export function BenchmarkSection({
+  benchmarkChart,
+  twrYear,
+  vniYear,
+  isLoading,
+}: BenchmarkSectionProps) {
   const isMobile = useIsMobile()
 
   const chartConfig = {
@@ -50,32 +43,30 @@ export function BenchmarkSection() {
 
   const dataKeys = Object.keys(chartConfig)
 
-  const { year } = usePerformanceYear()
-  const { data, error, isLoading } = useBenchmark(year)
-  const chartData = useBenchmarkChartData(data)
-
   if (isLoading) return <StatusLabel type="loading" />
-  if (error) return <StatusLabel type="error" />
-  if (!data || !chartData) return null
 
-  const alpha = chartData.equityReturn - chartData.vnIndexReturn
+  const chartData = BenchmarkChartConvert(
+    benchmarkChart ?? ({} as BenchmarkChartCols),
+  )
+
+  if (!benchmarkChart || !chartData.length) return null
+
+  const alpha = (twrYear ?? 0) - (vniYear ?? 0)
 
   return (
     <Card className="gap-3 pb-0">
       <CardHeader>
         <CardDescription>Return</CardDescription>
         <CardTitle className="text-2xl flex gap-1 items-baseline">
-          {pctNum(chartData.equityReturn ?? 0)}
+          {pctNum(twrYear ?? 0)}
           <Badge
             variant="ghost"
             className={cn(
-              (chartData.equityReturn ?? 0) > (chartData.vnIndexReturn ?? 0)
-                ? 'text-positive'
-                : 'text-negative',
+              (twrYear ?? 0) > (vniYear ?? 0) ? 'text-positive' : 'text-negative',
               '-ml-2 pointer-events-none',
             )}
           >
-            vs VN-Index {pctNum(chartData.vnIndexReturn ?? 0)}
+            vs VN-Index {pctNum(vniYear ?? 0)}
           </Badge>
         </CardTitle>
         <CardAction className="flex flex-col justify-end items-end">
@@ -92,7 +83,7 @@ export function BenchmarkSection() {
         </CardAction>
       </CardHeader>
       <ChartContainer config={chartConfig}>
-        <AreaChart data={chartData.chartRows} margin={{}}>
+        <AreaChart data={chartData} margin={{}}>
           <defs>
             {dataKeys.map((key) => (
               <linearGradient

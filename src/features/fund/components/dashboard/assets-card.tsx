@@ -13,7 +13,7 @@ import {
   ItemMedia,
   ItemContent,
   ItemTitle,
-  ItemDescription
+  ItemDescription,
 } from '@/components/ui/item'
 import { Progress } from '@/components/ui/progress'
 import { cn, compactNum, formatNum, pctNum } from '@/lib/utils'
@@ -39,7 +39,7 @@ interface PortfolioCardProps {
   isLoading: boolean
 }
 
-export function PortfolioCard({
+export function AssetCard({
   balanceSheet,
   equity,
   liability,
@@ -62,7 +62,7 @@ export function PortfolioCard({
       <CardHeader>
         <CardDescription>Assets</CardDescription>
         <CardTitle className="text-2xl gap-2 flex items-baseline">
-          {compactNum(asset)}
+          {compactNum(asset, 4)}
           <Badge
             variant="ghost"
             className={cn(
@@ -104,41 +104,39 @@ export function PortfolioCard({
         {sortedStocks.length > 0 ? (
           <ItemGroup className="gap-0">
             {sortedStocks.map((bs) => (
-              <div>
-                <Item className='px-0'>
-                  <ItemMedia variant="image">
-                    {bs.logo_url && (
-                      <img
-                        src={`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/stock/${bs.logo_url}`}
-                        loading="eager"
-                      />
+              <Item className="px-0">
+                <ItemMedia variant="image">
+                  {bs.logo_url && (
+                    <img
+                      src={`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/stock/${bs.logo_url}`}
+                      loading="eager"
+                    />
+                  )}
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>{bs.name}</ItemTitle>
+                  <ItemDescription className="text-xs">
+                    {`${formatNum(bs.quantity)} ${bs.currency_code == 'VND' ? 'units' : bs.currency_code} @ ${formatNum(bs.mkt_price)} `}
+                  </ItemDescription>
+                </ItemContent>
+                <ItemContent className="items-end">
+                  <ItemDescription>
+                    {formatNum(Math.max(bs.total_value, 0))}
+                  </ItemDescription>
+                  <ItemDescription
+                    className={cn(
+                      bs.net_profit > 0 ? 'text-positive' : 'text-negative',
+                      'text-xs',
                     )}
-                  </ItemMedia>
-                  <ItemContent>
-                    <ItemTitle>{bs.name}</ItemTitle>
-                    <ItemDescription className="text-xs">
-                      {`${formatNum(bs.quantity)} ${bs.currency_code == 'VND' ? 'units' : bs.currency_code} @ ${formatNum(bs.mkt_price)} `}
-                    </ItemDescription>
-                  </ItemContent>
-                  <ItemContent className="items-end">
-                    <ItemDescription>
-                      {formatNum(Math.max(bs.total_value, 0))}
-                    </ItemDescription>
-                    <ItemDescription
-                      className={cn(
-                        bs.net_profit > 0 ? 'text-positive' : 'text-negative',
-                        'text-xs',
-                      )}
-                    >
-                      {`${compactNum(bs.net_profit)} (${pctNum(bs.net_profit / bs.total_value)})`}
-                    </ItemDescription>
-                  </ItemContent>
-                  <Progress
-                    value={(bs.total_value / asset) * 100}
-                    className="w-full"
-                  />
-                </Item>
-              </div>
+                  >
+                    {`${compactNum(bs.net_profit)} (${pctNum(bs.net_profit / bs.total_value)})`}
+                  </ItemDescription>
+                </ItemContent>
+                <Progress
+                  value={(bs.total_value / asset) * 100}
+                  className="w-full"
+                />
+              </Item>
             ))}
           </ItemGroup>
         ) : (

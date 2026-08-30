@@ -1,7 +1,4 @@
-import { useMemo } from 'react'
-import { usePerformanceYear } from './year-context'
-import { useProfit } from '@/features/fund/hooks/use-performance-data'
-import type { ProfitView, ProfitChartCols } from '@/features/fund/fund.types'
+import type { ProfitChartCols } from '@/features/fund/fund.types'
 import StatusLabel from '@/components/status-label'
 import {
   Card,
@@ -23,43 +20,16 @@ import { format } from 'date-fns'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn, compactNum, formatNum } from '@/lib/utils'
 
-type ProfitChartRow = {
-  snapshot_date: string
-  revenue: number
-  fee: number
-  interest: number
-  tax: number
+interface NetProfitSectionProps {
+  monthlyPnlChart: ProfitChartCols | undefined
+  isLoading: boolean
 }
 
-function columnsToRows(cols: ProfitChartCols): ProfitChartRow[] {
-  return cols.snapshot_date.map((snapshot_date, i) => ({
-    snapshot_date,
-    revenue: cols.revenue[i],
-    fee: cols.fee[i],
-    interest: cols.interest[i],
-    tax: cols.tax[i],
-  }))
-}
-
-function useNetProfitChartData(data: ProfitView | undefined) {
-  return useMemo(() => {
-    if (!data) return null
-    const profitChart = data.profit_chart as ProfitChartCols | null
-    if (!profitChart?.snapshot_date) return null
-    return {
-      totalPnl: data.total_pnl,
-      avgProfit: data.avg_profit,
-      avgExpense: data.avg_expense,
-      chartRows: columnsToRows(profitChart),
-    }
-  }, [data])
-}
-
-export function NetProfitSection() {
+export function NetProfitSection({
+  monthlyPnlChart,
+  isLoading,
+}: NetProfitSectionProps) {
   const isMobile = useIsMobile()
-  const { year } = usePerformanceYear()
-  const { data, error, isLoading } = useProfit(year)
-  const chartData = useNetProfitChartData(data as ProfitView | undefined)
 
   const chartConfig = {
     tax: { label: 'Tax', color: 'var(--chart-4)' },
@@ -70,26 +40,38 @@ export function NetProfitSection() {
   const dataKeys = Object.keys(chartConfig)
 
   if (isLoading) return <StatusLabel type="loading" />
-  if (error) return <StatusLabel type="error" />
-  if (!data || !chartData) return null
+  if (!monthlyPnlChart) return null
+
+  const chartRows = monthlyPnlChart.snapshot_date.map((snapshot_date, i) => ({
+    snapshot_date,
+    revenue: monthlyPnlChart.revenue[i],
+    fee: monthlyPnlChart.fee[i],
+    interest: monthlyPnlChart.interest[i],
+    tax: monthlyPnlChart.tax[i],
+  }))
+
+  const totalPnl = chartRows.reduce(
+    (acc, row) => acc + row.revenue + row.fee + row.tax + row.interest,
+    0,
+  )
 
   return (
     <Card className="gap-3 pb-0">
       <CardHeader>
         <CardDescription>Net Profit</CardDescription>
         <CardTitle className="text-2xl flex gap-1 items-baseline">
-          {formatNum(chartData.totalPnl)}
+          {formatNum(totalPnl)}
         </CardTitle>
         <CardAction className="flex flex-col gap-1">
           <p className="text-xs text-muted-foreground">Monthly Avg.</p>
           <div className="flex flex-col gap-0 justify-end items-end text-xs">
             <p
               className={cn(
-                chartData.avgProfit > 0 ? 'text-positive' : 'text-negative',
+                totalPnl > 0 ? 'text-positive' : 'text-negative',
                 'p-0 pointer-events-none',
               )}
             >
-              {compactNum(chartData.avgProfit)}
+              {compactNum(totalPnl / (monthlyPnlChart.snapshot_date.length || 1))}
             </p>
           </div>
         </CardAction>
@@ -97,7 +79,7 @@ export function NetProfitSection() {
       <ChartContainer config={chartConfig} className="w-full">
         <BarChart
           accessibilityLayer
-          data={chartData.chartRows}
+          data={chartRows}
           layout="horizontal"
           margin={{}}
         >

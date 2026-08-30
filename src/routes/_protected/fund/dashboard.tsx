@@ -1,9 +1,9 @@
 import { EquityCard } from '@/features/fund/components/dashboard/equity-card'
 import { createFileRoute } from '@tanstack/react-router'
-import { ReturnChartSection } from '@/features/fund/components/dashboard/return-chart-content'
-import { PortfolioCard } from '@/features/fund/components/dashboard/portfolio-card'
-import { NewsSection } from '@/features/fund/components/dashboard/news-section'
-import { NetProfitChartSection } from '@/features/fund/components/dashboard/netprofit-chart-content'
+import { ReturnCard } from '@/features/fund/components/dashboard/return-card'
+import { AssetCard } from '@/features/fund/components/dashboard/assets-card'
+import { NewsCard } from '@/features/fund/components/dashboard/news-card'
+import { NetProfitCard } from '@/features/fund/components/dashboard/net-profit-card'
 import { Button } from '@/components/ui/button'
 import { RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
@@ -104,20 +104,20 @@ function Home() {
             equityChart={equityChartQuery.data}
             isLoading={balanceSheetQuery.isPending}
           />
-          <NetProfitChartSection
+          <NetProfitCard
             monthlyPnlChart={monthlyPnlChartQuery.data}
             isLoading={monthlyPnlChartQuery.isPending}
           />
         </div>
 
         <div className="flex flex-col gap-4 w-1/2">
-          <ReturnChartSection
+          <ReturnCard
             benchmarkChart={benchmarkChartQuery.data}
             twrYtd={twrYtdQuery.data}
             vniYtd={vniYtdQuery.data}
             isLoading={results.some((q) => q.isPending)}
           />
-          <PortfolioCard
+          <AssetCard
             balanceSheet={balanceSheetQuery.data}
             equity={equity}
             liability={liability}
@@ -129,7 +129,7 @@ function Home() {
           <div className="w-full bg-card h-21 border rounded-xl overflow-hidden">
             <TradingViewTickerTape symbols={miniChartSymbols} />
           </div>
-          <NewsSection
+          <NewsCard
             balanceSheet={balanceSheetQuery.data}
             news={newsQuery.data}
             isLoading={newsQuery.isPending}

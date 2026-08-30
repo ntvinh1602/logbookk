@@ -1,6 +1,4 @@
-import { useMemo } from 'react'
-import { usePerformanceYear } from './year-context'
-import { useCashflow } from '@/features/fund/hooks/use-performance-data'
+import type { CashflowSummary } from '@/features/fund/fund.types'
 import StatusLabel from '@/components/status-label'
 import {
   Card,
@@ -18,50 +16,35 @@ import {
   ProgressValue,
 } from '@/components/ui/progress'
 
-function useCashflowSummary(
-  deposits: number | undefined,
-  withdrawals: number | undefined,
-) {
-  return useMemo(() => {
-    if (deposits == null || withdrawals == null) return null
-    const inflow = deposits
-    const outflow = Math.abs(withdrawals)
-    const net = inflow + withdrawals
-    return { inflow, outflow, net }
-  }, [deposits, withdrawals])
+interface CashflowSectionProps {
+  data: CashflowSummary | undefined
+  isLoading: boolean
 }
 
-export function CashflowSection() {
-  const { year } = usePerformanceYear()
-  const { data, error, isLoading } = useCashflow(year)
-  const summary = useCashflowSummary(data?.deposits, data?.withdrawals)
-
+export function CashflowSection({ data, isLoading }: CashflowSectionProps) {
   if (isLoading) return <StatusLabel type="loading" />
-  if (error) return <StatusLabel type="error" description={error.message} />
-  if (!data || !summary) return null
+  if (!data) return null
 
-  const { inflow, outflow, net } = summary
-  
+  const netflow = data.deposits + data.withdrawals
+  const totalflow = data.deposits + Math.abs(data.withdrawals)
+
   const items = [
-    { label: 'Deposit', value: inflow },
-    { label: 'Withdraw', value: outflow },
+    { label: 'Deposit', value: data.deposits },
+    { label: 'Withdraw', value: Math.abs(data.withdrawals) },
   ]
 
   return (
     <Card>
       <CardHeader>
         <CardDescription>Cashflow</CardDescription>
-        <CardTitle className="text-xl">{formatNum(net)}</CardTitle>
+        <CardTitle className="text-xl">{formatNum(netflow)}</CardTitle>
         <CardAction>
           <ArrowLeftRight className="stroke-1" />
         </CardAction>
       </CardHeader>
-      <CardContent className='flex flex-col gap-6'>
+      <CardContent className="flex flex-col gap-6">
         {items.map(({ label, value }) => (
-          <Progress
-            value={(value / (inflow + outflow)) * 100}
-            className="w-full"
-          >
+          <Progress value={(value / totalflow) * 100} className="w-full">
             <ProgressLabel>{label}</ProgressLabel>
             <ProgressValue />
             {`(${formatNum(value)})`}
