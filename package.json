@@ -12,7 +12,8 @@
     "check": "prettier --check .",
     "db:types": "npx supabase gen types typescript --local > src/types/database.types.ts",
     "db:remote-dump": "npx supabase db dump --data-only -s public,flight,ods,dim,dwd,dws -f supabase/.seeds/data.sql",
-    "db:local-dump": "npx supabase db dump --data-only --local -s public,flight,ods,dim,dwd,dws -f supabase/.seeds/data.sql"
+    "db:local-dump": "npx supabase db dump --data-only --local -s public,flight,ods,dim,dwd,dws -f supabase/.seeds/data.sql",
+    "db:squash": "npx supabase migration squash --linked"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

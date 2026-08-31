@@ -1,4 +1,4 @@
-import type { StockPnl } from '@/features/fund/fund.types'
+import type { TopStocks } from '@/features/fund/fund.types'
 import {
   Item,
   ItemMedia,
@@ -21,7 +21,7 @@ import {
 import { Trophy } from 'lucide-react'
 
 interface TopStocksSectionProps {
-  data: StockPnl[] | undefined
+  data: TopStocks[] | undefined
   isLoading: boolean
 }
 

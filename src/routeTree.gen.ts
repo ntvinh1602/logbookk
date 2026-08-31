@@ -21,6 +21,10 @@ import { Route as ProtectedFlightHistoryRouteImport } from './routes/_protected/
 import { Route as ProtectedFlightMapRouteImport } from './routes/_protected/flight/map'
 import { Route as ProtectedFundDashboardRouteImport } from './routes/_protected/fund/dashboard'
 import { Route as ProtectedFundEventsRouteImport } from './routes/_protected/fund/events'
+import { Route as ProtectedFundEventsBorrowRouteImport } from './routes/_protected/fund/events/borrow'
+import { Route as ProtectedFundEventsCashflowRouteImport } from './routes/_protected/fund/events/cashflow'
+import { Route as ProtectedFundEventsRepayRouteImport } from './routes/_protected/fund/events/repay'
+import { Route as ProtectedFundEventsStockRouteImport } from './routes/_protected/fund/events/stock'
 import { Route as ProtectedFundPerformanceYearRouteImport } from './routes/_protected/fund/performance/$year'
 
 const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
@@ -82,6 +86,30 @@ const ProtectedFundEventsRoute = ProtectedFundEventsRouteImport.update({
   path: '/fund/events',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
+const ProtectedFundEventsBorrowRoute =
+  ProtectedFundEventsBorrowRouteImport.update({
+    id: '/borrow',
+    path: '/borrow',
+    getParentRoute: () => ProtectedFundEventsRoute,
+  } as any)
+const ProtectedFundEventsCashflowRoute =
+  ProtectedFundEventsCashflowRouteImport.update({
+    id: '/cashflow',
+    path: '/cashflow',
+    getParentRoute: () => ProtectedFundEventsRoute,
+  } as any)
+const ProtectedFundEventsRepayRoute =
+  ProtectedFundEventsRepayRouteImport.update({
+    id: '/repay',
+    path: '/repay',
+    getParentRoute: () => ProtectedFundEventsRoute,
+  } as any)
+const ProtectedFundEventsStockRoute =
+  ProtectedFundEventsStockRouteImport.update({
+    id: '/stock',
+    path: '/stock',
+    getParentRoute: () => ProtectedFundEventsRoute,
+  } as any)
 const ProtectedFundPerformanceYearRoute =
   ProtectedFundPerformanceYearRouteImport.update({
     id: '/fund/performance/$year',
@@ -101,7 +129,11 @@ export interface FileRoutesByFullPath {
   '/flight/history': typeof ProtectedFlightHistoryRoute
   '/flight/map': typeof ProtectedFlightMapRoute
   '/fund/dashboard': typeof ProtectedFundDashboardRoute
-  '/fund/events': typeof ProtectedFundEventsRoute
+  '/fund/events': typeof ProtectedFundEventsRouteWithChildren
+  '/fund/events/borrow': typeof ProtectedFundEventsBorrowRoute
+  '/fund/events/cashflow': typeof ProtectedFundEventsCashflowRoute
+  '/fund/events/repay': typeof ProtectedFundEventsRepayRoute
+  '/fund/events/stock': typeof ProtectedFundEventsStockRoute
   '/fund/performance/$year': typeof ProtectedFundPerformanceYearRoute
 }
 export interface FileRoutesByTo {
@@ -116,7 +148,11 @@ export interface FileRoutesByTo {
   '/flight/history': typeof ProtectedFlightHistoryRoute
   '/flight/map': typeof ProtectedFlightMapRoute
   '/fund/dashboard': typeof ProtectedFundDashboardRoute
-  '/fund/events': typeof ProtectedFundEventsRoute
+  '/fund/events': typeof ProtectedFundEventsRouteWithChildren
+  '/fund/events/borrow': typeof ProtectedFundEventsBorrowRoute
+  '/fund/events/cashflow': typeof ProtectedFundEventsCashflowRoute
+  '/fund/events/repay': typeof ProtectedFundEventsRepayRoute
+  '/fund/events/stock': typeof ProtectedFundEventsStockRoute
   '/fund/performance/$year': typeof ProtectedFundPerformanceYearRoute
 }
 export interface FileRoutesById {
@@ -132,7 +168,11 @@ export interface FileRoutesById {
   '/_protected/flight/history': typeof ProtectedFlightHistoryRoute
   '/_protected/flight/map': typeof ProtectedFlightMapRoute
   '/_protected/fund/dashboard': typeof ProtectedFundDashboardRoute
-  '/_protected/fund/events': typeof ProtectedFundEventsRoute
+  '/_protected/fund/events': typeof ProtectedFundEventsRouteWithChildren
+  '/_protected/fund/events/borrow': typeof ProtectedFundEventsBorrowRoute
+  '/_protected/fund/events/cashflow': typeof ProtectedFundEventsCashflowRoute
+  '/_protected/fund/events/repay': typeof ProtectedFundEventsRepayRoute
+  '/_protected/fund/events/stock': typeof ProtectedFundEventsStockRoute
   '/_protected/fund/performance/$year': typeof ProtectedFundPerformanceYearRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +190,10 @@ export interface FileRouteTypes {
     | '/flight/map'
     | '/fund/dashboard'
     | '/fund/events'
+    | '/fund/events/borrow'
+    | '/fund/events/cashflow'
+    | '/fund/events/repay'
+    | '/fund/events/stock'
     | '/fund/performance/$year'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +209,10 @@ export interface FileRouteTypes {
     | '/flight/map'
     | '/fund/dashboard'
     | '/fund/events'
+    | '/fund/events/borrow'
+    | '/fund/events/cashflow'
+    | '/fund/events/repay'
+    | '/fund/events/stock'
     | '/fund/performance/$year'
   id:
     | '__root__'
@@ -180,6 +228,10 @@ export interface FileRouteTypes {
     | '/_protected/flight/map'
     | '/_protected/fund/dashboard'
     | '/_protected/fund/events'
+    | '/_protected/fund/events/borrow'
+    | '/_protected/fund/events/cashflow'
+    | '/_protected/fund/events/repay'
+    | '/_protected/fund/events/stock'
     | '/_protected/fund/performance/$year'
   fileRoutesById: FileRoutesById
 }
@@ -280,6 +332,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedFundEventsRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
+    '/_protected/fund/events/borrow': {
+      id: '/_protected/fund/events/borrow'
+      path: '/borrow'
+      fullPath: '/fund/events/borrow'
+      preLoaderRoute: typeof ProtectedFundEventsBorrowRouteImport
+      parentRoute: typeof ProtectedFundEventsRoute
+    }
+    '/_protected/fund/events/cashflow': {
+      id: '/_protected/fund/events/cashflow'
+      path: '/cashflow'
+      fullPath: '/fund/events/cashflow'
+      preLoaderRoute: typeof ProtectedFundEventsCashflowRouteImport
+      parentRoute: typeof ProtectedFundEventsRoute
+    }
+    '/_protected/fund/events/repay': {
+      id: '/_protected/fund/events/repay'
+      path: '/repay'
+      fullPath: '/fund/events/repay'
+      preLoaderRoute: typeof ProtectedFundEventsRepayRouteImport
+      parentRoute: typeof ProtectedFundEventsRoute
+    }
+    '/_protected/fund/events/stock': {
+      id: '/_protected/fund/events/stock'
+      path: '/stock'
+      fullPath: '/fund/events/stock'
+      preLoaderRoute: typeof ProtectedFundEventsStockRouteImport
+      parentRoute: typeof ProtectedFundEventsRoute
+    }
     '/_protected/fund/performance/$year': {
       id: '/_protected/fund/performance/$year'
       path: '/fund/performance/$year'
@@ -290,11 +370,28 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ProtectedFundEventsRouteChildren {
+  ProtectedFundEventsBorrowRoute: typeof ProtectedFundEventsBorrowRoute
+  ProtectedFundEventsCashflowRoute: typeof ProtectedFundEventsCashflowRoute
+  ProtectedFundEventsRepayRoute: typeof ProtectedFundEventsRepayRoute
+  ProtectedFundEventsStockRoute: typeof ProtectedFundEventsStockRoute
+}
+
+const ProtectedFundEventsRouteChildren: ProtectedFundEventsRouteChildren = {
+  ProtectedFundEventsBorrowRoute: ProtectedFundEventsBorrowRoute,
+  ProtectedFundEventsCashflowRoute: ProtectedFundEventsCashflowRoute,
+  ProtectedFundEventsRepayRoute: ProtectedFundEventsRepayRoute,
+  ProtectedFundEventsStockRoute: ProtectedFundEventsStockRoute,
+}
+
+const ProtectedFundEventsRouteWithChildren =
+  ProtectedFundEventsRoute._addFileChildren(ProtectedFundEventsRouteChildren)
+
 interface ProtectedRouteRouteChildren {
   ProtectedFlightHistoryRoute: typeof ProtectedFlightHistoryRoute
   ProtectedFlightMapRoute: typeof ProtectedFlightMapRoute
   ProtectedFundDashboardRoute: typeof ProtectedFundDashboardRoute
-  ProtectedFundEventsRoute: typeof ProtectedFundEventsRoute
+  ProtectedFundEventsRoute: typeof ProtectedFundEventsRouteWithChildren
   ProtectedFundPerformanceYearRoute: typeof ProtectedFundPerformanceYearRoute
 }
 
@@ -302,7 +399,7 @@ const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
   ProtectedFlightHistoryRoute: ProtectedFlightHistoryRoute,
   ProtectedFlightMapRoute: ProtectedFlightMapRoute,
   ProtectedFundDashboardRoute: ProtectedFundDashboardRoute,
-  ProtectedFundEventsRoute: ProtectedFundEventsRoute,
+  ProtectedFundEventsRoute: ProtectedFundEventsRouteWithChildren,
   ProtectedFundPerformanceYearRoute: ProtectedFundPerformanceYearRoute,
 }
 

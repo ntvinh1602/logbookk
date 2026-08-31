@@ -67,6 +67,7 @@ export type Preset = (typeof withCustom)[number]["key"]
 interface TransactionFilterProps {
   filters: TransactionFilterState
   onFiltersChange: (filters: TransactionFilterState) => void
+  onCategoryChange?: (category: string) => void
   preset: Preset
   onPresetChange: (preset: Preset) => void
   resolvedStartDate: Date
@@ -78,6 +79,7 @@ interface TransactionFilterProps {
 export function TxFilter({
   filters,
   onFiltersChange,
+  onCategoryChange,
   preset,
   onPresetChange,
   resolvedStartDate,
@@ -103,13 +105,17 @@ export function TxFilter({
             value={filters.categories || "stock"}
             onValueChange={(v) => {
               if (v) {
-                const ops = txOperations[v]
-                const nextOp = ops.length === 1 ? ops[0].key : "all"
-                onFiltersChange({
-                  ...filters,
-                  categories: v,
-                  operation: nextOp,
-                })
+                if (onCategoryChange) {
+                  onCategoryChange(v)
+                } else {
+                  const ops = txOperations[v]
+                  const nextOp = ops.length === 1 ? ops[0].key : "all"
+                  onFiltersChange({
+                    ...filters,
+                    categories: v,
+                    operation: nextOp,
+                  })
+                }
               }
             }}
             options={txCategory}

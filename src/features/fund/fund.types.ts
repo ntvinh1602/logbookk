@@ -1,23 +1,3 @@
-import { type Tables } from "@/types/database.types"
-
-export type CashflowView = {
-  [K in keyof Tables<"cashflow_all">]: NonNullable<Tables<"cashflow_all">[K]>
-}
-
-export type StockPnl = {
-  [K in keyof Tables<"stock_pnl_all">]: NonNullable<Tables<"stock_pnl_all">[K]>
-}
-
-export type ProfitView = {
-  [K in keyof Tables<"pnl_expense_all">]: NonNullable<
-    Tables<"pnl_expense_all">[K]
-  >
-}
-
-export type BenchmarkView = {
-  [K in keyof Tables<"benchmark_all">]: NonNullable<Tables<"benchmark_all">[K]>
-}
-
 // Columnar equity series: keys stored once, not per-point.
 export type ProfitChartCols = {
   snapshot_date: string[]
@@ -59,6 +39,45 @@ export type NewsArticle = {
   excerpt: string
   published_at: string
   tickers?: string[]
+}
+
+export interface EventStock {
+  tx_id: number
+  created_at: string
+  operation: string
+  ticker: string
+  price: number
+  quantity: number
+  fee: number
+  tax: number | null
+  net_proceed: number
+}
+
+export interface EventCashflow {
+  tx_id: number
+  created_at: string
+  operation: string
+  memo: string
+  ticker: string
+  quantity: number
+  net_proceed: number
+}
+
+export interface EventBorrow {
+  tx_id: number
+  created_at: string
+  lender: string
+  principal: number
+  rate: number
+}
+
+export interface EventRepay {
+  tx_id: number
+  created_at: string
+  borrow_tx: number
+  lender: string
+  principal: number
+  interest: number
 }
 
 export interface CashflowSummary {

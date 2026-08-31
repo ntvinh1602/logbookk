@@ -39,7 +39,12 @@ export function NavBar() {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink
-                render={<Link to="/fund/performance/$year" params={{ year: new Date().getFullYear().toString() }} />}
+                render={
+                  <Link
+                    to="/fund/performance/$year"
+                    params={{ year: new Date().getFullYear().toString() }}
+                  />
+                }
                 className={navigationMenuTriggerStyle()}
               >
                 Performance
@@ -88,7 +93,11 @@ export function NavBar() {
 
         <div className="ml-auto flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={toggleTheme}>
-            {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
+            {theme === 'dark' ? (
+              <Sun className="size-4" />
+            ) : (
+              <Moon className="size-4" />
+            )}
           </Button>
           <Button variant="ghost" onClick={handleLogout}>
             Log out

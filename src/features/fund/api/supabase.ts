@@ -4,9 +4,13 @@ import type {
   BSheetView,
   CashflowSummary,
   EquityChartCols,
+  EventBorrow,
+  EventCashflow,
+  EventRepay,
   NewsArticle,
   ProfitChartCols,
-  StockPnl,
+  EventStock,
+  TopStocks,
 } from '../fund.types'
 
 export async function getCurrentEquity() {
@@ -195,17 +199,75 @@ export async function getCashflow(
 export async function getTopStocks(
   startDate: string,
   endDate: string,
-): Promise<StockPnl[]> {
+): Promise<TopStocks[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.schema('dws').rpc('get_top_stocks', {
+    p_start_date: startDate,
+    p_end_date: endDate,
+  })
+
+  if (error) throw new Error(error.message)
+
+  return (data ?? []) as TopStocks[]
+}
+
+export async function getStockEvents(
+  startDate?: string,
+  endDate?: string,
+  ticker?: string,
+  operation?: string,
+): Promise<EventStock[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.schema('dws').rpc('get_event_stock', {
+    p_start_date: startDate ?? null,
+    p_end_date: endDate ?? null,
+    p_ticker: ticker ?? null,
+    p_operation: operation ?? null,
+  })
+
+  if (error) throw new Error(error.message)
+
+  return (data ?? []) as EventStock[]
+}
+
+export async function getCashflowEvents(
+  startDate?: string,
+  endDate?: string,
+  operation?: string,
+): Promise<EventCashflow[]> {
   const supabase = createClient()
 
   const { data, error } = await supabase
     .schema('dws')
-    .rpc('get_top_stocks', {
-      p_start_date: startDate,
-      p_end_date: endDate,
+    .rpc('get_event_cashflow', {
+      p_start_date: startDate ?? null,
+      p_end_date: endDate ?? null,
+      p_operation: operation ?? null,
     })
 
   if (error) throw new Error(error.message)
 
-  return (data ?? []) as StockPnl[]
+  return (data ?? []) as EventCashflow[]
+}
+
+export async function getBorrowEvents(): Promise<EventBorrow[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.schema('dws').rpc('get_event_borrow')
+
+  if (error) throw new Error(error.message)
+
+  return (data ?? []) as EventBorrow[]
+}
+
+export async function getRepayEvents(): Promise<EventRepay[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.schema('dws').rpc('get_event_repay')
+
+  if (error) throw new Error(error.message)
+
+  return (data ?? []) as EventRepay[]
 }

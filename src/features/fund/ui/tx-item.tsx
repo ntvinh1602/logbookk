@@ -19,7 +19,6 @@ import {
   ItemTitle,
   ItemDescription,
 } from "@/components/ui/item"
-import type { Tables } from "@/types/database.types"
 import { Badge } from "@/components/ui/badge"
 
 type Operation =
@@ -77,7 +76,10 @@ const OperationCfg = {
 
 interface Props {
   tx: {
-    [K in keyof Tables<"tx_summary">]: NonNullable<Tables<"tx_summary">[K]>
+    operation: string
+    created_at: string
+    memo: string
+    value: number
   }
 }
 

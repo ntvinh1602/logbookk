@@ -3,7 +3,11 @@
 import { useTransactionsData } from "./transactions-data-context"
 import { TxFilter } from "@/features/fund/ui/tx-filter"
 
-export function TransactionsFilterSection() {
+export function TransactionsFilterSection({
+  onCategoryChange,
+}: {
+  onCategoryChange?: (category: string) => void
+}) {
   const {
     state: { filters, preset, resolvedStartDate, resolvedEndDate },
     actions: {
@@ -18,6 +22,7 @@ export function TransactionsFilterSection() {
     <TxFilter
       filters={filters}
       onFiltersChange={setFilters}
+      onCategoryChange={onCategoryChange}
       preset={preset}
       onPresetChange={setPreset}
       resolvedStartDate={resolvedStartDate}

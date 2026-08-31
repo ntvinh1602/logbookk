@@ -7,6 +7,7 @@ import type {
   TransactionFilterState,
   Preset,
 } from "@/features/fund/ui/tx-filter"
+import { txOperations } from "@/features/fund/ui/tx-filter"
 
 function getDateRangeFromPreset(preset: Preset, now: Date) {
   switch (preset) {
@@ -25,10 +26,12 @@ function getDateRangeFromPreset(preset: Preset, now: Date) {
 
 interface UseTransactionFiltersOptions {
   defaultPreset?: Preset
+  initialCategory?: string
 }
 
 export function useTransactionFilters(options?: UseTransactionFiltersOptions) {
   const defaultPreset: Preset = options?.defaultPreset ?? "3M"
+  const initialCategory = options?.initialCategory ?? "stock"
 
   const [preset, setPreset] = useState<Preset>(defaultPreset)
   const [customRange, setCustomRange] = useState<{
@@ -36,11 +39,23 @@ export function useTransactionFilters(options?: UseTransactionFiltersOptions) {
     endDate: Date
   }>(() => getDateRangeFromPreset(defaultPreset, new Date()))
   const [filters, setFilters] = useState<TransactionFilterState>({
-    categories: "stock",
+    categories: initialCategory,
     operation: "all",
     search: "",
   })
   const [refreshCounter, setRefreshCounter] = useState(0)
+
+  // Sync category when the URL-driven initialCategory changes
+  useEffect(() => {
+    setFilters((prev) => {
+      if (prev.categories !== initialCategory) {
+        const ops = txOperations[initialCategory] ?? []
+        const nextOp = ops.length === 1 ? ops[0].key : "all"
+        return { ...prev, categories: initialCategory, operation: nextOp }
+      }
+      return prev
+    })
+  }, [initialCategory])
 
   // When switching to CUSTOM, snapshot the previous preset's range
   const prevPresetRef = useRef(preset)
