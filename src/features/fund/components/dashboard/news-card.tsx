@@ -35,7 +35,7 @@ function ArticleList({ articles }: { articles: NewsArticle[] }) {
   return (
     <ItemGroup className="gap-0 px-2">
       {articles.map((article) => (
-        <Item key={article.id} className=''>
+        <Item key={article.id}>
           <ItemContent className="w-full">
             <ItemTitle
               className="cursor-pointer hover:text-primary transition-colors line-clamp-1"

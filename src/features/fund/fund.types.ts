@@ -49,8 +49,10 @@ export interface EventStock {
   price: number
   quantity: number
   fee: number
-  tax: number | null
+  tax: number
   net_proceed: number
+  logo_url: string
+  name: string
 }
 
 export interface EventCashflow {
@@ -59,6 +61,7 @@ export interface EventCashflow {
   operation: string
   memo: string
   ticker: string
+  currency: string
   quantity: number
   net_proceed: number
 }

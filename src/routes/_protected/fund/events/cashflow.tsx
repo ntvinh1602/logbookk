@@ -22,7 +22,6 @@ import {
 } from '@/components/filter/select-options'
 import { DateRangePicker } from '@/components/filter/date-picker'
 import { FieldGroup } from '@/components/ui/field'
-import { Separator } from '@/components/ui/separator'
 import { CashflowTransactions } from '@/features/fund/components/events/cashflow-transactions'
 
 export const Route = createFileRoute('/_protected/fund/events/cashflow')({
@@ -123,7 +122,10 @@ function CashflowEvents() {
               options={txCategory}
             />
           </div>
-          <div className="w-full flex-none md:w-auto md:pl-4">
+        </div>
+
+        <div className="flex flex-col xl:flex-row gap-3 w-full">
+          <div className="w-full flex-none md:w-auto">
             <SelectAllEnabled
               icon={Settings}
               placeholder="Operation"
@@ -133,11 +135,7 @@ function CashflowEvents() {
               options={cashflowOperations}
             />
           </div>
-        </div>
-
-        <div className="flex flex-col xl:flex-row gap-4 w-full">
-          <Separator orientation="vertical" className="my-3 hidden xl:block" />
-          <div className="flex flex-col md:flex-row w-full gap-4">
+          <div className="flex flex-col md:flex-row w-full gap-3">
             <SingleOptionSelect
               icon={Calendar}
               placeholder="Preset"

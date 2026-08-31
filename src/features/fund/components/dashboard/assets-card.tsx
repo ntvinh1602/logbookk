@@ -29,7 +29,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { useState } from 'react'
-import BalanceSheet from '@/features/fund/ui/balance-sheet'
+import BalanceSheet from '@/features/fund/components/dashboard/balance-sheet'
 import { Badge } from '@/components/ui/badge'
 
 interface PortfolioCardProps {

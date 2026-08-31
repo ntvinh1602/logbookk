@@ -10,16 +10,12 @@ import {
 import { FormDialogWrapper } from "@/components/form/form-wrapper"
 import { PlusIcon } from "lucide-react"
 import { useAddEvent } from "./add-event-context"
-import { useTransactionsData } from "./transactions-data-context"
 
 export function AddEventSection() {
   const {
     state: { open, currentConfig },
     actions: { setOpen, openForm },
   } = useAddEvent()
-  const {
-    actions: { triggerRefresh },
-  } = useTransactionsData()
 
   return (
     <>
