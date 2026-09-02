@@ -1,18 +1,16 @@
-"use client"
-
-import { useState, useRef } from "react"
+import { useState, useRef } from 'react'
+import { Button } from '@/components/ui/button'
+import { Field } from '@/components/ui/field'
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Field } from "@/components/ui/field"
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '../ui/sheet'
 
-const FORM_ID = "dialog-form"
+const FORM_ID = 'dialog-form'
 
 type FormComponentProps = {
   onSuccess?: () => void
@@ -47,20 +45,20 @@ export function FormDialogWrapper({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          {subtitle && <DialogDescription>{subtitle}</DialogDescription>}
-        </DialogHeader>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>{title}</SheetTitle>
+          {subtitle && <SheetDescription>{subtitle}</SheetDescription>}
+        </SheetHeader>
         <FormComponent
           onSuccess={handleSuccess}
           formId={FORM_ID}
           onLoadingChange={setLoading}
           resetFormRef={resetFormRef}
         />
-        <DialogFooter>
-          <Field className="flex justify-end" orientation="horizontal">
+        <SheetFooter>
+          <Field>
             <Button
               type="button"
               variant="outline"
@@ -69,11 +67,11 @@ export function FormDialogWrapper({
               Reset
             </Button>
             <Button type="submit" form={FORM_ID} disabled={loading}>
-              {loading ? "Submitting..." : "Submit"}
+              {loading ? 'Submitting...' : 'Submit'}
             </Button>
           </Field>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   )
 }

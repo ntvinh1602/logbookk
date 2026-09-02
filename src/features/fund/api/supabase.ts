@@ -11,6 +11,7 @@ import type {
   ProfitChartCols,
   EventStock,
   TopStocks,
+  AssetSearchResult,
 } from '../fund.types'
 
 export async function getCurrentEquity() {
@@ -270,4 +271,143 @@ export async function getRepayEvents(): Promise<EventRepay[]> {
   if (error) throw new Error(error.message)
 
   return (data ?? []) as EventRepay[]
+}
+
+export async function getAssets(query: string, assetClass: string) {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dim')
+    .from('asset')
+    .select(
+      `
+      id,
+      ticker,
+      name,
+      ...currency!inner(
+        currency:iso_code
+      )
+      `,
+    )
+    .eq('asset_class', assetClass)
+    .ilike('ticker', `%${query}%`)
+    .limit(20)
+
+  if (error) throw new Error(error.message)
+  return (data ?? []) as AssetSearchResult[]
+}
+
+export async function getCashAssets() {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dim')
+    .from('asset')
+    .select(
+      `
+      id,
+      ticker,
+      name,
+      ...currency!inner(
+        currency:iso_code
+      )
+      `,
+    )
+    .in('asset_class', ['cash', 'fund'])
+
+  if (error) throw new Error(error.message)
+  return (data ?? []) as AssetSearchResult[]
+}
+
+export async function addStockEvent(params: {
+  side: string
+  stockId: number
+  price: number
+  quantity: number
+  fee: number
+  tax: number
+  createdAt?: string
+}) {
+  const supabase = createClient()
+
+  const { error } = await supabase.schema('dwd').rpc('add_stock_event', {
+    p_side: params.side,
+    p_stock_id: params.stockId,
+    p_price: params.price,
+    p_quantity: params.quantity,
+    p_fee: params.fee,
+    p_tax: params.tax,
+    p_created_at: params.createdAt ?? null,
+  })
+
+  if (error) throw new Error(error.message)
+}
+
+export async function addCashflowEvent(params: {
+  operation: string
+  assetId: number
+  quantity: number
+  fxRate: number
+  memo?: string
+  createdAt?: string
+}) {
+  const supabase = createClient()
+
+  const { error } = await supabase.schema('dwd').rpc('add_cashflow_event', {
+    p_operation: params.operation,
+    p_asset_id: params.assetId,
+    p_quantity: params.quantity,
+    p_fx_rate: params.fxRate,
+    p_memo: params.memo ?? null,
+    p_created_at: params.createdAt ?? null,
+  })
+
+  if (error) throw new Error(error.message)
+}
+
+export async function addBorrowEvent(params: {
+  principal: number
+  lender: string
+  rate: number
+  createdAt?: string
+}) {
+  const supabase = createClient()
+
+  const { error } = await supabase.schema('dwd').rpc('add_borrow_event', {
+    p_principal: params.principal,
+    p_lender: params.lender,
+    p_rate: params.rate,
+    p_created_at: params.createdAt ?? null,
+  })
+
+  if (error) throw new Error(error.message)
+}
+
+export async function addRepayEvent(params: {
+  repayTx: number
+  interest: number
+  createdAt?: string
+}) {
+  const supabase = createClient()
+
+  const { error } = await supabase.schema('dwd').rpc('add_repay_event', {
+    p_repay_tx: params.repayTx,
+    p_interest: params.interest,
+    p_created_at: params.createdAt ?? null,
+  })
+
+  if (error) throw new Error(error.message)
+}
+
+export async function getOutstandingDebts() {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dws')
+    .from('outstanding_debts')
+    .select('tx_id, lender, principal, rate')
+
+  if (error) throw new Error(error.message)
+
+  return data ?? []
 }

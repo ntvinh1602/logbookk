@@ -1,5 +1,6 @@
 "use client"
 
+import { useQueryClient } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -7,15 +8,28 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { FormDialogWrapper } from "@/components/form/form-wrapper"
 import { PlusIcon } from "lucide-react"
 import { useAddEvent } from "./add-event-context"
+import { eventKeys } from "@/features/fund/queries/events"
+import { dashboardKeys } from "@/features/fund/queries/dashboard"
+import { performanceKeys } from "@/features/fund/queries/performance"
 
 export function AddEventSection() {
+  const queryClient = useQueryClient()
   const {
-    state: { open, currentConfig },
-    actions: { setOpen, openForm },
+    state: { currentConfig },
+    actions: { openForm },
   } = useAddEvent()
+
+  const handleSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: eventKeys.all })
+    queryClient.invalidateQueries({ queryKey: dashboardKeys.all })
+    queryClient.invalidateQueries({ queryKey: performanceKeys.all })
+  }
+
+  if (!currentConfig) return null
+
+  const { Component } = currentConfig
 
   return (
     <>
@@ -43,16 +57,7 @@ export function AddEventSection() {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {currentConfig && (
-        <FormDialogWrapper
-          open={open}
-          onOpenChange={setOpen}
-          title={currentConfig.title}
-          subtitle={currentConfig.subtitle}
-          FormComponent={currentConfig.Component}
-          onSuccess={triggerRefresh}
-        />
-      )}
+      <Component onSuccess={handleSuccess} />
     </>
   )
 }

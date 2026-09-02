@@ -16,9 +16,6 @@ export const formConfig: Record<
     subtitle?: string
     Component: React.ComponentType<{
       onSuccess?: () => void
-      formId: string
-      onLoadingChange: (loading: boolean) => void
-      resetFormRef: { current: () => void }
     }>
   }
 > = {

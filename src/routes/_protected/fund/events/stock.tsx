@@ -21,6 +21,7 @@ import {
 import { DateRangePicker } from '@/components/filter/date-picker'
 import { FieldGroup } from '@/components/ui/field'
 import { StockTransactions } from '@/features/fund/components/events/stock-transactions'
+import { StockForm } from '@/features/fund/form/stockForm'
 
 export const Route = createFileRoute('/_protected/fund/events/stock')({
   component: StockEvents,
@@ -109,7 +110,10 @@ function StockEvents() {
 
   return (
     <div className="flex flex-col max-w-screen-lg mx-auto py-15 gap-8">
-      <h1 className="text-2xl font-bold">Stock Events</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Stock Events</h1>
+        <StockForm />
+      </div>
 
       <FieldGroup className="gap-4">
         <div className="flex w-full flex-col gap-4 md:flex-row md:items-center">

@@ -12,12 +12,14 @@ interface ToggleOption {
 
 interface ToggleGroupFieldProps {
   field: AnyFieldApi
+  label: string
   options: ToggleOption[]
   disabled?: boolean
 }
 
 export function ToggleGroupField({
   field,
+  label,
   options,
   disabled,
 }: ToggleGroupFieldProps) {
@@ -25,7 +27,7 @@ export function ToggleGroupField({
 
   return (
     <Field data-invalid={errors.length > 0} data-disabled={disabled}>
-      <FieldLabel className="sr-only">{field.name}</FieldLabel>
+      <FieldLabel>{label}</FieldLabel>
       <ToggleGroup
         value={field.state.value ? [field.state.value] : []}
         onValueChange={(value) => {

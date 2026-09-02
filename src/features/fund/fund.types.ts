@@ -94,3 +94,10 @@ export interface TopStocks {
   logo_url: string
   total_pnl: number
 }
+
+export type AssetSearchResult = {
+  id: string
+  ticker: string
+  name: string
+  currency: string
+}

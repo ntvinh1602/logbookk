@@ -52,7 +52,7 @@ export function NavBar() {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink
-                render={<Link to="/fund/events" />}
+                render={<Link to="/fund/events/stock" />}
                 className={navigationMenuTriggerStyle()}
               >
                 Events

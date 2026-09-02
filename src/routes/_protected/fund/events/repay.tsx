@@ -5,6 +5,7 @@ import { events } from '@/features/fund/queries/events'
 import { FilterToggleGroup } from '@/components/filter/toggle-options'
 import { FieldGroup } from '@/components/ui/field'
 import { RepayTransactions } from '@/features/fund/components/events/repay-transactions'
+import { RepayForm } from '@/features/fund/form/repayForm'
 
 export const Route = createFileRoute('/_protected/fund/events/repay')({
   component: RepayEvents,
@@ -24,7 +25,10 @@ function RepayEvents() {
 
   return (
     <div className="flex flex-col max-w-screen-lg mx-auto py-15 gap-8">
-      <h1 className="text-2xl font-bold">Repay Events</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Repay Events</h1>
+        <RepayForm />
+      </div>
 
       <FieldGroup className="gap-4">
         <div className="flex w-full flex-col gap-4 md:flex-row md:items-center">

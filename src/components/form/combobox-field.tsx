@@ -36,7 +36,7 @@ export function ComboboxField({
 
   return (
     <Field data-invalid={errors.length > 0}>
-      <FieldLabel className="sr-only">{label}</FieldLabel>
+      <FieldLabel>{label}</FieldLabel>
       <Combobox
         items={items}
         value={

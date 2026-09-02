@@ -1,18 +1,18 @@
-import * as React from "react"
-import type { AnyFieldApi } from "@tanstack/react-form"
-import { format, parseISO } from "date-fns"
-import { Calendar } from "@/components/ui/calendar"
+import * as React from 'react'
+import type { AnyFieldApi } from '@tanstack/react-form'
+import { format, parseISO } from 'date-fns'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Button } from "@/components/ui/button"
-import { Field, FieldError, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { CalendarIcon, ClockIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { toFieldErrorMessages } from "./field-errors"
+} from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
+import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { CalendarIcon, ClockIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { toFieldErrorMessages } from './field-errors'
 
 type DateTimeFieldProps = {
   field: AnyFieldApi
@@ -21,9 +21,9 @@ type DateTimeFieldProps = {
 }
 
 function formatLocalDateTime(date: Date) {
-  if (isNaN(date.getTime())) return ""
+  if (isNaN(date.getTime())) return ''
 
-  const pad = (n: number) => n.toString().padStart(2, "0")
+  const pad = (n: number) => n.toString().padStart(2, '0')
 
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
     date.getDate(),
@@ -34,7 +34,7 @@ function formatLocalDateTime(date: Date) {
 
 function formatDisplay(
   dateString?: string,
-  placeholder = "Select date & time",
+  placeholder = 'Select date & time',
 ) {
   if (!dateString) return placeholder
 
@@ -42,7 +42,7 @@ function formatDisplay(
 
   if (isNaN(date.getTime())) return placeholder
 
-  return format(date, "dd MMM yyyy, HH:mm")
+  return format(date, 'dd MMM yyyy, HH:mm')
 }
 
 function DateTimePicker({
@@ -54,16 +54,16 @@ function DateTimePicker({
 }) {
   const value = field.value ? new Date(field.value) : undefined
   const [time, setTime] = React.useState(
-    value ? value.toTimeString().slice(0, 8) : "10:30:00",
+    value ? value.toTimeString().slice(0, 8) : '10:30:00',
   )
 
   function handleDateChange(date?: Date) {
     if (!date) {
-      field.onChange("")
+      field.onChange('')
       return
     }
 
-    const [h, m, s] = time.split(":").map(Number)
+    const [h, m, s] = time.split(':').map(Number)
 
     const updated = new Date(date)
     updated.setHours(h, m, s)
@@ -77,7 +77,7 @@ function DateTimePicker({
 
     if (!value) return
 
-    const [h, m, s] = newTime.split(":").map(Number)
+    const [h, m, s] = newTime.split(':').map(Number)
 
     const updated = new Date(value)
     updated.setHours(h, m, s)
@@ -93,8 +93,8 @@ function DateTimePicker({
             type="button"
             variant="outline"
             className={cn(
-              "justify-between",
-              !field.value && "text-muted-foreground",
+              'justify-between',
+              !field.value && 'text-muted-foreground',
             )}
           >
             {formatDisplay(field.value, placeholder)}
@@ -130,16 +130,16 @@ function DateTimePicker({
 export function DateTimeField({
   field,
   label,
-  placeholder = "Select date & time",
+  placeholder = 'Select date & time',
 }: DateTimeFieldProps) {
   const errors = toFieldErrorMessages(field.state.meta.errors)
 
   return (
     <Field data-invalid={errors.length > 0}>
-      <FieldLabel className="sr-only">{label}</FieldLabel>
+      <FieldLabel>{label}</FieldLabel>
       <DateTimePicker
         field={{
-          value: field.state.value ?? "",
+          value: field.state.value ?? '',
           onChange: (value) => field.handleChange(value),
         }}
         placeholder={placeholder}

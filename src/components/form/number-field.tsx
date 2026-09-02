@@ -3,10 +3,10 @@ import {
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
-} from "@/components/ui/input-group"
-import type { AnyFieldApi } from "@tanstack/react-form"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { toFieldErrorMessages } from "./field-errors"
+} from '@/components/ui/input-group'
+import type { AnyFieldApi } from '@tanstack/react-form'
+import { Field, FieldLabel, FieldError } from '@/components/ui/field'
+import { toFieldErrorMessages } from './field-errors'
 
 interface NumberFieldProps {
   field: AnyFieldApi
@@ -27,21 +27,24 @@ export function NumberField({
 
   return (
     <Field data-invalid={errors.length > 0} data-disabled={disabled}>
-      <FieldLabel className="sr-only">{label}</FieldLabel>
+      <FieldLabel>{label}</FieldLabel>
       <InputGroup>
         <InputGroupInput
           type="number"
-          value={field.state.value ?? ""}
-          onChange={(e) => field.handleChange(e.target.value)}
+          value={field.state.value ?? ''}
+          onChange={(e) => {
+            field.handleChange(
+              e.target.value === '' ? undefined : e.target.valueAsNumber,
+            )
+          }}
+          onBlur={field.handleBlur}
           inputMode="decimal"
           placeholder={placeholder}
           disabled={disabled}
         />
         {suffix && (
           <InputGroupAddon align="inline-end">
-            <InputGroupText className="text-nowrap">
-              {suffix}
-            </InputGroupText>
+            <InputGroupText className="text-nowrap">{suffix}</InputGroupText>
           </InputGroupAddon>
         )}
       </InputGroup>

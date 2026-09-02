@@ -4,6 +4,7 @@ import {
   getCashflowEvents,
   getBorrowEvents,
   getRepayEvents,
+  getAssets,
 } from '@/features/fund/api/supabase'
 
 export const eventKeys = {
@@ -31,6 +32,9 @@ export const eventKeys = {
   borrowTx: () => [...eventKeys.all, 'borrow-tx'] as const,
 
   repayTx: () => [...eventKeys.all, 'repay-tx'] as const,
+
+  assetSearch: (query: string) =>
+    [...eventKeys.all, 'asset-search', 'stock', query] as const,
 }
 
 export const events = {
@@ -64,6 +68,14 @@ export const events = {
     return queryOptions({
       queryKey: eventKeys.repayTx(),
       queryFn: () => getRepayEvents(),
+    })
+  },
+
+  assetSearch: (query: string) => {
+    return queryOptions({
+      queryKey: eventKeys.assetSearch(query),
+      queryFn: () => getAssets(query, 'stock'),
+      enabled: query.length >= 2,
     })
   },
 }

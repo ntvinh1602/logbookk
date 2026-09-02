@@ -23,6 +23,7 @@ import {
 import { DateRangePicker } from '@/components/filter/date-picker'
 import { FieldGroup } from '@/components/ui/field'
 import { CashflowTransactions } from '@/features/fund/components/events/cashflow-transactions'
+import { CashflowForm } from '@/features/fund/form/cashflowForm'
 
 export const Route = createFileRoute('/_protected/fund/events/cashflow')({
   component: CashflowEvents,
@@ -109,7 +110,10 @@ function CashflowEvents() {
 
   return (
     <div className="flex flex-col max-w-screen-lg mx-auto py-15 gap-8">
-      <h1 className="text-2xl font-bold">Cashflow Events</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Cashflow Events</h1>
+        <CashflowForm />
+      </div>
 
       <FieldGroup className="gap-4">
         <div className="flex w-full flex-col gap-4 md:flex-row md:items-center">
