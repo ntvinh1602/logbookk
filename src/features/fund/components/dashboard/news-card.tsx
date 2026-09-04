@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import StatusLabel from '@/components/status-label'
-import type { BSheetView, NewsArticle } from '@/features/fund/fund.types'
+import type { BSheetView, NewsArticle } from '@/features/fund/types'
 import {
   Item,
   ItemContent,

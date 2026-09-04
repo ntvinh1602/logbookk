@@ -1,10 +1,8 @@
-import * as React from 'react'
+import { useState, useMemo } from 'react'
 import { useSelector, useForm } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
+import { useQuery } from '@tanstack/react-query'
 import { PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
 import {
   Sheet,
   SheetContent,
@@ -20,12 +18,9 @@ import { Field, FieldGroup } from '@/components/ui/field'
 import { cashflowSchema } from './schema'
 import { ToggleGroupField } from '@/components/form/toggle-group-field'
 import { SelectField } from '@/components/form/select-field'
-import { zodFieldValidator } from '@/components/form/zod-field-validator'
-import { addCashflowEvent, getCashAssets } from '../api/supabase'
-import { eventKeys } from '../queries/events'
-import { dashboardKeys } from '../queries/dashboard'
-import { performanceKeys } from '../queries/performance'
-import type { AssetSearchResult } from '../fund.types'
+import { addCashflowEvent } from '../api/supabase'
+import { events } from '../queries/events'
+import { useAddFundEvent } from '../hooks/use-add-fund-event'
 
 const FORM_ID = 'cashflow-form'
 
@@ -43,85 +38,20 @@ const CASHFLOW_MEMO = {
 } as const
 
 const cashflowOps = [
-  { key: 'deposit', label: 'Buy' },
+  { key: 'deposit', label: 'Deposit' },
   { key: 'withdraw', label: 'Withdraw' },
   { key: 'income', label: 'Income' },
   { key: 'expense', label: 'Expense' },
 ]
 
 export function CashflowForm() {
-  const queryClient = useQueryClient()
-  const [open, setOpen] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
-  const resetFormRef = React.useRef<() => void>(() => {})
-  const [assetData, setAssetData] = React.useState<AssetSearchResult[]>([])
+  const [open, setOpen] = useState(false)
 
-  React.useEffect(() => {
-    getCashAssets().then(setAssetData)
-  }, [])
+  const assetsQuery = useQuery(events.cashAssets())
 
-  const form = useForm({
-    defaultValues: {
-      operation: 'expense' as 'deposit' | 'withdraw' | 'income' | 'expense',
-      created_at: undefined as string | undefined,
-      asset: null as string | null,
-      quantity: '',
-      fx_rate: undefined as string | undefined,
-      memo: undefined as string | undefined,
-    },
-    onSubmit: async ({ value }) => {
-      setLoading(true)
-      try {
-        const values = cashflowSchema.parse(value)
-
-        const createdAt = values.created_at
-          ? new Date(values.created_at).toISOString()
-          : undefined
-
-        await addCashflowEvent({
-          operation: values.operation,
-          assetId: values.asset,
-          quantity: values.quantity,
-          fxRate: values.fx_rate ?? 1,
-          memo: values.memo,
-          createdAt,
-        })
-
-        toast.success('Cashflow event added', { description: values.memo })
-        form.reset()
-        queryClient.invalidateQueries({ queryKey: eventKeys.all })
-        queryClient.invalidateQueries({ queryKey: dashboardKeys.all })
-        queryClient.invalidateQueries({ queryKey: performanceKeys.all })
-        setOpen(false)
-      } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : 'An unexpected error occurred. Please try again later.'
-        toast.error('Unexpected error', { description: message })
-      } finally {
-        setLoading(false)
-      }
-    },
-  })
-
-  const operation = useSelector(form.store, (state) => state.values.operation)
-  const selectedAssetId = useSelector(form.store, (state) => state.values.asset)
-
-  const filteredMemos = React.useMemo(() => {
-    if (!operation) return []
-
-    return (
-      CASHFLOW_MEMO[operation]?.map((memo) => ({
-        value: memo,
-        label: memo,
-      })) ?? []
-    )
-  }, [operation])
-
-  const assetIDs = React.useMemo(() => {
-    const seen = new Set<string>()
-    return assetData
+  const assetOptions = useMemo(() => {
+    const seen = new Set<number>()
+    return (assetsQuery.data ?? [])
       .map((a) => ({
         value: a.id,
         label: a.name ? `${a.ticker} — ${a.name}` : a.ticker,
@@ -132,27 +62,87 @@ export function CashflowForm() {
         seen.add(item.value)
         return true
       })
-  }, [assetData])
+  }, [assetsQuery.data])
 
-  const selectedAsset = React.useMemo(() => {
-    return assetIDs.find((a) => a.value === selectedAssetId)
-  }, [assetIDs, selectedAssetId])
+  const { addEvent } = useAddFundEvent({
+    mutationFn: addCashflowEvent,
+    successMessage: 'Cashflow event added',
+    successDescription: (p) => p.memo,
+  })
+
+  const form = useForm({
+    defaultValues: {
+      operation: 'expense' as 'deposit' | 'withdraw' | 'income' | 'expense',
+      created_at: '',
+      asset: 0,
+      quantity: 0,
+      fx_rate: 1,
+      memo: '',
+    },
+    validators: {
+      onSubmit: cashflowSchema,
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        await addEvent({
+          operation: value.operation,
+          assetId: value.asset,
+          quantity: value.quantity,
+          fxRate: value.fx_rate,
+          memo: value.memo,
+          createdAt: value.created_at
+            ? new Date(value.created_at).toISOString()
+            : undefined,
+        })
+      } catch {
+        // Error toast is shown by useAddFundEvent; keep the sheet open.
+        return
+      }
+
+      form.reset()
+      setOpen(false)
+    },
+  })
+
+  const isSubmitting = useSelector(form.store, (state) => state.isSubmitting)
+  const operation = useSelector(form.store, (state) => state.values.operation)
+  const selectedAssetId = useSelector(form.store, (state) => state.values.asset)
+
+  const filteredMemos = useMemo(() => {
+    return CASHFLOW_MEMO[operation].map((memo) => ({
+      value: memo,
+      label: memo,
+    }))
+  }, [operation])
+
+  const selectedAsset = useMemo(() => {
+    return assetOptions.find((a) => a.value === selectedAssetId)
+  }, [assetOptions, selectedAssetId])
 
   const isVND = selectedAsset?.currency === 'VND'
 
-  React.useEffect(() => {
-    resetFormRef.current = () => form.reset()
-  }, [form])
+  const handleReset = () => {
+    form.reset()
+  }
+
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open)
+    if (!open) handleReset()
+  }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger render={<Button><PlusIcon /> Add Event</Button>} />
+    <Sheet open={open} onOpenChange={handleOpenChange}>
+      <SheetTrigger
+        render={
+          <Button>
+            <PlusIcon /> Add Event
+          </Button>
+        }
+      />
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Add Cashflow Event</SheetTitle>
-          <SheetDescription>
-            Record cash assets transactions
-          </SheetDescription>
+          <SheetDescription>Record cash assets transactions</SheetDescription>
         </SheetHeader>
         <form
           id={FORM_ID}
@@ -163,100 +153,80 @@ export function CashflowForm() {
             void form.handleSubmit()
           }}
         >
-          <FieldGroup className="gap-6">
-            <form.Field
-              name="operation"
-              validators={{ onChange: cashflowSchema.shape.operation }}
-            >
+          <FieldGroup className="px-4">
+            <form.Field name="operation">
               {(field) => (
-                <ToggleGroupField field={field} label="Operation" options={cashflowOps} />
+                <ToggleGroupField
+                  field={field}
+                  label="Operation"
+                  options={cashflowOps}
+                />
               )}
             </form.Field>
 
-            <div className="flex flex-col gap-3">
-              <form.Field
-                name="created_at"
-                validators={{ onChange: cashflowSchema.shape.created_at }}
-              >
-                {(field) => <DateTimeField field={field} label="Date time" />}
-              </form.Field>
+            <form.Field name="created_at">
+              {(field) => <DateTimeField field={field} label="Date & Time" />}
+            </form.Field>
 
-              <form.Field
-                name="memo"
-                validators={{ onChange: cashflowSchema.shape.memo }}
-              >
-                {(field) => (
-                  <SelectField
-                    field={field}
-                    label="Description"
-                    placeholder="Event description"
-                    options={filteredMemos}
-                  />
-                )}
-              </form.Field>
+            <form.Field name="memo">
+              {(field) => (
+                <SelectField
+                  field={field}
+                  label="Description"
+                  placeholder="Event description"
+                  options={filteredMemos}
+                />
+              )}
+            </form.Field>
 
-              <form.Field
-                name="asset"
-                validators={{
-                  onChange: zodFieldValidator(cashflowSchema.shape.asset),
-                }}
-              >
-                {(field) => (
-                  <SelectField
-                    field={field}
-                    label="Asset"
-                    placeholder="Cash / fund asset"
-                    options={assetIDs}
-                  />
-                )}
-              </form.Field>
+            <form.Field name="asset">
+              {(field) => (
+                <SelectField
+                  field={field}
+                  label="Asset"
+                  placeholder="Cash / fund asset"
+                  options={assetOptions}
+                  onValueChange={(assetId) => {
+                    const currency = assetOptions.find(
+                      (a) => a.value === assetId,
+                    )?.currency
+                    if (currency === 'VND') form.setFieldValue('fx_rate', 1)
+                  }}
+                />
+              )}
+            </form.Field>
 
-              <form.Field
-                name="quantity"
-                validators={{
-                  onChange: zodFieldValidator(cashflowSchema.shape.quantity),
-                }}
-              >
-                {(field) => (
-                  <NumberField
-                    field={field}
-                    label="Quantity"
-                    placeholder="Amount in original currency"
-                    suffix={selectedAsset ? selectedAsset.currency : 'VND'}
-                  />
-                )}
-              </form.Field>
+            <form.Field name="quantity">
+              {(field) => (
+                <NumberField
+                  field={field}
+                  label="Quantity"
+                  placeholder="Amount in original currency"
+                  suffix={selectedAsset ? selectedAsset.currency : 'VND'}
+                />
+              )}
+            </form.Field>
 
-              <form.Field
-                name="fx_rate"
-                validators={{
-                  onChange: zodFieldValidator(cashflowSchema.shape.fx_rate),
-                }}
-              >
-                {(field) => (
-                  <NumberField
-                    field={field}
-                    label="FX Rate"
-                    placeholder="Exchange rate to VND"
-                    disabled={isVND}
-                    suffix="VND"
-                  />
-                )}
-              </form.Field>
-            </div>
+            <form.Field name="fx_rate">
+              {(field) => (
+                <NumberField
+                  field={field}
+                  label="FX Rate"
+                  placeholder="Exchange rate to VND"
+                  disabled={isVND}
+                  suffix="VND"
+                />
+              )}
+            </form.Field>
           </FieldGroup>
         </form>
         <SheetFooter>
           <Field>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => resetFormRef.current()}
-            >
+            <Button type="button" variant="outline" onClick={handleReset}>
               Reset
             </Button>
-            <Button type="submit" form={FORM_ID} disabled={loading}>
-              {loading ? 'Submitting...' : 'Submit'}
+            <Button type="submit" form={FORM_ID} disabled={isSubmitting}>
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
           </Field>
         </SheetFooter>

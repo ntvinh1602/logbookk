@@ -1,7 +1,6 @@
-import * as React from 'react'
-import { useForm } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
+import { useState, useMemo } from 'react'
+import { useSelector, useForm } from '@tanstack/react-form'
+import { useQuery } from '@tanstack/react-query'
 import { PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -20,84 +19,79 @@ import { DateTimeField } from '@/components/form/datetime-field'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { repaySchema } from './schema'
 import { formatNum } from '@/lib/utils'
-import { zodFieldValidator } from '@/components/form/zod-field-validator'
-import { addRepayEvent, getOutstandingDebts } from '../api/supabase'
-import { eventKeys } from '../queries/events'
-import { dashboardKeys } from '../queries/dashboard'
-import { performanceKeys } from '../queries/performance'
+import { addRepayEvent } from '../api/supabase'
+import { events } from '../queries/events'
+import { useAddFundEvent } from '../hooks/use-add-fund-event'
 
 const FORM_ID = 'repay-form'
 
 export function RepayForm() {
-  const queryClient = useQueryClient()
-  const [open, setOpen] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
-  const resetFormRef = React.useRef<() => void>(() => {})
-  const [debtOptions, setDebtOptions] = React.useState<
-    { value: string; label: string }[]
-  >([])
+  const [open, setOpen] = useState(false)
+
+  const debtsQuery = useQuery(events.outstandingDebts())
+
+  const debtOptions = useMemo(
+    () =>
+      (debtsQuery.data ?? []).map((d) => ({
+        value: d.tx_id,
+        label: `${d.lender} — ${formatNum(d.principal)} at ${d.rate}%`,
+      })),
+    [debtsQuery.data],
+  )
+
+  const { addEvent } = useAddFundEvent({
+    mutationFn: addRepayEvent,
+    successMessage: 'Repay event added',
+  })
 
   const form = useForm({
     defaultValues: {
-      created_at: undefined as string | undefined,
-      repay_tx: null as string | null,
-      interest: '',
+      created_at: '',
+      repay_tx: 0,
+      interest: 0,
+    },
+    validators: {
+      onSubmit: repaySchema,
     },
     onSubmit: async ({ value }) => {
-      setLoading(true)
       try {
-        const values = repaySchema.parse(value)
-
-        const createdAt = values.created_at
-          ? new Date(values.created_at).toISOString()
-          : undefined
-
-        await addRepayEvent({
-          repayTx: values.repay_tx,
-          interest: values.interest,
-          createdAt,
+        await addEvent({
+          repayTx: value.repay_tx,
+          interest: value.interest,
+          createdAt: value.created_at
+            ? new Date(value.created_at).toISOString()
+            : undefined,
         })
-
-        toast.success('Repay event added')
-        form.reset()
-        queryClient.invalidateQueries({ queryKey: eventKeys.all })
-        queryClient.invalidateQueries({ queryKey: dashboardKeys.all })
-        queryClient.invalidateQueries({ queryKey: performanceKeys.all })
-        setOpen(false)
-      } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : 'An unexpected error occurred. Please try again later.'
-        toast.error('Unexpected error', { description: message })
-      } finally {
-        setLoading(false)
+      } catch {
+        // Error toast is shown by useAddFundEvent; keep the sheet open.
+        return
       }
+
+      form.reset()
+      setOpen(false)
     },
   })
 
-  React.useEffect(() => {
-    getOutstandingDebts()
-      .then((data) =>
-        setDebtOptions(
-          data.map((d) => ({
-            value: d.tx_id,
-            label: `${d.lender} — ${formatNum(d.principal)} at ${d.rate}%`,
-          })),
-        ),
-      )
-      .catch((err) =>
-        toast.error('Failed to load debts', { description: err.message }),
-      )
-  }, [])
+  const isSubmitting = useSelector(form.store, (state) => state.isSubmitting)
 
-  React.useEffect(() => {
-    resetFormRef.current = () => form.reset()
-  }, [form])
+  const handleReset = () => {
+    form.reset()
+  }
+
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open)
+    if (!open) handleReset()
+  }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger render={<Button><PlusIcon /> Add Event</Button>} />
+    <Sheet open={open} onOpenChange={handleOpenChange}>
+      <SheetTrigger
+        render={
+          <Button>
+            <PlusIcon /> Add Event
+          </Button>
+        }
+      />
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Add Repay Event</SheetTitle>
@@ -112,20 +106,12 @@ export function RepayForm() {
             void form.handleSubmit()
           }}
         >
-          <FieldGroup className="gap-3">
-            <form.Field
-              name="created_at"
-              validators={{ onChange: repaySchema.shape.created_at }}
-            >
+          <FieldGroup className="px-4">
+            <form.Field name="created_at">
               {(field) => <DateTimeField field={field} label="Date & Time" />}
             </form.Field>
 
-            <form.Field
-              name="repay_tx"
-              validators={{
-                onChange: zodFieldValidator(repaySchema.shape.repay_tx),
-              }}
-            >
+            <form.Field name="repay_tx">
               {(field) => (
                 <ComboboxField
                   field={field}
@@ -136,12 +122,7 @@ export function RepayForm() {
               )}
             </form.Field>
 
-            <form.Field
-              name="interest"
-              validators={{
-                onChange: zodFieldValidator(repaySchema.shape.interest),
-              }}
-            >
+            <form.Field name="interest">
               {(field) => (
                 <NumberField
                   field={field}
@@ -155,15 +136,11 @@ export function RepayForm() {
         </form>
         <SheetFooter>
           <Field>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => resetFormRef.current()}
-            >
+            <Button type="button" variant="outline" onClick={handleReset}>
               Reset
             </Button>
-            <Button type="submit" form={FORM_ID} disabled={loading}>
-              {loading ? 'Submitting...' : 'Submit'}
+            <Button type="submit" form={FORM_ID} disabled={isSubmitting}>
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
           </Field>
         </SheetFooter>

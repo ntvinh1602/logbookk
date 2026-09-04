@@ -1,8 +1,8 @@
-import type { LucideIcon } from "lucide-react"
-import type { AnyFieldApi } from "@tanstack/react-form"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { toFieldErrorMessages } from "./field-errors"
+import type { LucideIcon } from 'lucide-react'
+import type { AnyFieldApi } from '@tanstack/react-form'
+import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { toFieldErrorMessages } from './field-errors'
 
 interface ToggleOption {
   key: string
@@ -15,6 +15,8 @@ interface ToggleGroupFieldProps {
   label: string
   options: ToggleOption[]
   disabled?: boolean
+  /** Called with the newly selected key after the field value is updated. */
+  onValueChange?: (value: string) => void
 }
 
 export function ToggleGroupField({
@@ -22,6 +24,7 @@ export function ToggleGroupField({
   label,
   options,
   disabled,
+  onValueChange,
 }: ToggleGroupFieldProps) {
   const errors = toFieldErrorMessages(field.state.meta.errors)
 
@@ -31,7 +34,10 @@ export function ToggleGroupField({
       <ToggleGroup
         value={field.state.value ? [field.state.value] : []}
         onValueChange={(value) => {
-          if (value.length > 0) field.handleChange(value[0])
+          if (value.length > 0) {
+            field.handleChange(value[0])
+            onValueChange?.(value[0])
+          }
         }}
         variant="outline"
         disabled={disabled}

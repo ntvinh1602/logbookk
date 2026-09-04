@@ -1,10 +1,12 @@
-import { queryOptions } from '@tanstack/react-query'
+import { keepPreviousData, queryOptions } from '@tanstack/react-query'
 import {
   getStockEvents,
   getCashflowEvents,
   getBorrowEvents,
   getRepayEvents,
   getAssets,
+  getOutstandingDebts,
+  getCashAssets,
 } from '@/features/fund/api/supabase'
 
 export const eventKeys = {
@@ -35,6 +37,10 @@ export const eventKeys = {
 
   assetSearch: (query: string) =>
     [...eventKeys.all, 'asset-search', 'stock', query] as const,
+
+  outstandingDebts: () => [...eventKeys.all, 'outstanding-debts'] as const,
+
+  cashAssets: () => [...eventKeys.all, 'cash-assets'] as const,
 }
 
 export const events = {
@@ -76,6 +82,23 @@ export const events = {
       queryKey: eventKeys.assetSearch(query),
       queryFn: () => getAssets(query, 'stock'),
       enabled: query.length >= 2,
+      placeholderData: keepPreviousData,
+    })
+  },
+
+  outstandingDebts: () => {
+    return queryOptions({
+      queryKey: eventKeys.outstandingDebts(),
+      queryFn: () => getOutstandingDebts(),
+      staleTime: Infinity,
+    })
+  },
+
+  cashAssets: () => {
+    return queryOptions({
+      queryKey: eventKeys.cashAssets(),
+      queryFn: () => getCashAssets(),
+      staleTime: Infinity,
     })
   },
 }

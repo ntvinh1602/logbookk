@@ -1,4 +1,4 @@
-import { type BenchmarkChartCols, type EquityChartCols } from './fund.types'
+import { type BenchmarkChartCols, type EquityChartCols } from './types'
 
 export function BenchmarkChartConvert({ d, p, v }: BenchmarkChartCols) {
   const out = new Array(d.length)

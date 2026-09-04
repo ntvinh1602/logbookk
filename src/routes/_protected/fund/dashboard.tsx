@@ -6,11 +6,9 @@ import { NewsCard } from '@/features/fund/components/dashboard/news-card'
 import { NetProfitCard } from '@/features/fund/components/dashboard/net-profit-card'
 import { Button } from '@/components/ui/button'
 import { RefreshCw } from 'lucide-react'
-import { toast } from 'sonner'
-import { fetchPrices } from '@/features/fund/actions/fetch-price'
-import { useState } from 'react'
 import { useQueries } from '@tanstack/react-query'
 import { dashboard } from '@/features/fund/queries/dashboard'
+import { useRefreshPrices } from '@/features/fund/hooks/use-refresh-prices'
 import { TradingViewTickerTape } from '@/lib/trading-view/ticker-tape'
 
 export const Route = createFileRoute('/_protected/fund/dashboard')({
@@ -18,7 +16,7 @@ export const Route = createFileRoute('/_protected/fund/dashboard')({
 })
 
 function Home() {
-  const [isRefreshing, setIsRefreshing] = useState(false)
+  const { refreshPrices, isPending } = useRefreshPrices()
 
   const results = useQueries({
     queries: [
@@ -58,26 +56,6 @@ function Home() {
     .filter((r) => r.asset_class === 'liability')
     .reduce((sum, r) => sum + r.total_value, 0)
 
-  const handleRefresh = async () => {
-    setIsRefreshing(true)
-    const toastId = toast.loading('Fetching latest prices...')
-
-    try {
-      const data = await fetchPrices()
-
-      toast.success(data.message, {
-        id: toastId,
-        description: `Updated items: ${data.updated}`,
-      })
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to update prices'
-      toast.error(message, { id: toastId })
-    } finally {
-      setIsRefreshing(false)
-    }
-  }
-
   const miniChartSymbols = ['CAPITALCOM:XAUUSD', 'BINANCE:BTCUSDT', 'TVC:UKOIL']
 
   return (
@@ -86,10 +64,10 @@ function Home() {
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <Button
           variant="outline"
-          onClick={handleRefresh}
-          disabled={isRefreshing}
+          onClick={() => void refreshPrices()}
+          disabled={isPending}
         >
-          <RefreshCw className={`${isRefreshing && 'animate-spin'}`} />
+          <RefreshCw className={isPending ? 'animate-spin' : ''} />
           Update Prices
         </Button>
       </div>

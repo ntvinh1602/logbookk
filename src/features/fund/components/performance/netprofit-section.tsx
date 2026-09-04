@@ -1,4 +1,4 @@
-import type { ProfitChartCols } from '@/features/fund/fund.types'
+import type { ProfitChartCols } from '@/features/fund/types'
 import StatusLabel from '@/components/status-label'
 import {
   Card,

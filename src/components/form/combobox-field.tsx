@@ -1,5 +1,5 @@
-import type { AnyFieldApi } from "@tanstack/react-form"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
+import type { AnyFieldApi } from '@tanstack/react-form'
+import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import {
   Combobox,
   ComboboxContent,
@@ -7,11 +7,11 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-} from "@/components/ui/combobox"
-import { toFieldErrorMessages } from "./field-errors"
+} from '@/components/ui/combobox'
+import { toFieldErrorMessages } from './field-errors'
 
 type ComboboxOption = {
-  value: string
+  value: string | number
   label: string
 }
 

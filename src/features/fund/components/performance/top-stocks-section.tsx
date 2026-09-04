@@ -1,4 +1,4 @@
-import type { TopStocks } from '@/features/fund/fund.types'
+import type { TopStocks } from '@/features/fund/types'
 import {
   Item,
   ItemMedia,

@@ -1,4 +1,4 @@
-import type { BSheetView } from '@/features/fund/fund.types'
+import type { BSheetView } from '@/features/fund/types'
 import {
   Card,
   CardAction,

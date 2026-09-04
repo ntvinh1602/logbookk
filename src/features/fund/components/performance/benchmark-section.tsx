@@ -1,4 +1,4 @@
-import type { BenchmarkChartCols } from '@/features/fund/fund.types'
+import type { BenchmarkChartCols } from '@/features/fund/types'
 import { BenchmarkChartConvert } from '@/features/fund/utils'
 import {
   Card,

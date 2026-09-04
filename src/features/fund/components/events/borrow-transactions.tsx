@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/item'
 import { Badge } from '@/components/ui/badge'
 import StatusLabel from '@/components/status-label'
-import type { EventBorrow } from '@/features/fund/fund.types'
+import type { EventBorrow } from '@/features/fund/types'
 import { Button } from '@/components/ui/button'
 import {
   Card,

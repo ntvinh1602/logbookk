@@ -19,7 +19,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { cn, formatNum, pctNum } from '@/lib/utils'
 import { BenchmarkChartConvert } from '../../utils'
 import { Badge } from '@/components/ui/badge'
-import type { BenchmarkChartCols } from '@/features/fund/fund.types'
+import type { BenchmarkChartCols } from '@/features/fund/types'
 
 interface ReturnChartSectionProps {
   benchmarkChart: BenchmarkChartCols | undefined

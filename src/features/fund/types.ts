@@ -1,3 +1,5 @@
+import type { Database } from '@/types/database.types'
+
 // Columnar equity series: keys stored once, not per-point.
 export type ProfitChartCols = {
   snapshot_date: string[]
@@ -41,63 +43,33 @@ export type NewsArticle = {
   tickers?: string[]
 }
 
-export interface EventStock {
-  tx_id: number
-  created_at: string
-  operation: string
-  ticker: string
-  price: number
-  quantity: number
-  fee: number
-  tax: number
-  net_proceed: number
-  logo_url: string
-  name: string
-}
+export type EventStock =
+  Database['dws']['Functions']['get_event_stock']['Returns'][number]
 
-export interface EventCashflow {
-  tx_id: number
-  created_at: string
-  operation: string
-  memo: string
-  ticker: string
-  currency: string
-  quantity: number
-  net_proceed: number
-}
+export type EventCashflow =
+  Database['dws']['Functions']['get_event_cashflow']['Returns'][number]
 
-export interface EventBorrow {
-  tx_id: number
-  created_at: string
-  lender: string
-  principal: number
-  rate: number
-}
+export type EventBorrow =
+  Database['dws']['Functions']['get_event_borrow']['Returns'][number]
 
-export interface EventRepay {
-  tx_id: number
-  created_at: string
-  borrow_tx: number
-  lender: string
-  principal: number
-  interest: number
-}
+export type EventRepay =
+  Database['dws']['Functions']['get_event_repay']['Returns'][number]
 
-export interface CashflowSummary {
-  deposits: number
-  withdrawals: number
-}
+export type CashflowSummary =
+  Database['dws']['Functions']['get_cashflow_summary']['Returns'][number]
 
-export interface TopStocks {
-  ticker: string
-  name: string
-  logo_url: string
-  total_pnl: number
-}
+export type TopStocks =
+  Database['dws']['Functions']['get_top_stocks']['Returns'][number]
 
 export type AssetSearchResult = {
-  id: string
+  id: number
   ticker: string
   name: string
   currency: string
+}
+
+export type PriceRefreshResult = {
+  message: string
+  updated: number
+  failed: number
 }

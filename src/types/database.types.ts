@@ -396,8 +396,8 @@ export type Database = {
           p_price: number
           p_quantity: number
           p_side: string
+          p_stock_id: number
           p_tax?: number
-          p_ticker: string
           p_user_id?: string
         }
         Returns: undefined
@@ -510,6 +510,65 @@ export type Database = {
         Args: { p_end_date: string; p_start_date: string; p_threshold?: number }
         Returns: Json
       }
+      get_event_borrow: {
+        Args: never
+        Returns: {
+          created_at: string
+          lender: string
+          principal: number
+          rate: number
+          tx_id: number
+        }[]
+      }
+      get_event_cashflow: {
+        Args: {
+          p_end_date?: string
+          p_operation?: string
+          p_start_date?: string
+        }
+        Returns: {
+          created_at: string
+          currency: string
+          memo: string
+          net_proceed: number
+          operation: string
+          quantity: number
+          ticker: string
+          tx_id: number
+        }[]
+      }
+      get_event_repay: {
+        Args: never
+        Returns: {
+          borrow_tx: number
+          created_at: string
+          interest: number
+          lender: string
+          principal: number
+          tx_id: number
+        }[]
+      }
+      get_event_stock: {
+        Args: {
+          p_end_date?: string
+          p_operation?: string
+          p_start_date?: string
+          p_ticker?: string
+        }
+        Returns: {
+          created_at: string
+          fee: number
+          logo_url: string
+          name: string
+          net_proceed: number
+          operation: string
+          price: number
+          quantity: number
+          tax: number
+          ticker: string
+          tx_id: number
+        }[]
+      }
       get_monthly_pnl_chart: {
         Args: { p_end_date: string; p_start_date: string }
         Returns: Json
@@ -517,6 +576,15 @@ export type Database = {
       get_return_chart: {
         Args: { p_end_date: string; p_start_date: string; p_threshold?: number }
         Returns: Json
+      }
+      get_top_stocks: {
+        Args: { p_end_date: string; p_start_date: string }
+        Returns: {
+          logo_url: string
+          name: string
+          ticker: string
+          total_pnl: number
+        }[]
       }
       recompute_daily_snapshots: {
         Args: { p_from_date?: string; p_user_id?: string }

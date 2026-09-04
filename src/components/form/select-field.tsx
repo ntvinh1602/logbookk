@@ -1,17 +1,17 @@
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select"
-import type { AnyFieldApi } from "@tanstack/react-form"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { toFieldErrorMessages } from "./field-errors"
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import type { AnyFieldApi } from '@tanstack/react-form'
+import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import { toFieldErrorMessages } from './field-errors'
 
 interface SelectOption {
   label: string
-  value: string
+  value: string | number
 }
 
 interface SelectFieldProps {
@@ -20,6 +20,8 @@ interface SelectFieldProps {
   placeholder?: string
   options: SelectOption[]
   disabled?: boolean
+  /** Called with the newly selected value after the field value is updated. */
+  onValueChange?: (value: string | number) => void
 }
 
 export function SelectField({
@@ -28,6 +30,7 @@ export function SelectField({
   placeholder,
   options,
   disabled,
+  onValueChange,
 }: SelectFieldProps) {
   const errors = toFieldErrorMessages(field.state.meta.errors)
 
@@ -36,7 +39,10 @@ export function SelectField({
       <FieldLabel className="sr-only">{label}</FieldLabel>
 
       <Select
-        onValueChange={(value) => field.handleChange(value ?? null)}
+        onValueChange={(value) => {
+          field.handleChange(value ?? null)
+          if (value != null) onValueChange?.(value)
+        }}
         value={field.state.value ?? undefined}
         items={options}
         disabled={disabled}

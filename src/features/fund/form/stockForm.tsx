@@ -1,7 +1,6 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { useSelector, useForm } from '@tanstack/react-form'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
+import { useQuery } from '@tanstack/react-query'
 import { PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -20,9 +19,9 @@ import { Field, FieldGroup } from '@/components/ui/field'
 import { stockSchema } from './schema'
 import { ToggleGroupField } from '@/components/form/toggle-group-field'
 import { addStockEvent } from '../api/supabase'
-import { events, eventKeys } from '../queries/events'
-import { dashboardKeys } from '../queries/dashboard'
-import { performanceKeys } from '../queries/performance'
+import { events } from '../queries/events'
+import { useAddFundEvent } from '../hooks/use-add-fund-event'
+import { useDebouncedValue } from '@/hooks/use-debounced-value'
 
 const FORM_ID = 'stock-form'
 
@@ -32,12 +31,13 @@ export const stockOps = [
 ]
 
 export function StockForm() {
-  const queryClient = useQueryClient()
-
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
 
-  const assetsQuery = useQuery(events.assetSearch(search))
+  // Debounce so typing doesn't fire one asset search per keystroke.
+  const debouncedSearch = useDebouncedValue(search, 300)
+
+  const assetsQuery = useQuery(events.assetSearch(debouncedSearch))
 
   const stockOptions = useMemo(
     () =>
@@ -47,6 +47,13 @@ export function StockForm() {
       })),
     [assetsQuery.data],
   )
+
+  const { addEvent } = useAddFundEvent({
+    mutationFn: addStockEvent,
+    successMessage: 'Stock transaction added',
+    successDescription: (p) =>
+      `${p.side.toUpperCase()} ${p.quantity} stock ID ${p.stockId} @ ${p.price}`,
+  })
 
   const form = useForm({
     defaultValues: {
@@ -63,7 +70,7 @@ export function StockForm() {
     },
     onSubmit: async ({ value }) => {
       try {
-        await addStockEvent({
+        await addEvent({
           side: value.side,
           stockId: value.stock_id,
           price: value.price,
@@ -74,44 +81,20 @@ export function StockForm() {
             ? new Date(value.created_at).toISOString()
             : undefined,
         })
-
-        toast.success('Stock transaction added', {
-          description: `${value.side.toUpperCase()} ${value.quantity} stock ID ${value.stock_id} @ ${value.price}`,
-        })
-
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: eventKeys.all,
-          }),
-          queryClient.invalidateQueries({
-            queryKey: dashboardKeys.all,
-          }),
-          queryClient.invalidateQueries({
-            queryKey: performanceKeys.all,
-          }),
-        ])
-
-        form.reset()
-        setSearch('')
-        setOpen(false)
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Please try again later.'
-
-        toast.error('Failed to add transaction', {
-          description: message,
-        })
+      } catch {
+        // Error toast is shown by useAddFundEvent; keep the sheet open.
+        return
       }
+
+      form.reset()
+      setSearch('')
+      setOpen(false)
     },
   })
 
   const isSubmitting = useSelector(form.store, (state) => state.isSubmitting)
 
   const side = useSelector(form.store, (state) => state.values.side)
-
-  useEffect(() => {
-    if (side === 'buy') form.setFieldValue('tax', 0)
-  }, [side, form])
 
   const handleReset = () => {
     form.reset()
@@ -155,6 +138,9 @@ export function StockForm() {
                   field={field}
                   label="Operations"
                   options={stockOps}
+                  onValueChange={(value) => {
+                    if (value === 'buy') form.setFieldValue('tax', 0)
+                  }}
                 />
               )}
             </form.Field>

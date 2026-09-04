@@ -16,7 +16,7 @@ import {
 import { format } from 'date-fns'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn, compactNum } from '@/lib/utils'
-import type { ProfitChartCols } from '@/features/fund/fund.types'
+import type { ProfitChartCols } from '@/features/fund/types'
 import StatusLabel from '@/components/status-label'
 import { Badge } from '@/components/ui/badge'
 

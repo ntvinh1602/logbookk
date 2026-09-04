@@ -1,7 +1,5 @@
-import * as React from 'react'
-import { useForm } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
+import { useState } from 'react'
+import { useSelector, useForm } from '@tanstack/react-form'
 import { PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -19,68 +17,69 @@ import { TextField } from '@/components/form/text-field'
 import { DateTimeField } from '@/components/form/datetime-field'
 import { Field, FieldDescription, FieldGroup } from '@/components/ui/field'
 import { borrowSchema } from './schema'
-import { zodFieldValidator } from '@/components/form/zod-field-validator'
 import { addBorrowEvent } from '../api/supabase'
-import { eventKeys } from '../queries/events'
-import { dashboardKeys } from '../queries/dashboard'
-import { performanceKeys } from '../queries/performance'
+import { useAddFundEvent } from '../hooks/use-add-fund-event'
 
 const FORM_ID = 'borrow-form'
 
 export function BorrowForm() {
-  const queryClient = useQueryClient()
-  const [open, setOpen] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
-  const resetFormRef = React.useRef<() => void>(() => {})
+  const [open, setOpen] = useState(false)
+
+  const { addEvent } = useAddFundEvent({
+    mutationFn: addBorrowEvent,
+    successMessage: 'Debt added',
+  })
 
   const form = useForm({
     defaultValues: {
-      created_at: undefined as string | undefined,
+      created_at: '',
       lender: '',
-      principal: '',
-      rate: '',
+      principal: 0,
+      rate: 0,
+    },
+    validators: {
+      onSubmit: borrowSchema,
     },
     onSubmit: async ({ value }) => {
-      setLoading(true)
       try {
-        const values = borrowSchema.parse(value)
-
-        const createdAt = values.created_at
-          ? new Date(values.created_at).toISOString()
-          : undefined
-
-        await addBorrowEvent({
-          principal: values.principal,
-          lender: values.lender,
-          rate: values.rate,
-          createdAt,
+        await addEvent({
+          principal: value.principal,
+          lender: value.lender,
+          rate: value.rate,
+          createdAt: value.created_at
+            ? new Date(value.created_at).toISOString()
+            : undefined,
         })
-
-        toast.success('Debt added')
-        form.reset()
-        queryClient.invalidateQueries({ queryKey: eventKeys.all })
-        queryClient.invalidateQueries({ queryKey: dashboardKeys.all })
-        queryClient.invalidateQueries({ queryKey: performanceKeys.all })
-        setOpen(false)
-      } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : 'An unexpected error occurred. Please try again later.'
-        toast.error('Unexpected error', { description: message })
-      } finally {
-        setLoading(false)
+      } catch {
+        // Error toast is shown by useAddFundEvent; keep the sheet open.
+        return
       }
+
+      form.reset()
+      setOpen(false)
     },
   })
 
-  React.useEffect(() => {
-    resetFormRef.current = () => form.reset()
-  }, [form])
+  const isSubmitting = useSelector(form.store, (state) => state.isSubmitting)
+
+  const handleReset = () => {
+    form.reset()
+  }
+
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open)
+    if (!open) handleReset()
+  }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger render={<Button><PlusIcon /> Add Event</Button>} />
+    <Sheet open={open} onOpenChange={handleOpenChange}>
+      <SheetTrigger
+        render={
+          <Button>
+            <PlusIcon /> Add Event
+          </Button>
+        }
+      />
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Add Borrow Event</SheetTitle>
@@ -95,31 +94,25 @@ export function BorrowForm() {
             void form.handleSubmit()
           }}
         >
-          <FieldGroup className="gap-3">
-            <form.Field
-              name="created_at"
-              validators={{ onChange: borrowSchema.shape.created_at }}
-            >
+          <FieldGroup className="px-4">
+            <form.Field name="created_at">
               {(field) => <DateTimeField field={field} label="Date & Time" />}
             </form.Field>
 
-            <form.Field
-              name="lender"
-              validators={{ onChange: borrowSchema.shape.lender }}
-            >
+            <form.Field name="lender">
               {(field) => (
-                <TextField field={field} label="Lender" placeholder="Lender name" />
+                <TextField
+                  field={field}
+                  label="Lender"
+                  placeholder="Lender name"
+                />
               )}
             </form.Field>
             <FieldDescription className="text-right">
               Note: Add unique identifier for repeated lenders
             </FieldDescription>
-            <form.Field
-              name="principal"
-              validators={{
-                onChange: zodFieldValidator(borrowSchema.shape.principal),
-              }}
-            >
+
+            <form.Field name="principal">
               {(field) => (
                 <NumberField
                   field={field}
@@ -130,10 +123,7 @@ export function BorrowForm() {
               )}
             </form.Field>
 
-            <form.Field
-              name="rate"
-              validators={{ onChange: zodFieldValidator(borrowSchema.shape.rate) }}
-            >
+            <form.Field name="rate">
               {(field) => (
                 <NumberField
                   field={field}
@@ -147,15 +137,11 @@ export function BorrowForm() {
         </form>
         <SheetFooter>
           <Field>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => resetFormRef.current()}
-            >
+            <Button type="button" variant="outline" onClick={handleReset}>
               Reset
             </Button>
-            <Button type="submit" form={FORM_ID} disabled={loading}>
-              {loading ? 'Submitting...' : 'Submit'}
+            <Button type="submit" form={FORM_ID} disabled={isSubmitting}>
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
           </Field>
         </SheetFooter>
