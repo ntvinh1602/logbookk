@@ -7,7 +7,6 @@ import {
   Route,
   TicketsPlane,
 } from 'lucide-react'
-import type { LifetimeStats } from '@/features/flight/actions/get-lifetime-stats'
 import {
   Item,
   ItemContent,
@@ -16,8 +15,9 @@ import {
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
+import type { StatsRow } from '@/lib/supabase/api/types'
 
-export default function StatsCarousel({ stats }: { stats: LifetimeStats }) {
+export default function StatsCarousel({ stats }: { stats: StatsRow }) {
   const statItems = [
     {
       title: 'Flights',
@@ -54,7 +54,7 @@ export default function StatsCarousel({ stats }: { stats: LifetimeStats }) {
   return (
     <ItemGroup className='flex-row gap-2'>
       {statItems.map((stat) => (
-        <Item variant="outline">
+        <Item variant="outline" key={stat.title}>
           <ItemMedia variant="icon">
             <stat.icon />
           </ItemMedia>

@@ -97,7 +97,7 @@ export function EquityCard({
 
         <ChartContainer config={equityChartConfig} className="py-4">
           <AreaChart
-            data={EquityChartConvert(equityChart ?? ({} as EquityChartCols))}
+            data={equityChart ? EquityChartConvert(equityChart) : []}
             margin={{}}
           >
             <XAxis dataKey="t" hide />

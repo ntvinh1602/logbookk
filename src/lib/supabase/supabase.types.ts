@@ -9,6 +9,72 @@ export type Json =
 export type Database = {
   dim: {
     Tables: {
+      aircraft: {
+        Row: {
+          icao_code: string
+          model: string
+        }
+        Insert: {
+          icao_code: string
+          model: string
+        }
+        Update: {
+          icao_code?: string
+          model?: string
+        }
+        Relationships: []
+      }
+      airline: {
+        Row: {
+          icao_code: string
+          logo: string
+          name: string
+        }
+        Insert: {
+          icao_code: string
+          logo: string
+          name: string
+        }
+        Update: {
+          icao_code?: string
+          logo?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      airport: {
+        Row: {
+          city: string
+          country: string
+          iata_code: string
+          icao_code: string
+          lat: number
+          lng: number
+          name: string
+          timezone: string
+        }
+        Insert: {
+          city: string
+          country: string
+          iata_code: string
+          icao_code: string
+          lat: number
+          lng: number
+          name: string
+          timezone: string
+        }
+        Update: {
+          city?: string
+          country?: string
+          iata_code?: string
+          icao_code?: string
+          lat?: number
+          lng?: number
+          name?: string
+          timezone?: string
+        }
+        Relationships: []
+      }
       asset: {
         Row: {
           asset_class: Database["dim"]["Enums"]["asset_class"]
@@ -88,7 +154,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      haversine_distance_km: {
+        Args: { lat1: number; lat2: number; lng1: number; lng2: number }
+        Returns: number
+      }
     }
     Enums: {
       asset_class: "cash" | "stock" | "fund" | "equity" | "liability" | "index"
@@ -105,7 +174,9 @@ export type Database = {
         | "Rejected"
         | "Expired"
         | "DoneForDay"
+      seat_position: "window" | "middle" | "aisle"
       stock_ops: "buy" | "sell"
+      ticket_class: "eco" | "biz"
       tx_category: "stock" | "cashflow" | "borrow" | "repay"
     }
     CompositeTypes: {
@@ -156,6 +227,54 @@ export type Database = {
           close?: number
           currency_id?: number
           date?: string
+        }
+        Relationships: []
+      }
+      flights: {
+        Row: {
+          aircraft_type: string | null
+          airline_code: string
+          arr_airport_iata: string
+          arrival_time: string
+          departure_time: string
+          dept_airport_iata: string
+          flight_number: string
+          id: number
+          seat_number: string | null
+          seat_position: Database["flight"]["Enums"]["seat_position"] | null
+          tail_number: string | null
+          ticket_class: Database["flight"]["Enums"]["ticket_class"]
+          user_id: string
+        }
+        Insert: {
+          aircraft_type?: string | null
+          airline_code: string
+          arr_airport_iata: string
+          arrival_time: string
+          departure_time: string
+          dept_airport_iata: string
+          flight_number: string
+          id?: number
+          seat_number?: string | null
+          seat_position?: Database["flight"]["Enums"]["seat_position"] | null
+          tail_number?: string | null
+          ticket_class: Database["flight"]["Enums"]["ticket_class"]
+          user_id: string
+        }
+        Update: {
+          aircraft_type?: string | null
+          airline_code?: string
+          arr_airport_iata?: string
+          arrival_time?: string
+          departure_time?: string
+          dept_airport_iata?: string
+          flight_number?: string
+          id?: number
+          seat_number?: string | null
+          seat_position?: Database["flight"]["Enums"]["seat_position"] | null
+          tail_number?: string | null
+          ticket_class?: Database["flight"]["Enums"]["ticket_class"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -473,6 +592,43 @@ export type Database = {
         }
         Relationships: []
       }
+      flights_summary: {
+        Row: {
+          aircraft_type: string | null
+          airline_logo: string | null
+          airline_name: string | null
+          arrival_code: string | null
+          arrival_name: string | null
+          arrival_time: string | null
+          arrival_tz: string | null
+          departure_code: string | null
+          departure_name: string | null
+          departure_time: string | null
+          departure_tz: string | null
+          distance_km: number | null
+          duration: string | null
+          flight_number: string | null
+          id: number | null
+          seat_number: string | null
+          seat_position: Database["flight"]["Enums"]["seat_position"] | null
+          tail_number: string | null
+          ticket_class: Database["flight"]["Enums"]["ticket_class"] | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
+      lifetime_stats: {
+        Row: {
+          airports_count: number | null
+          country_count: number | null
+          flights_count: number | null
+          total_distance: number | null
+          total_duration: number | null
+          type_count: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       outstanding_debts: {
         Row: {
           accrued_interest: number | null
@@ -481,6 +637,23 @@ export type Database = {
           principal: number | null
           rate: number | null
           tx_id: number | null
+        }
+        Relationships: []
+      }
+      routes_geojson: {
+        Row: {
+          airport_a_city: string | null
+          airport_a_code: string | null
+          airport_a_country: string | null
+          airport_a_name: string | null
+          airport_b_city: string | null
+          airport_b_code: string | null
+          airport_b_country: string | null
+          airport_b_name: string | null
+          distance_km: number | null
+          flights_by_direction: Json | null
+          geometry: Json | null
+          route_frequency: number | null
         }
         Relationships: []
       }
@@ -1203,7 +1376,9 @@ export const Constants = {
         "Expired",
         "DoneForDay",
       ],
+      seat_position: ["window", "middle", "aisle"],
       stock_ops: ["buy", "sell"],
+      ticket_class: ["eco", "biz"],
       tx_category: ["stock", "cashflow", "borrow", "repay"],
     },
   },

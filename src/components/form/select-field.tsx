@@ -36,7 +36,7 @@ export function SelectField({
 
   return (
     <Field data-invalid={errors.length > 0} data-disabled={disabled}>
-      <FieldLabel className="sr-only">{label}</FieldLabel>
+      <FieldLabel>{label}</FieldLabel>
 
       <Select
         onValueChange={(value) => {

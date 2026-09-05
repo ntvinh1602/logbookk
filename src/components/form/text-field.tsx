@@ -20,7 +20,7 @@ export function TextField({
 
   return (
     <Field data-invalid={errors.length > 0} data-disabled={disabled}>
-      <FieldLabel className="sr-only">{label}</FieldLabel>
+      <FieldLabel>{label}</FieldLabel>
       <Input
         type="text"
         value={field.state.value ?? ""}

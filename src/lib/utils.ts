@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx'
+import { fromZonedTime } from 'date-fns-tz'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -55,4 +56,12 @@ export function compactNum(amount: number, significant: 3 | 4 = 3) {
 // Percentage number format
 export function pctNum(amount: number) {
   return percentageFormatter.format(amount)
+}
+
+/**
+ * Interprets a naive local datetime ("yyyy-MM-ddTHH:mm") as wall-clock time in
+ * the airport's IANA timezone and converts it to a UTC ISO string.
+ */
+export function localToUtc(local: string, timeZone: string) {
+  return fromZonedTime(local, timeZone).toISOString()
 }

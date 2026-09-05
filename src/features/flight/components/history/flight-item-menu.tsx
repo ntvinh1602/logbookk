@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import { useState } from "react"
+import { useState } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,14 +17,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { FormDialogWrapper } from "@/components/form/form-wrapper"
-import FlightForm from "@/features/flight/form/flightsForm"
-import { useFlightsOptions } from "./flights-options-context"
-import { useFlightsData } from "./flights-data-context"
-import { useFlightFormAdapter } from "@/features/flight/hooks/use-flight-form-adapter"
-import { MoreVertical, Pencil, Trash2, Loader2 } from "lucide-react"
-import type { Flight } from "@/features/flight/ui/flight-config"
+} from '@/components/ui/alert-dialog'
+import { useDeleteFlight } from '@/features/flight/hooks/use-delete-flight'
+import { EditFlightForm } from '@/features/flight/form/flightsForm'
+import { MoreVertical, Pencil, Trash2, Loader2 } from 'lucide-react'
+import type { Flight } from '@/lib/supabase/api/types'
 
 interface FlightItemMenuProps {
   flight: Flight
@@ -34,9 +31,7 @@ export function FlightItemMenu({ flight }: FlightItemMenuProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [editing, setEditing] = useState(false)
   const [confirming, setConfirming] = useState(false)
-  const {
-    actions: { deleteFlight, triggerRefresh, isDeleting },
-  } = useFlightsData()
+  const { deleteFlight, isPending } = useDeleteFlight()
 
   const handleEdit = () => {
     setDropdownOpen(false)
@@ -74,14 +69,14 @@ export function FlightItemMenu({ flight }: FlightItemMenuProps) {
               setDropdownOpen(false)
               setConfirming(true)
             }}
-            disabled={isDeleting}
+            disabled={isPending}
           >
-            {isDeleting ? (
+            {isPending ? (
               <Loader2 className="size-4 animate-spin" />
             ) : (
               <Trash2 className="size-4" />
             )}
-            {isDeleting ? "Deleting..." : "Delete Flight"}
+            {isPending ? 'Deleting...' : 'Delete Flight'}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -104,58 +99,11 @@ export function FlightItemMenu({ flight }: FlightItemMenuProps) {
         </AlertDialogContent>
       </AlertDialog>
 
-      <EditFlightDialog
+      <EditFlightForm
         flight={flight}
         open={editing}
-        onClose={() => setEditing(false)}
-        onSuccess={() => {
-          setEditing(false)
-          triggerRefresh()
-        }}
+        onOpenChange={setEditing}
       />
     </>
-  )
-}
-
-function EditFlightDialog({
-  flight,
-  open,
-  onClose,
-  onSuccess,
-}: {
-  flight: Flight
-  open: boolean
-  onClose: () => void
-  onSuccess: () => void
-}) {
-  const { airlineFormOptions, aircraftFormOptions, airportFormOptions } =
-    useFlightsOptions()
-
-  const flightToFormData = useFlightFormAdapter({
-    airlineFormOptions,
-    aircraftFormOptions,
-    airportFormOptions,
-  })
-
-  return (
-    <FormDialogWrapper
-      open={open}
-      onOpenChange={(isOpen) => {
-        if (!isOpen) onClose()
-      }}
-      title="Edit Flight"
-      subtitle="Update flight details"
-      onSuccess={onSuccess}
-      FormComponent={(props) => (
-        <FlightForm
-          {...props}
-          airlineOptions={airlineFormOptions}
-          aircraftOptions={aircraftFormOptions}
-          airportOptions={airportFormOptions}
-          initialData={flightToFormData(flight) as Record<string, unknown>}
-          flightId={flight.id}
-        />
-      )}
-    />
   )
 }

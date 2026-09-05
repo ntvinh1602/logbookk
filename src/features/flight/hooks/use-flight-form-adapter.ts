@@ -1,43 +1,36 @@
-import { useCallback } from "react"
-import { formatInTimeZone } from "date-fns-tz"
-import type { FlightFormValues } from "@/features/flight/form/schema"
-import type { Flight } from "@/features/flight/ui/flight-config"
+import { useCallback } from 'react'
+import { formatInTimeZone } from 'date-fns-tz'
+import type { FlightFormValues } from '@/features/flight/form/schema'
+import type { FlightsSummaryRow } from '@/lib/supabase/api/types'
 
 interface FormOptions {
   airlineFormOptions: { label: string; value: string }[]
   aircraftFormOptions: { label: string; value: string }[]
-  airportFormOptions: { label: string; value: string }[]
 }
 
 /**
- * Converts a Flight (view model) into FlightFormValues (form model)
- * by reverse-mapping display labels back to database IDs.
+ * Converts a flight (view row) into FlightFormValues (form model).
+ *
+ * Airport IATA codes and local times come straight off the view; airline (name
+ * -> ICAO) and aircraft (model -> ICAO) need a reverse lookup because the view
+ * only exposes their display labels.
  */
 export function useFlightFormAdapter({
   airlineFormOptions,
   aircraftFormOptions,
-  airportFormOptions,
 }: FormOptions) {
   return useCallback(
-    (flight: Flight): Partial<FlightFormValues> => {
+    (flight: FlightsSummaryRow): Partial<FlightFormValues> => {
       const matchingAirline = airlineFormOptions.find(
         (opt) => opt.label === flight.airline_name,
       )
       const matchingAircraft = aircraftFormOptions.find((opt) => {
-        const model = opt.label.split(" — ")[1]
-        return model && model === flight.aircraft_type
-      })
-      const matchingDeparture = airportFormOptions.find((opt) => {
-        const name = opt.label.split(" — ")[1]
-        return name === flight.departure_name
-      })
-      const matchingArrival = airportFormOptions.find((opt) => {
-        const name = opt.label.split(" — ")[1]
-        return name === flight.arrival_name
+        const model = opt.label.split(' — ')[1]
+        return Boolean(model) && model === flight.aircraft_type
       })
 
       return {
-        departureAirportId: matchingDeparture?.value ?? "",
+        departureCode: flight.departure_code ?? '',
         departureTimeLocal:
           flight.departure_time && flight.departure_tz
             ? formatInTimeZone(
@@ -45,8 +38,8 @@ export function useFlightFormAdapter({
                 flight.departure_tz,
                 "yyyy-MM-dd'T'HH:mm",
               )
-            : "",
-        arrivalAirportId: matchingArrival?.value ?? "",
+            : '',
+        arrivalCode: flight.arrival_code ?? '',
         arrivalTimeLocal:
           flight.arrival_time && flight.arrival_tz
             ? formatInTimeZone(
@@ -54,17 +47,16 @@ export function useFlightFormAdapter({
                 flight.arrival_tz,
                 "yyyy-MM-dd'T'HH:mm",
               )
-            : "",
-        flightNumber: flight.flight_number,
-        airlineId: matchingAirline?.value ?? "",
-        ticketClass: flight.ticket_class,
+            : '',
+        flightNumber: flight.flight_number ?? '',
+        airlineCode: matchingAirline?.value ?? '',
+        ticketClass: flight.ticket_class ?? 'eco',
         seatNo: flight.seat_number,
         seatPos: flight.seat_position,
-        aircraftId: matchingAircraft?.value ?? null,
+        aircraftCode: matchingAircraft?.value ?? null,
         tailNo: flight.tail_number,
-        notes: null,
       }
     },
-    [airlineFormOptions, aircraftFormOptions, airportFormOptions],
+    [airlineFormOptions, aircraftFormOptions],
   )
 }

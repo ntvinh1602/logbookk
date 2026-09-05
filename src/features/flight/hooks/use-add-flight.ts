@@ -1,25 +1,25 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { deleteFlight } from '@/lib/supabase/api/flight.supabase'
+import { addFlight as addFlightRequest } from '@/lib/supabase/api/flight.supabase'
 import { invalidateFlightQueries } from '../queries/invalidate'
 
-export function useDeleteFlight() {
+export function useAddFlight() {
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationFn: deleteFlight,
+    mutationFn: addFlightRequest,
     onSuccess: async () => {
       await invalidateFlightQueries(queryClient)
-      toast.success('Flight deleted successfully')
+      toast.success('Flight added successfully')
     },
     onError: (error: Error) => {
-      toast.error('Failed to delete flight', { description: error.message })
+      toast.error('Failed to add flight', { description: error.message })
     },
   })
 
   return {
-    deleteFlight: mutation.mutateAsync,
+    addFlight: mutation.mutateAsync,
     isPending: mutation.isPending,
   }
 }

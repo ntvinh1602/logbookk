@@ -1,6 +1,6 @@
 import 'leaflet/dist/leaflet.css'
 
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import {
   MapContainer,
   TileLayer,
@@ -8,16 +8,13 @@ import {
   CircleMarker,
   Popup,
 } from 'react-leaflet'
-import type { FeatureCollection, LineString } from 'geojson'
-import type { RoutesGeoJSONProperties } from '@/features/flight/actions/get-geojson-routes'
-import type { Airport } from '@/features/flight/actions/get-airports'
 import L from 'leaflet'
-
-type RoutesGeoJSON = FeatureCollection<LineString, RoutesGeoJSONProperties>
+import type { AirportRow, RoutesGeoJSON } from '@/lib/supabase/api/types'
+import type { LineString } from 'geojson'
 
 type Props = {
-  routes: RoutesGeoJSON
-  airports: Airport[]
+  data: RoutesGeoJSON[]
+  airports: AirportRow[]
 }
 
 function interpolateColor(start: number[], end: number[], factor: number) {
@@ -42,11 +39,30 @@ function getColor(freq: number, max: number) {
   return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
 }
 
-export default function LeafletMap({ routes, airports }: Props) {
-  const frequencies = routes.features.map(
-    (f) => f.properties?.route_frequency ?? 1,
-  )
-  const maxFreq = Math.max(...frequencies, 1)
+export default function LeafletMap({ data, airports }: Props) {
+  const safeData = Array.isArray(data) ? data : []
+
+  const { routes, maxFreq } = useMemo(() => {
+    const features = safeData.map(({ geometry, ...properties }) => ({
+      type: 'Feature' as const,
+      geometry: geometry as unknown as LineString,
+      properties,
+    }))
+
+    const maxFreq = Math.max(
+      ...features.map((f) => f.properties.route_frequency ?? 1),
+      1,
+    )
+
+    return {
+      routes: {
+        type: 'FeatureCollection' as const,
+        features,
+      },
+
+      maxFreq,
+    }
+  }, [safeData])
 
   const mapKeyRef = useRef<string | null>(null)
   if (mapKeyRef.current === null) {
@@ -54,7 +70,7 @@ export default function LeafletMap({ routes, airports }: Props) {
   }
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="h-180 w-full overflow-hidden isolate">
       <MapContainer
         key={mapKeyRef.current}
         center={[15, 105]}
