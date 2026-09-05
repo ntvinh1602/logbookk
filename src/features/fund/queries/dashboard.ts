@@ -17,7 +17,7 @@ import {
   getPnl,
   getTwr,
   getVniReturn,
-} from '@/features/fund/api/supabase'
+} from '@/lib/supabase/api/fund.supabase'
 
 const today = new Date()
 const formatDate = (date: Date) => format(date, 'yyyy-MM-dd')

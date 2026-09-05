@@ -19,7 +19,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { cn, formatNum, pctNum } from '@/lib/utils'
 import { BenchmarkChartConvert } from '../../utils'
 import { Badge } from '@/components/ui/badge'
-import type { BenchmarkChartCols } from '@/features/fund/types'
+import type { BenchmarkChartCols } from '@/lib/supabase/api/types'
 
 interface ReturnChartSectionProps {
   benchmarkChart: BenchmarkChartCols | undefined

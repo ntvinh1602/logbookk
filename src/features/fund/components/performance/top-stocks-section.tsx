@@ -1,4 +1,4 @@
-import type { TopStocks } from '@/features/fund/types'
+import type { TopStocks } from '@/lib/supabase/api/types'
 import {
   Item,
   ItemMedia,

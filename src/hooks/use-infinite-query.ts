@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useSyncExternalStore } from "react"
 
 import { createClient } from "@/lib/supabase/client"
-import type { Database } from "@/types/database.types"
+import type { Database } from "@/lib/supabase/supabase.types"
 
 const supabase = createClient()
 

@@ -2,18 +2,23 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRef } from 'react'
 import { toast } from 'sonner'
 
-import { refreshPrices } from '@/features/fund/api/prices'
-import { invalidateFundQueries } from '@/features/fund/queries/invalidate'
+import { refreshPrices } from '../actions/refresh-prices'
+import { invalidateFundQueries } from '../queries/invalidate'
 
 export function useRefreshPrices() {
   const queryClient = useQueryClient()
+
   const loadingToastId = useRef<string | number | undefined>(undefined)
 
   const mutation = useMutation({
-    mutationFn: refreshPrices,
+    mutationFn: () => refreshPrices(),
+
     onMutate: () => {
-      loadingToastId.current = toast.loading('Fetching latest prices...')
+      loadingToastId.current = toast.loading(
+        'Fetching latest prices...',
+      )
     },
+
     onSuccess: async (data) => {
       await invalidateFundQueries(queryClient)
 
@@ -22,6 +27,7 @@ export function useRefreshPrices() {
         description: `Updated items: ${data.updated}`,
       })
     },
+
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to update prices', {
         id: loadingToastId.current,

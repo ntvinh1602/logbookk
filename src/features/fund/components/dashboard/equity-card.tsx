@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { MoveDownLeft, MoveUpRight } from 'lucide-react'
 import StatusLabel from '@/components/status-label'
 import { EquityChartConvert } from '../../utils'
-import type { BSheetView, EquityChartCols } from '@/features/fund/types'
+import type { BSheetView, EquityChartCols } from '@/lib/supabase/api/types'
 import {
   Card,
   CardContent,
@@ -109,9 +109,8 @@ export function EquityCard({
               hide
             />
             {dataKeys.map((key) => (
-              <div>
+              <div key={key}>
                 <Area
-                  key={key}
                   dataKey={key}
                   type="natural"
                   connectNulls={true}
@@ -121,7 +120,6 @@ export function EquityCard({
                   dot={false}
                 />
                 <linearGradient
-                  key={key}
                   id={`fill-${key}`}
                   x1="0"
                   y1="0"

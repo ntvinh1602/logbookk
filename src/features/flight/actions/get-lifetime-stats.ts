@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client"
-import { type Database } from "@/types/database.types"
+import { type Database } from "@/lib/supabase/supabase.types"
 
 type StatsRow = Database["flight"]["Views"]["lifetime_stats"]["Row"]
 

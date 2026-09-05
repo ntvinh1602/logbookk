@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import StatusLabel from '@/components/status-label'
-import type { BSheetView, NewsArticle } from '@/features/fund/types'
+import type { BSheetView, NewsArticle } from '@/lib/supabase/api/types'
 import {
   Item,
   ItemContent,
@@ -45,7 +45,7 @@ function ArticleList({ articles }: { articles: NewsArticle[] }) {
                 variant="default"
                 className="self-start text-xs pointer-events-none font-mono mr-2"
               >
-                {article.tickers && article.tickers[0]}
+                {article.related_stocks[0]}
               </Badge>
               {article.title}
             </ItemTitle>
@@ -88,7 +88,7 @@ export function NewsCard({
       .map((asset) => asset.ticker),
   )
   const portfolioNews = news.filter((article) =>
-    article.tickers?.some((ticker) => tickerSet.has(ticker)),
+    article.related_stocks.some((ticker) => tickerSet.has(ticker)),
   )
 
   const articles = selected === 'all' ? news : portfolioNews

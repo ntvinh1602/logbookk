@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase/client'
-import type { Database } from '@/types/database.types'
 import type {
   BenchmarkChartCols,
   BSheetView,
@@ -13,10 +12,9 @@ import type {
   EventStock,
   TopStocks,
   AssetSearchResult,
-} from '../types'
+  DailyAssetCloseInsert,
+} from './types'
 
-type DailyAssetCloseInsert =
-  Database['dwd']['Tables']['daily_asset_close']['Insert']
 
 export async function getCurrentEquity() {
   const supabase = createClient()
@@ -137,7 +135,8 @@ export async function getBalanceSheet() {
     name: 'Margin',
     asset_class: 'liability',
     logo_url: null,
-    currency_code: 'VND',
+    currency: 'VND',
+    cost_basis: 0,
     quantity: 0,
     total_value: Math.max(-fxVnd, 0),
     mkt_price: 0,
@@ -151,7 +150,8 @@ export async function getBalanceSheet() {
     name: 'Unrealized PnL',
     asset_class: 'equity',
     logo_url: null,
-    currency_code: 'VND',
+    currency: 'VND',
+    cost_basis: 0,
     quantity: 0,
     total_value: unrealized,
     mkt_price: 0,
@@ -167,15 +167,12 @@ export async function getNews() {
   const { data, error } = await supabase
     .schema('ods')
     .from('news_articles')
-    .select('id, title, url, source, excerpt, published_at, related_stocks')
+    .select()
     .order('published_at', { ascending: false })
 
   if (error) throw new Error(error.message)
 
-  return (data?.map((article) => ({
-    ...article,
-    tickers: article.related_stocks ?? [],
-  })) ?? []) as NewsArticle[]
+  return (data ?? []) as NewsArticle[]
 }
 
 export async function getCashflow(
@@ -416,11 +413,6 @@ export async function getOutstandingDebts() {
   return data ?? []
 }
 
-/**
- * Stock tickers with an open long position for the current user. Replaces the
- * `active_stock_tickers` RPC: holdings are read straight from `dws.balance_sheet`
- * (already scoped to `auth.uid()`).
- */
 export async function getHeldStockTickers(): Promise<string[]> {
   const supabase = createClient()
 
@@ -452,6 +444,8 @@ export async function getAssetIdsByTicker(
   return data
 }
 
+// Write
+ 
 export async function upsertDailyAssetClose(rows: DailyAssetCloseInsert[]) {
   const supabase = createClient()
 

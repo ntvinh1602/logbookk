@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/item'
 import { Badge } from '@/components/ui/badge'
 import StatusLabel from '@/components/status-label'
-import type { EventRepay } from '@/features/fund/types'
+import type { EventRepay } from '@/lib/supabase/api/types'
 import { Button } from '@/components/ui/button'
 import {
   Card,

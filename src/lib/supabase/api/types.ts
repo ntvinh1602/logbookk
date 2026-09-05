@@ -1,6 +1,9 @@
-import type { Database } from '@/types/database.types'
+import type { Database } from '@/lib/supabase/supabase.types'
 
-// Columnar equity series: keys stored once, not per-point.
+type NonNullableExcept<T, K extends keyof T = never> = {
+  [P in keyof T]: P extends K ? T[P] : NonNullable<T[P]>
+}
+
 export type ProfitChartCols = {
   snapshot_date: string[]
   revenue: number[]
@@ -21,27 +24,18 @@ export type BenchmarkChartCols = {
   v: number[] // vni_value (normalized, 2dp)
 }
 
-export interface BSheetView {
+export type AssetSearchResult = {
+  id: number
   ticker: string
   name: string
-  asset_class: string
-  logo_url: string | null
-  currency_code: string
-  quantity: number
-  total_value: number
-  mkt_price: number
-  net_profit: number
+  currency: string
 }
 
-export type NewsArticle = {
-  id: string
-  title: string
-  url: string
-  source: string
-  excerpt: string
-  published_at: string
-  tickers?: string[]
-}
+export type BSheetView = NonNullableExcept<
+  Database['dws']['Views']['balance_sheet']['Row'], 'logo_url'
+>
+
+export type NewsArticle = Database['ods']['Tables']['news_articles']['Row']
 
 export type EventStock =
   Database['dws']['Functions']['get_event_stock']['Returns'][number]
@@ -61,15 +55,6 @@ export type CashflowSummary =
 export type TopStocks =
   Database['dws']['Functions']['get_top_stocks']['Returns'][number]
 
-export type AssetSearchResult = {
-  id: number
-  ticker: string
-  name: string
-  currency: string
-}
+export type DailyAssetCloseInsert =
+  Database['dwd']['Tables']['daily_asset_close']['Insert']
 
-export type PriceRefreshResult = {
-  message: string
-  updated: number
-  failed: number
-}

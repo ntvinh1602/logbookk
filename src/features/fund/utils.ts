@@ -1,4 +1,4 @@
-import { type BenchmarkChartCols, type EquityChartCols } from './types'
+import { type BenchmarkChartCols, type EquityChartCols } from '../../lib/supabase/api/types'
 
 export function BenchmarkChartConvert({ d, p, v }: BenchmarkChartCols) {
   const out = new Array(d.length)

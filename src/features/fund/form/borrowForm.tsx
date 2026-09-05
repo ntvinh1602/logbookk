@@ -17,7 +17,7 @@ import { TextField } from '@/components/form/text-field'
 import { DateTimeField } from '@/components/form/datetime-field'
 import { Field, FieldDescription, FieldGroup } from '@/components/ui/field'
 import { borrowSchema } from './schema'
-import { addBorrowEvent } from '../api/supabase'
+import { addBorrowEvent } from '../../../lib/supabase/api/fund.supabase'
 import { useAddFundEvent } from '../hooks/use-add-fund-event'
 
 const FORM_ID = 'borrow-form'

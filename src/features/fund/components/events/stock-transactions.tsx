@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/item'
 import { Badge } from '@/components/ui/badge'
 import StatusLabel from '@/components/status-label'
-import type { EventStock } from '@/features/fund/types'
+import type { EventStock } from '@/lib/supabase/api/types'
 import {
   Card,
   CardContent,

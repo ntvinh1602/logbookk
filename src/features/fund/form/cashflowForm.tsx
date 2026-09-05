@@ -18,7 +18,7 @@ import { Field, FieldGroup } from '@/components/ui/field'
 import { cashflowSchema } from './schema'
 import { ToggleGroupField } from '@/components/form/toggle-group-field'
 import { SelectField } from '@/components/form/select-field'
-import { addCashflowEvent } from '../api/supabase'
+import { addCashflowEvent } from '../../../lib/supabase/api/fund.supabase'
 import { events } from '../queries/events'
 import { useAddFundEvent } from '../hooks/use-add-fund-event'
 

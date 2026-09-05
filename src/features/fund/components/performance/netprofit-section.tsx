@@ -1,4 +1,4 @@
-import type { ProfitChartCols } from '@/features/fund/types'
+import type { ProfitChartCols } from '@/lib/supabase/api/types'
 import StatusLabel from '@/components/status-label'
 import {
   Card,

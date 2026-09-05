@@ -19,7 +19,7 @@ import { DateTimeField } from '@/components/form/datetime-field'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { repaySchema } from './schema'
 import { formatNum } from '@/lib/utils'
-import { addRepayEvent } from '../api/supabase'
+import { addRepayEvent } from '../../../lib/supabase/api/fund.supabase'
 import { events } from '../queries/events'
 import { useAddFundEvent } from '../hooks/use-add-fund-event'
 

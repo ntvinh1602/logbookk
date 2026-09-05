@@ -1,4 +1,4 @@
-import type { BenchmarkChartCols } from '@/features/fund/types'
+import type { BenchmarkChartCols } from '@/lib/supabase/api/types'
 import { BenchmarkChartConvert } from '@/features/fund/utils'
 import {
   Card,

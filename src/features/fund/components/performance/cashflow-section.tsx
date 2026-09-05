@@ -1,4 +1,4 @@
-import type { CashflowSummary } from '@/features/fund/types'
+import type { CashflowSummary } from '@/lib/supabase/api/types'
 import StatusLabel from '@/components/status-label'
 import {
   Card,

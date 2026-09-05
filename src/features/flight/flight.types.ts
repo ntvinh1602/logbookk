@@ -1,4 +1,4 @@
-import type { Database } from "@/types/database.types"
+import type { Database } from "@/lib/supabase/supabase.types"
 
 export interface FilterState {
   year: string | null // "all" or a year string like "2024"

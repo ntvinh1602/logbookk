@@ -1,4 +1,4 @@
-import type { BSheetView } from '@/features/fund/types'
+import type { BSheetView } from '@/lib/supabase/api/types'
 import {
   Card,
   CardAction,

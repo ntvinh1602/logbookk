@@ -12,7 +12,7 @@ import {
   getMonthlyPnlChart,
   getTwr,
   getVniReturn,
-} from '@/features/fund/api/supabase'
+} from '@/lib/supabase/api/fund.supabase'
 
 const formatDate = (date: Date) => format(date, 'yyyy-MM-dd')
 
@@ -41,7 +41,7 @@ export const performanceKeys = {
   
   twrYear: (year: string) => [...performanceKeys.all, 'year', year] as const,
   
-  vniYear: (year: string) => [...performanceKeys.all, 'year', year] as const,
+  vniYear: (year: string) => [...performanceKeys.all, 'vni-year', year] as const,
 }
 
 export const performance = {
