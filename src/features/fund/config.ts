@@ -11,6 +11,8 @@ import {
   Upload,
 } from 'lucide-react'
 
+export const FUND_START_YEAR = 2021
+
 export const VNINDEX_TICKER = 'VNINDEX'
 
 export const EVENT_DATE_KEY = 'yyyy-MM-dd'
@@ -96,3 +98,4 @@ export const TIME_PRESET = {
 export type Events = keyof typeof EVENT_CATEGORY
 export type TimePresets = keyof typeof TIME_PRESET
 export type CashflowOps = keyof typeof EVENT_CATEGORY.cashflow.operations
+export type StockOps = keyof typeof EVENT_CATEGORY.stock.operations

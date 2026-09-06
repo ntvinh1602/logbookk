@@ -6,7 +6,7 @@ import { EVENT_CATEGORY } from '@/features/fund/config'
 import type { Events } from '@/features/fund/config'
 import { getValidOp } from '@/features/fund/utils'
 import { useEventDateRange } from '@/features/fund/hooks/use-event-date-range'
-import { StockTransactions } from './stock-transactions'
+import { StockEventTable } from './stock-table'
 import { CashflowTransactions } from './cashflow-transactions'
 import { BorrowTransactions } from './borrow-transactions'
 import { RepayTransactions } from './repay-transactions'
@@ -22,7 +22,7 @@ function StockList() {
   const query = useQuery(events.stockTx(startISO, endISO, undefined, op))
 
   return (
-    <StockTransactions
+    <StockEventTable
       data={query.data ?? []}
       isLoading={query.isPending}
       error={query.error}

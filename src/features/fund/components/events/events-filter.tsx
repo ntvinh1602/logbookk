@@ -1,12 +1,13 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { format } from 'date-fns'
 import { Calendar, Settings } from 'lucide-react'
-import {
-  SelectAllEnabled,
-  SingleOptionSelect,
-} from '@/components/filter/select-options'
+import { FilterSelect } from '@/components/filter/select-options'
 import { DateRangePicker } from '@/components/filter/date-picker'
-import { EVENT_CATEGORY, EVENT_DATE_KEY, TIME_PRESET } from '@/features/fund/config'
+import {
+  EVENT_CATEGORY,
+  EVENT_DATE_KEY,
+  TIME_PRESET,
+} from '@/features/fund/config'
 import type { Events, TimePresets } from '@/features/fund/config'
 import { getValidOp } from '@/features/fund/utils'
 import { useEventDateRange } from '@/features/fund/hooks/use-event-date-range'
@@ -56,18 +57,17 @@ export function EventsFilter({ event }: { event: Events }) {
 
   return (
     <div className="flex flex-col xl:flex-row gap-3 w-full">
-      <div className="w-full flex-none md:w-auto">
-        <SelectAllEnabled
+      <div className="w-auto min-w-60 flex-none">
+        <FilterSelect
           icon={Settings}
-          placeholder="Operation"
-          value={currentOp ?? null}
+          placeholder="Choose operation"
+          value={currentOp ? currentOp : null}
           onValueChange={(v) => go({ op: v ?? undefined })}
-          allLabel="All operations"
           options={ops}
         />
       </div>
       <div className="flex flex-col md:flex-row w-full gap-3">
-        <SingleOptionSelect
+        <FilterSelect
           icon={Calendar}
           placeholder="period"
           value={period}
@@ -78,7 +78,9 @@ export function EventsFilter({ event }: { event: Events }) {
         <DateRangePicker
           dateFrom={range.displayFrom}
           dateTo={range.displayTo}
-          onDateFromChange={(date) => go({ from: format(date, EVENT_DATE_KEY) })}
+          onDateFromChange={(date) =>
+            go({ from: format(date, EVENT_DATE_KEY) })
+          }
           onDateToChange={(date) => go({ to: format(date, EVENT_DATE_KEY) })}
           disabled={!isCustom}
         />

@@ -2,6 +2,8 @@
 -- Transaction mode: transactional
 -- Boundary reason: default
 
+DROP VIEW dws.lifetime_stats;
+DROP VIEW dws.flights_summary;
 DROP VIEW dws.routes_geojson;
 
 CREATE OR REPLACE VIEW dws.flights_summary WITH (security_invoker=on) AS SELECT f.user_id,
@@ -63,3 +65,56 @@ GRANT ALL ON dws.unique_routes TO anon;
 GRANT ALL ON dws.unique_routes TO authenticated;
 
 GRANT ALL ON dws.unique_routes TO service_role;
+
+create view dws.lifetime_stats
+with
+  (security_invoker = on) as
+with
+  visited_airports as (
+    select
+      fd.user_id,
+      fd.dept_airport_iata as airport_code
+    from
+      dwd.flights fd
+    union
+    select
+      fa.user_id,
+      fa.arr_airport_iata
+    from
+      dwd.flights fa
+  )
+select
+  f.user_id,
+  f.flights_count,
+  count(distinct va.airport_code) as airports_count,
+  count(distinct a.country) as country_count,
+  f.type_count,
+  f.total_distance,
+  f.total_duration
+from
+  (
+    select
+      fs.user_id,
+      count(*) as flights_count,
+      count(distinct fs.aircraft_type) as type_count,
+      sum(fs.distance_km) as total_distance,
+      round(
+        EXTRACT(
+          epoch
+          from
+            sum(fs.arrival_time - fs.departure_time)
+        ) / 3600::numeric
+      ) as total_duration
+    from
+      dws.flights_summary fs
+    group by
+      fs.user_id
+  ) f
+  left join visited_airports va on va.user_id = f.user_id
+  left join dim.airport a on a.iata_code = va.airport_code
+group by
+  f.user_id,
+  f.flights_count,
+  f.type_count,
+  f.total_distance,
+  f.total_duration;

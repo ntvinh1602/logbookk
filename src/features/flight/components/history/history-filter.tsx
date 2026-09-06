@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { Users, Calendar } from 'lucide-react'
 import { flights } from '@/features/flight/queries/flights'
-import { SelectAllEnabled } from '@/components/filter/select-options'
+import { FilterSelect } from '@/components/filter/select-options'
 import { FilterToggleGroup } from '@/components/filter/toggle-options'
 import { FilterSearch } from '@/components/filter/text-search'
 import { FieldGroup } from '@/components/ui/field'
-import { Separator } from '@/components/ui/separator'
 import type { FilterState } from '@/features/flight/types'
-import { FLIGHTS_START_YEAR, TICKET_CLASS } from '@/features/flight/config'
+import { TICKET_CLASS, FLIGHTS_START_YEAR } from '@/features/flight/config'
+import { useYearOptions } from '@/hooks/use-year-options'
 
 const routeApi = getRouteApi('/_protected/flight/history')
 
@@ -44,13 +44,7 @@ export function HistoryFilter() {
     (airlinesQuery.data ?? []).map((a) => [a.name, { label: a.name }]),
   )
 
-  const years = Array.from(
-    { length: new Date().getFullYear() - FLIGHTS_START_YEAR + 1 },
-    (_, i) => FLIGHTS_START_YEAR + i,
-  ).reverse()
-  const yearOptions: Record<string, { label: string }> = Object.fromEntries(
-    years.map((year) => [String(year), { label: String(year) }]),
-  )
+  const { years, yearOptions } = useYearOptions(FLIGHTS_START_YEAR)
 
   const setFilter = <TKey extends keyof FilterState>(
     key: TKey,
@@ -74,34 +68,28 @@ export function HistoryFilter() {
         />
       </div>
 
-      <div className="flex flex-col xl:flex-row gap-4 w-full">
+      <div className="flex flex-col xl:flex-row gap-3 w-full">
         <FilterSearch
           placeholder="Flight number"
           value={filters.search}
           onCommit={(v) => setFilter('search', v)}
         />
 
-        <Separator orientation="vertical" className="my-3 hidden xl:block" />
-
-        <SelectAllEnabled
+        <FilterSelect
           icon={Users}
-          placeholder="Airline"
+          placeholder="Select an airline"
           value={filters.airline}
           onValueChange={(v) => setFilter('airline', v)}
-          allLabel="All Airlines"
           options={airlineOptions}
         />
 
-        <Separator orientation="vertical" className="my-3 hidden xl:block" />
-
-        <SelectAllEnabled
+        <FilterSelect
           icon={Calendar}
           placeholder="Year"
           value={filters.year === null ? null : String(filters.year)}
           onValueChange={(v) =>
             setFilter('year', v === null ? null : Number(v))
           }
-          allLabel="All Years"
           options={yearOptions}
           optionsOrder={years.map(String)}
         />

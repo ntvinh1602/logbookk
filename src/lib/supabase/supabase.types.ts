@@ -621,6 +621,7 @@ export type Database = {
         Row: {
           airports_count: number | null
           country_count: number | null
+          domestic_count: number | null
           flights_count: number | null
           total_distance: number | null
           total_duration: number | null
@@ -637,23 +638,6 @@ export type Database = {
           principal: number | null
           rate: number | null
           tx_id: number | null
-        }
-        Relationships: []
-      }
-      routes_geojson: {
-        Row: {
-          airport_a_city: string | null
-          airport_a_code: string | null
-          airport_a_country: string | null
-          airport_a_name: string | null
-          airport_b_city: string | null
-          airport_b_code: string | null
-          airport_b_country: string | null
-          airport_b_name: string | null
-          distance_km: number | null
-          flights_by_direction: Json | null
-          geometry: Json | null
-          route_frequency: number | null
         }
         Relationships: []
       }
