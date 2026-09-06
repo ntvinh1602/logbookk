@@ -65,3 +65,7 @@ export function pctNum(amount: number) {
 export function localToUtc(local: string, timeZone: string) {
   return fromZonedTime(local, timeZone).toISOString()
 }
+
+export type NonNullableExcept<T, TKeys extends keyof T = never> = {
+  [P in keyof T]: P extends TKeys ? T[P] : NonNullable<T[P]>
+}

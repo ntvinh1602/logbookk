@@ -9,8 +9,9 @@ import {
   Popup,
 } from 'react-leaflet'
 import L from 'leaflet'
-import type { AirportRow, RoutesGeoJSON } from '@/lib/supabase/api/types'
+import type {  } from '@/features/fund/types'
 import type { LineString } from 'geojson'
+import type { AirportRow, RoutesGeoJSON } from '@/features/flight/types'
 
 type Props = {
   data: RoutesGeoJSON[]

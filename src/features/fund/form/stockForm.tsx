@@ -16,16 +16,16 @@ import { NumberField } from '@/components/form/number-field'
 import { ComboboxField } from '@/components/form/combobox-field'
 import { DateTimeField } from '@/components/form/datetime-field'
 import { Field, FieldGroup } from '@/components/ui/field'
-import { stockSchema } from './schema'
+import { stockSchema } from '@/features/fund/form/schema'
 import { ToggleGroupField } from '@/components/form/toggle-group-field'
-import { addStockEvent } from '../../../lib/supabase/api/fund.supabase'
-import { events } from '../queries/events'
-import { useAddFundEvent } from '../hooks/use-add-fund-event'
+import { addStockEvent } from '@/features/fund/api.supabase'
+import { events } from '@/features/fund/queries/events'
+import { useAddFundEvent } from '@/features/fund/hooks/use-add-fund-event'
 import { useDebouncedValue } from '@/hooks/use-debounced-value'
 
 const FORM_ID = 'stock-form'
 
-export const stockOps = [
+const stockOps = [
   { key: 'buy', label: 'Buy' },
   { key: 'sell', label: 'Sell' },
 ]

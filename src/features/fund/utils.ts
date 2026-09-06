@@ -1,4 +1,7 @@
-import { type BenchmarkChartCols, type EquityChartCols } from '../../lib/supabase/api/types'
+import type {
+  BenchmarkChartCols,
+  EquityChartCols,
+} from '@/features/fund/types'
 
 export function BenchmarkChartConvert({ d, p, v }: BenchmarkChartCols) {
   const out = new Array(d.length)
@@ -22,4 +25,12 @@ export function EquityChartConvert({ d, e, c }: EquityChartCols) {
     }
   }
   return out
+}
+
+/** A URL op only counts if it is one of the event's operations. */
+export function getValidOp<T extends Record<string, unknown>>(
+  ops: T,
+  op: string | undefined,
+): string | undefined {
+  return op && Object.hasOwn(ops, op) ? op : undefined
 }

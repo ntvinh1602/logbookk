@@ -2,10 +2,9 @@ import type { LucideIcon } from 'lucide-react'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { toFieldErrorMessages } from './field-errors'
+import { toFieldErrorMessages } from '@/components/form/field-errors'
 
 interface ToggleOption {
-  key: string
   label: string
   icon?: LucideIcon
 }
@@ -13,9 +12,9 @@ interface ToggleOption {
 interface ToggleGroupFieldProps {
   field: AnyFieldApi
   label: string
-  options: ToggleOption[]
+  options: Record<string, ToggleOption>
   disabled?: boolean
-  /** Called with the newly selected key after the field value is updated. */
+  displayIcon?: boolean
   onValueChange?: (value: string) => void
 }
 
@@ -24,6 +23,7 @@ export function ToggleGroupField({
   label,
   options,
   disabled,
+  displayIcon = true,
   onValueChange,
 }: ToggleGroupFieldProps) {
   const errors = toFieldErrorMessages(field.state.meta.errors)
@@ -44,16 +44,16 @@ export function ToggleGroupField({
         spacing={0}
         className="w-full"
       >
-        {options.map((option) => (
-          <ToggleGroupItem
-            key={option.key}
-            value={option.key}
-            className="flex-1"
-          >
-            {option.icon && <option.icon />}
-            {option.label}
-          </ToggleGroupItem>
-        ))}
+        {Object.entries(options).map(([key, option]) => {
+          const Icon = displayIcon && option.icon
+
+          return (
+            <ToggleGroupItem key={key} value={key} className="flex-1">
+              {Icon && <Icon />}
+              {option.label}
+            </ToggleGroupItem>
+          )
+        })}
       </ToggleGroup>
 
       {errors.length > 0 && <FieldError errors={errors} />}

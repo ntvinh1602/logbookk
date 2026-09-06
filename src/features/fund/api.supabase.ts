@@ -4,17 +4,16 @@ import type {
   BSheetView,
   CashflowSummary,
   EquityChartCols,
-  EventBorrow,
-  EventCashflow,
-  EventRepay,
   NewsArticle,
   ProfitChartCols,
-  EventStock,
   TopStocks,
   AssetSearchResult,
   DailyAssetCloseInsert,
-} from './types'
-
+  StockEvents,
+  CashflowEvents,
+  BorrowEvents,
+  RepayEvents,
+} from '@/features/fund/types'
 
 export async function getCurrentEquity() {
   const supabase = createClient()
@@ -219,7 +218,7 @@ export async function getStockEvents(
   endDate?: string,
   ticker?: string,
   operation?: string,
-): Promise<EventStock[]> {
+): Promise<StockEvents[]> {
   const supabase = createClient()
 
   const { data, error } = await supabase.schema('dws').rpc('get_event_stock', {
@@ -231,14 +230,14 @@ export async function getStockEvents(
 
   if (error) throw new Error(error.message)
 
-  return (data ?? []) as EventStock[]
+  return (data ?? []) as StockEvents[]
 }
 
 export async function getCashflowEvents(
   startDate?: string,
   endDate?: string,
   operation?: string,
-): Promise<EventCashflow[]> {
+): Promise<CashflowEvents[]> {
   const supabase = createClient()
 
   const { data, error } = await supabase
@@ -251,27 +250,27 @@ export async function getCashflowEvents(
 
   if (error) throw new Error(error.message)
 
-  return (data ?? []) as EventCashflow[]
+  return (data ?? []) as CashflowEvents[]
 }
 
-export async function getBorrowEvents(): Promise<EventBorrow[]> {
+export async function getBorrowEvents(): Promise<BorrowEvents[]> {
   const supabase = createClient()
 
   const { data, error } = await supabase.schema('dws').rpc('get_event_borrow')
 
   if (error) throw new Error(error.message)
 
-  return (data ?? []) as EventBorrow[]
+  return (data ?? []) as BorrowEvents[]
 }
 
-export async function getRepayEvents(): Promise<EventRepay[]> {
+export async function getRepayEvents(): Promise<RepayEvents[]> {
   const supabase = createClient()
 
   const { data, error } = await supabase.schema('dws').rpc('get_event_repay')
 
   if (error) throw new Error(error.message)
 
-  return (data ?? []) as EventRepay[]
+  return (data ?? []) as RepayEvents[]
 }
 
 export async function getAssets(query: string, assetClass: string) {
@@ -445,7 +444,7 @@ export async function getAssetIdsByTicker(
 }
 
 // Write
- 
+
 export async function upsertDailyAssetClose(rows: DailyAssetCloseInsert[]) {
   const supabase = createClient()
 

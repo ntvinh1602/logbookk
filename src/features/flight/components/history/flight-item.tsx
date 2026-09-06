@@ -13,62 +13,16 @@ import {
   ItemSeparator,
 } from '@/components/ui/item'
 import { Badge } from '@/components/ui/badge'
-import {
-  Plane,
-  Calendar,
-  Clock,
-  ChevronRight,
-  Users,
-  Armchair,
-  Star,
-  Hash,
-  Leaf,
-  BriefcaseBusiness,
-} from 'lucide-react'
+import { Plane, Calendar, Clock, ChevronRight } from 'lucide-react'
 import { formatInTimeZone } from 'date-fns-tz'
-import type { Flight } from '@/lib/supabase/api/types'
+import type { FlightsSummaryRow } from '@/features/flight/types'
+import { FLIGHT_DETAILS } from '@/features/flight/config'
 
 interface FlightItemProps {
-  flight: Flight
+  flight: FlightsSummaryRow
   itemKey: string
   menuSlot?: React.ReactNode
 }
-
-export const ticketClass = [
-  { key: 'eco', label: 'Economy', icon: Leaf },
-  { key: 'biz', label: 'Business', icon: BriefcaseBusiness },
-]
-
-export const FlightDetail = [
-  { key: 'tail', icon: Hash, getValue: (f: Flight) => f.tail_number ?? 'N/A' },
-  {
-    key: 'airline',
-    icon: Users,
-    getValue: (f: Flight) => f.airline_name ?? 'N/A',
-  },
-  {
-    key: 'aircraft',
-    icon: Plane,
-    getValue: (f: Flight) => f.aircraft_type ?? 'N/A',
-  },
-  {
-    key: 'duration',
-    icon: Clock,
-    getValue: (f: Flight) => f.duration ?? 'N/A',
-  },
-  {
-    key: 'seat',
-    icon: Armchair,
-    getValue: (f: Flight) =>
-      `${f.seat_number ?? 'N/A'} - ${f.seat_position ?? 'N/A'}`,
-  },
-  {
-    key: 'class',
-    icon: Star,
-    getValue: (f: Flight) =>
-      ticketClass.find((s) => s.key === f.ticket_class)?.label ?? 'N/A',
-  },
-] as const
 
 export function FlightItem({ flight, itemKey, menuSlot }: FlightItemProps) {
   const isUpcoming = new Date(flight.departure_time) > new Date()
@@ -163,18 +117,13 @@ export function FlightItem({ flight, itemKey, menuSlot }: FlightItemProps) {
       </AccordionTrigger>
       <AccordionContent className="h-full flex items-center border-t border-border pt-4">
         <ItemGroup className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {FlightDetail.map((detail) => {
-            const value = detail.getValue(flight)
-            if (!value) return null
+          {FLIGHT_DETAILS.map((d) => {
+            const value = d.getValue(flight)
+            if (!value) return 'N/A'
             return (
-              <Item
-                key={detail.key}
-                size="xs"
-                className="p-1"
-                variant="default"
-              >
+              <Item key={d.key} size="xs" className="p-1">
                 <ItemMedia variant="icon" className="text-muted-foreground">
-                  <detail.icon />
+                  <d.icon />
                 </ItemMedia>
                 <ItemContent>
                   <ItemDescription className="capitalize">

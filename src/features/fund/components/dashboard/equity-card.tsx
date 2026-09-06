@@ -2,8 +2,8 @@ import { cn, compactNum } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { MoveDownLeft, MoveUpRight } from 'lucide-react'
 import StatusLabel from '@/components/status-label'
-import { EquityChartConvert } from '../../utils'
-import type { BSheetView, EquityChartCols } from '@/lib/supabase/api/types'
+import { EquityChartConvert } from '@/features/fund/utils'
+import type { BSheetView, EquityChartCols } from '@/features/fund/types'
 import {
   Card,
   CardContent,

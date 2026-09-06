@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
@@ -8,7 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Calendar } from "../ui/calendar"
+import { Calendar } from "@/components/ui/calendar"
 
 type SinglePickerProps = {
   date: Date

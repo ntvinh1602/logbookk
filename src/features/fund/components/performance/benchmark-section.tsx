@@ -1,4 +1,4 @@
-import type { BenchmarkChartCols } from '@/lib/supabase/api/types'
+import type { BenchmarkChartCols } from '@/features/fund/types'
 import { BenchmarkChartConvert } from '@/features/fund/utils'
 import {
   Card,
@@ -37,8 +37,14 @@ export function BenchmarkSection({
   const isMobile = useIsMobile()
 
   const chartConfig = {
-    portfolio_value: { label: 'Equity', color: 'var(--chart-1)' },
-    vni_value: { label: 'VN-Index', color: 'var(--chart-2)' },
+    portfolio_value: {
+      label: 'Equity',
+      color: 'var(--chart-1)',
+    },
+    vni_value: {
+      label: 'VN-Index',
+      color: 'var(--chart-2)',
+    },
   }
 
   const dataKeys = Object.keys(chartConfig)
@@ -62,7 +68,9 @@ export function BenchmarkSection({
           <Badge
             variant="ghost"
             className={cn(
-              (twrYear ?? 0) > (vniYear ?? 0) ? 'text-positive' : 'text-negative',
+              (twrYear ?? 0) > (vniYear ?? 0)
+                ? 'text-positive'
+                : 'text-negative',
               '-ml-2 pointer-events-none',
             )}
           >

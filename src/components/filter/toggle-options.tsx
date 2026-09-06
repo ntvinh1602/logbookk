@@ -1,9 +1,8 @@
-import type { LucideIcon } from "lucide-react"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { Field, FieldLabel } from "@/components/ui/field"
+import type { LucideIcon } from 'lucide-react'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { Field, FieldLabel } from '@/components/ui/field'
 
 interface FilterToggleOption {
-  key: string
   label: string
   icon: LucideIcon
 }
@@ -11,7 +10,7 @@ interface FilterToggleOption {
 interface FilterToggleGroupProps {
   value: string
   onValueChange: (value: string) => void
-  options: readonly FilterToggleOption[]
+  options: Record<string, FilterToggleOption>
 }
 
 export function FilterToggleGroup({
@@ -25,17 +24,17 @@ export function FilterToggleGroup({
       <ToggleGroup
         multiple={false}
         value={[value]}
-        onValueChange={(v) => onValueChange(v[0] ?? "")}
+        onValueChange={(v) => onValueChange(v[0] ?? '')}
         variant="default"
         spacing={1}
         className="flex w-full justify-start overflow-x-auto md:inline-flex md:w-fit md:max-w-full"
       >
-        {options.map((option) => {
+        {Object.entries(options).map(([key, option]) => {
           const OptionIcon = option.icon
           return (
             <ToggleGroupItem
-              key={option.key}
-              value={option.key}
+              key={key}
+              value={key}
               className="flex-1 px-6 rounded-none aria-pressed:bg-muted/0 aria-pressed:border-foreground aria-pressed:border-b hover:bg-muted/0 text-muted-foreground aria-pressed:text-foreground md:flex-none"
             >
               <OptionIcon />

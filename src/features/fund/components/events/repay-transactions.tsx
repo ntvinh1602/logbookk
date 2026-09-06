@@ -6,23 +6,15 @@ import {
   ItemContent,
   ItemTitle,
   ItemDescription,
-  ItemGroup,
   ItemSeparator,
 } from '@/components/ui/item'
 import { Badge } from '@/components/ui/badge'
-import StatusLabel from '@/components/status-label'
-import type { EventRepay } from '@/lib/supabase/api/types'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import type { RepayEvents } from '@/features/fund/types'
+import { EventListCard } from './event-list-card'
 
 interface RepayTransactionsProps {
-  data: EventRepay[]
+  data: RepayEvents[]
   isLoading: boolean
   error: Error | null
 }
@@ -32,53 +24,41 @@ export function RepayTransactions({
   isLoading,
   error,
 }: RepayTransactionsProps) {
-  if (isLoading) return <StatusLabel type="loading" />
-  if (error) return <StatusLabel type="error" />
-  if (data.length === 0) return <StatusLabel type="empty" />
-
   return (
-    <Card className="gap-4">
-      <CardHeader>
-        <CardTitle>Event List</CardTitle>
-        <CardDescription>{data.length} transactions</CardDescription>
-      </CardHeader>
-      <CardContent className="px-0">
-        <ItemGroup className="gap-0">
-          {data.map((tx) => (
-            <div key={tx.tx_id}>
-              <ItemSeparator />
-              <Item className="py-2">
-                <Button variant="secondary" className="pointer-events-none">
-                  <Handshake />
-                </Button>
+    <EventListCard count={data.length} isLoading={isLoading} error={error}>
+      {data.map((tx) => (
+        <div key={tx.tx_id}>
+          <ItemSeparator />
+          <Item className="py-2">
+            <Button variant="secondary" className="pointer-events-none">
+              <Handshake />
+            </Button>
 
-                <ItemSeparator orientation="vertical" />
+            <ItemSeparator orientation="vertical" />
 
-                <ItemContent>
-                  <ItemTitle>{tx.lender}</ItemTitle>
-                  <ItemDescription className="flex gap-1">
-                    <Badge variant="ghost" className="pointer-events-none px-0">
-                      <Calendar />
-                      {format(new Date(tx.created_at), 'yyyy-MM-dd')}
-                    </Badge>
-                    <Badge variant="ghost" className="pointer-events-none px-0">
-                      <Clock />
-                      {format(new Date(tx.created_at), 'HH:mm')}
-                    </Badge>
-                  </ItemDescription>
-                </ItemContent>
+            <ItemContent>
+              <ItemTitle>{tx.lender}</ItemTitle>
+              <ItemDescription className="flex gap-1">
+                <Badge variant="ghost" className="pointer-events-none px-0">
+                  <Calendar />
+                  {format(new Date(tx.created_at), 'yyyy-MM-dd')}
+                </Badge>
+                <Badge variant="ghost" className="pointer-events-none px-0">
+                  <Clock />
+                  {format(new Date(tx.created_at), 'HH:mm')}
+                </Badge>
+              </ItemDescription>
+            </ItemContent>
 
-                <ItemContent className="items-end">
-                  <ItemTitle>{formatNum(tx.principal)}</ItemTitle>
-                  <ItemDescription className="text-xs">
-                    Repay · Interest {formatNum(tx.interest)}
-                  </ItemDescription>
-                </ItemContent>
-              </Item>
-            </div>
-          ))}
-        </ItemGroup>
-      </CardContent>
-    </Card>
+            <ItemContent className="items-end">
+              <ItemTitle>{formatNum(tx.principal)}</ItemTitle>
+              <ItemDescription className="text-xs">
+                Repay · Interest {formatNum(tx.interest)}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </div>
+      ))}
+    </EventListCard>
   )
 }

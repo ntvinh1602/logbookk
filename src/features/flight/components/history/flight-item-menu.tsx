@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import {
   DropdownMenu,
@@ -21,10 +19,10 @@ import {
 import { useDeleteFlight } from '@/features/flight/hooks/use-delete-flight'
 import { EditFlightForm } from '@/features/flight/form/flightsForm'
 import { MoreVertical, Pencil, Trash2, Loader2 } from 'lucide-react'
-import type { Flight } from '@/lib/supabase/api/types'
+import type { FlightsSummaryRow } from '@/features/flight/types'
 
 interface FlightItemMenuProps {
-  flight: Flight
+  flight: FlightsSummaryRow
 }
 
 export function FlightItemMenu({ flight }: FlightItemMenuProps) {

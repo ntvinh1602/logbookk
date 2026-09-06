@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { formatInTimeZone } from 'date-fns-tz'
 import type { FlightFormValues } from '@/features/flight/form/schema'
-import type { FlightsSummaryRow } from '@/lib/supabase/api/types'
+import type { FlightsSummaryRow } from '@/features/fund/types'
 
 interface FormOptions {
   airlineFormOptions: { label: string; value: string }[]

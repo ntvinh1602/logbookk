@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/item'
 import { Progress } from '@/components/ui/progress'
 import { cn, compactNum, formatNum, pctNum } from '@/lib/utils'
-import type { BSheetView } from '@/lib/supabase/api/types'
+import type { BSheetView } from '@/features/fund/types'
 import { Button } from '@/components/ui/button'
 import { ListOrdered } from 'lucide-react'
 import {
@@ -116,7 +116,7 @@ export function AssetCard({
                 <ItemContent>
                   <ItemTitle>{bs.name}</ItemTitle>
                   <ItemDescription className="text-xs">
-                    {`${formatNum(bs.quantity)} ${bs.currency_code == 'VND' ? 'units' : bs.currency_code} @ ${formatNum(bs.mkt_price)} `}
+                    {`${formatNum(bs.quantity)} ${bs.currency == 'VND' ? 'units' : bs.currency} @ ${formatNum(bs.mkt_price)} `}
                   </ItemDescription>
                 </ItemContent>
                 <ItemContent className="items-end">

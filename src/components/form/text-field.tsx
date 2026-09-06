@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input"
 import type { AnyFieldApi } from "@tanstack/react-form"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { toFieldErrorMessages } from "./field-errors"
+import { toFieldErrorMessages } from "@/components/form/field-errors"
 
 interface TextFieldProps {
   field: AnyFieldApi

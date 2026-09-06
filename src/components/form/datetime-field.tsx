@@ -12,7 +12,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { CalendarIcon, ClockIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { toFieldErrorMessages } from './field-errors'
+import { toFieldErrorMessages } from '@/components/form/field-errors'
 
 type DateTimeFieldProps = {
   field: AnyFieldApi

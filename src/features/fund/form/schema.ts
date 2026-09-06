@@ -1,3 +1,4 @@
+import { EVENT_CATEGORY } from '@/features/fund/config'
 import * as z from 'zod'
 
 const positiveInt = (field: string) =>
@@ -12,8 +13,13 @@ const nonNegativeInt = (field: string) =>
     .int(`${field} must be a whole number`)
     .min(0, `${field} cannot be negative`)
 
+const enumKeys = <T extends object>(
+  obj: T,
+): [Extract<keyof T, string>, ...Extract<keyof T, string>[]] =>
+  Object.keys(obj) as [Extract<keyof T, string>, ...Extract<keyof T, string>[]]
+
 export const stockSchema = z.object({
-  side: z.enum(['buy', 'sell']),
+  side: z.enum(enumKeys(EVENT_CATEGORY.stock.operations)),
   stock_id: positiveInt('Stock ID'),
   price: nonNegativeInt('Price'),
   quantity: positiveInt('Quantity'),
@@ -23,7 +29,7 @@ export const stockSchema = z.object({
 })
 
 export const cashflowSchema = z.object({
-  operation: z.enum(['deposit', 'withdraw', 'income', 'expense']),
+  operation: z.enum(enumKeys(EVENT_CATEGORY.cashflow.operations)),
   asset: positiveInt('Asset ID'),
   quantity: z.number().positive('Quantity must be positive'),
   fx_rate: z.number().min(1, 'FX Rate cannot be less than 1'),

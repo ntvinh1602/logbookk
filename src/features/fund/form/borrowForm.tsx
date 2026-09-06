@@ -16,9 +16,9 @@ import { NumberField } from '@/components/form/number-field'
 import { TextField } from '@/components/form/text-field'
 import { DateTimeField } from '@/components/form/datetime-field'
 import { Field, FieldDescription, FieldGroup } from '@/components/ui/field'
-import { borrowSchema } from './schema'
-import { addBorrowEvent } from '../../../lib/supabase/api/fund.supabase'
-import { useAddFundEvent } from '../hooks/use-add-fund-event'
+import { borrowSchema } from '@/features/fund/form/schema'
+import { addBorrowEvent } from '@/features/fund/api.supabase'
+import { useAddFundEvent } from '@/features/fund/hooks/use-add-fund-event'
 
 const FORM_ID = 'borrow-form'
 

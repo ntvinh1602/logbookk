@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/select'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
-import { toFieldErrorMessages } from './field-errors'
+import { toFieldErrorMessages } from '@/components/form/field-errors'
 
 interface SelectOption {
   label: string

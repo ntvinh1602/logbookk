@@ -17,9 +17,9 @@ import {
 import { format } from 'date-fns'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn, formatNum, pctNum } from '@/lib/utils'
-import { BenchmarkChartConvert } from '../../utils'
+import { BenchmarkChartConvert } from '@/features/fund/utils'
 import { Badge } from '@/components/ui/badge'
-import type { BenchmarkChartCols } from '@/lib/supabase/api/types'
+import type { BenchmarkChartCols } from '@/features/fund/types'
 
 interface ReturnChartSectionProps {
   benchmarkChart: BenchmarkChartCols | undefined
@@ -37,8 +37,14 @@ export function ReturnCard({
   const isMobile = useIsMobile()
 
   const chartConfig = {
-    portfolio_value: { label: 'Equity', color: 'var(--chart-1)' },
-    vni_value: { label: 'VN-Index', color: 'var(--chart-2)' },
+    portfolio_value: {
+      label: 'Equity',
+      color: 'var(--chart-1)',
+    },
+    vni_value: {
+      label: 'VN-Index',
+      color: 'var(--chart-2)',
+    },
   }
 
   const dataKeys = Object.keys(chartConfig)

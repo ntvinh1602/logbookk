@@ -6,7 +6,7 @@ import {
 } from '@/components/ui/input-group'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
-import { toFieldErrorMessages } from './field-errors'
+import { toFieldErrorMessages } from '@/components/form/field-errors'
 
 interface NumberFieldProps {
   field: AnyFieldApi

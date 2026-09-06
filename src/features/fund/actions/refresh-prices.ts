@@ -4,15 +4,16 @@ import {
   getAssetIdsByTicker,
   getHeldStockTickers,
   upsertDailyAssetClose,
-} from '@/lib/supabase/api/fund.supabase'
+} from '@/features/fund/api.supabase'
+import { VNINDEX_TICKER } from '@/features/fund/config'
 
-export type DnsePriceRow = {
+type DnsePriceRow = {
   ticker: string
   close: number
   date: string
 }
 
-export type DnsePriceError = {
+type DnsePriceError = {
   ticker: string
   reason: string
 }
@@ -22,8 +23,6 @@ export type PriceRefreshResult = {
   updated: number
   failed: number
 }
-
-const VNINDEX_TICKER = 'VNINDEX'
 
 export const refreshPrices = createServerFn({
   method: 'POST',

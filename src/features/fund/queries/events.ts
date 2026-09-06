@@ -7,7 +7,7 @@ import {
   getAssets,
   getOutstandingDebts,
   getCashAssets,
-} from '@/lib/supabase/api/fund.supabase'
+} from '@/features/fund/api.supabase'
 
 export const eventKeys = {
   all: ['events'] as const,

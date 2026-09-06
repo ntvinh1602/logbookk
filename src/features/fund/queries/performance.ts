@@ -12,7 +12,7 @@ import {
   getMonthlyPnlChart,
   getTwr,
   getVniReturn,
-} from '@/lib/supabase/api/fund.supabase'
+} from '@/features/fund/api.supabase'
 
 const formatDate = (date: Date) => format(date, 'yyyy-MM-dd')
 

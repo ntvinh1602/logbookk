@@ -1,4 +1,4 @@
-import type { BSheetView } from '@/lib/supabase/api/types'
+import type { BSheetView } from '@/features/fund/types'
 import {
   Card,
   CardAction,
@@ -15,7 +15,7 @@ import {
   ItemSeparator,
   ItemTitle,
 } from '@/components/ui/item'
-import { Separator } from '@/components/ui/separator'
+import { Marker, MarkerContent } from '@/components/ui/marker'
 
 interface Props {
   bsData: BSheetView[]
@@ -65,8 +65,12 @@ export default function BalanceSheet({
   ] as const
 
   return (
-    <div className="flex flex-col gap-2">
-      <Card className="flex gap-3 bg-0 ring-0 shadow-none">
+    <div className="flex flex-col">
+      <Marker variant="separator" className="px-6">
+        <MarkerContent>Total Assets</MarkerContent>
+      </Marker>
+
+      <Card className="flex gap-3 py-4 pb-8 bg-0 ring-0 shadow-none">
         <CardHeader>
           <CardTitle>Assets</CardTitle>
           <CardAction>{formatNum(asset)}</CardAction>
@@ -98,7 +102,7 @@ export default function BalanceSheet({
                         <ItemTitle>{item.name}</ItemTitle>
                         {item.ticker !== 'FX.VND' && (
                           <ItemDescription>
-                            {`${formatNum(item.quantity)} ${item.asset_class == 'stock' ? ' shares' : `${item.currency_code}`}`}
+                            {`${formatNum(item.quantity)} ${item.asset_class == 'stock' ? ' shares' : `${item.currency}`}`}
                           </ItemDescription>
                         )}
                       </ItemContent>
@@ -116,37 +120,32 @@ export default function BalanceSheet({
         </CardContent>
       </Card>
 
-      <div className="px-4">
-        <Separator />
-      </div>
+      <Marker variant="separator" className="px-6">
+        <MarkerContent>Total Liabilities</MarkerContent>
+      </Marker>
 
-      <div className="flex flex-col">
-        {liabilityAssets.map((s) => (
-          <Card
-            key={s.label}
-            className="flex gap-3 py-4 bg-0 ring-0 shadow-none"
-          >
-            <CardHeader>
-              <CardTitle>{s.label}</CardTitle>
-              <CardAction>{formatNum(s.value)}</CardAction>
-            </CardHeader>
-            <CardContent className="px-4 flex flex-col gap-1">
-              {s.items.map((item) => (
-                <Item key={item.ticker} size="xs" variant="muted">
-                  <ItemContent>
-                    <ItemTitle>{item.name}</ItemTitle>
-                  </ItemContent>
-                  <ItemContent>
-                    <ItemDescription>
-                      {formatNum(item.total_value)}
-                    </ItemDescription>
-                  </ItemContent>
-                </Item>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {liabilityAssets.map((s) => (
+        <Card key={s.label} className="flex gap-3 py-4 bg-0 ring-0 shadow-none">
+          <CardHeader>
+            <CardTitle>{s.label}</CardTitle>
+            <CardAction>{formatNum(s.value)}</CardAction>
+          </CardHeader>
+          <CardContent className="px-4 flex flex-col gap-1">
+            {s.items.map((item) => (
+              <Item key={item.ticker} size="xs" variant="muted">
+                <ItemContent>
+                  <ItemTitle>{item.name}</ItemTitle>
+                </ItemContent>
+                <ItemContent>
+                  <ItemDescription>
+                    {formatNum(item.total_value)}
+                  </ItemDescription>
+                </ItemContent>
+              </Item>
+            ))}
+          </CardContent>
+        </Card>
+      ))}
     </div>
   )
 }

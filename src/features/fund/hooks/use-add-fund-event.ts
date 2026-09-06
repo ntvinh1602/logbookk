@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { invalidateFundQueries } from '../queries/invalidate'
+import { invalidateFundQueries } from '@/features/fund/queries/invalidate'
 
 interface AddFundEventOptions<TInput> {
   mutationFn: (input: TInput) => Promise<void>

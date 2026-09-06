@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import type { FlightUpsertInput } from '@/lib/supabase/api/flight.supabase'
-import { updateFlight as updateFlightRequest } from '@/lib/supabase/api/flight.supabase'
-import { invalidateFlightQueries } from '../queries/invalidate'
+import type { FlightUpsertInput } from '@/features/flight/api.supabase'
+import { updateFlight as updateFlightRequest } from '@/features/flight/api.supabase'
+import { invalidateFlightQueries } from '@/features/flight/queries/invalidate'
 
 interface UpdateFlightVariables {
   flightId: number

@@ -18,13 +18,8 @@ import { SelectField } from '@/components/form/select-field'
 import { ComboboxField } from '@/components/form/combobox-field'
 import { DateTimeField } from '@/components/form/datetime-field'
 import { Field, FieldGroup } from '@/components/ui/field'
-import type {
-  Flight,
-  SeatPosition,
-  TicketClass,
-} from '@/lib/supabase/api/types'
-import { flightSchema } from './schema'
-import type { FlightFormValues } from './schema'
+import { flightSchema } from '@/features/flight/form/schema'
+import type { FlightFormValues } from '@/features/flight/form/schema'
 import { ToggleGroupField } from '@/components/form/toggle-group-field'
 import { flights } from '@/features/flight/queries/flights'
 import { useAddFlight } from '@/features/flight/hooks/use-add-flight'
@@ -32,29 +27,12 @@ import { useUpdateFlight } from '@/features/flight/hooks/use-update-flight'
 import { useFlightFormOptions } from '@/features/flight/hooks/use-flight-form-options'
 import { useFlightFormAdapter } from '@/features/flight/hooks/use-flight-form-adapter'
 import { Marker, MarkerContent } from '@/components/ui/marker'
-import { ticketClass } from '../components/history/flight-item'
-
-export interface FlightUpsertInput {
-  airlineCode: string
-  departureCode: string
-  departureLocal: string
-  departureTz: string
-  arrivalCode: string
-  arrivalLocal: string
-  arrivalTz: string
-  flightNumber: string
-  ticketClass: TicketClass
-  aircraftType: string | null
-  seatNumber: string | null
-  seatPosition: SeatPosition | null
-  tailNumber: string | null
-}
-
-const SEAT_POSITIONS = [
-  { key: 'window', label: 'Window' },
-  { key: 'middle', label: 'Middle' },
-  { key: 'aisle', label: 'Aisle' },
-]
+import type {
+  FlightsSummaryRow,
+  FlightUpsertInput,
+  SeatPosition,
+} from '@/features/flight/types'
+import { SEAT_POSITIONS, TICKET_CLASS } from '@/features/flight/config'
 
 function toFlightUpsert(
   values: FlightFormValues,
@@ -89,12 +67,11 @@ function toFlightUpsert(
 type FlightFormOptions = ReturnType<typeof useFlightFormOptions>
 
 interface FlightDialogProps {
-  open: boolean
   onOpenChange: (open: boolean) => void
   title: string
   subtitle?: string
   options: FlightFormOptions
-  flight?: Flight
+  flight?: FlightsSummaryRow
 }
 
 /**
@@ -103,7 +80,6 @@ interface FlightDialogProps {
  * defaultValues are (re)captured from the current flight on every open.
  */
 function FlightDialog({
-  open,
   onOpenChange,
   title,
   subtitle,
@@ -259,12 +235,12 @@ function FlightDialog({
               <ToggleGroupField
                 field={field}
                 label="Ticket Class"
-                options={ticketClass}
+                options={TICKET_CLASS}
               />
             )}
           </form.Field>
 
-          <Marker variant="separator" className='-mb-4'>
+          <Marker variant="separator" className="-mb-4">
             <MarkerContent>Optional Inputs</MarkerContent>
           </Marker>
 
@@ -335,7 +311,6 @@ export function AddFlightForm() {
         }
       />
       <FlightDialog
-        open={open}
         onOpenChange={setOpen}
         title="Add Flight"
         subtitle="Log a new flight into your travel history"
@@ -350,7 +325,7 @@ export function EditFlightForm({
   open,
   onOpenChange,
 }: {
-  flight: Flight
+  flight: FlightsSummaryRow
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
@@ -359,7 +334,6 @@ export function EditFlightForm({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <FlightDialog
-        open={open}
         onOpenChange={onOpenChange}
         title="Edit Flight"
         subtitle="Update flight details"

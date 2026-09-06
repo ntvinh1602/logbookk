@@ -1,11 +1,9 @@
-"use client"
-
 import { useState } from "react"
 import { SearchIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Field, FieldLabel } from "@/components/ui/field"
-import { ButtonGroup } from "../ui/button-group"
-import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
+import { ButtonGroup } from "@/components/ui/button-group"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 
 interface FilterSearchProps {
   placeholder: string

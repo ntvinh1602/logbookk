@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRef } from 'react'
 import { toast } from 'sonner'
 
-import { refreshPrices } from '../actions/refresh-prices'
-import { invalidateFundQueries } from '../queries/invalidate'
+import { refreshPrices } from '@/features/fund/actions/refresh-prices'
+import { invalidateFundQueries } from '@/features/fund/queries/invalidate'
 
 export function useRefreshPrices() {
   const queryClient = useQueryClient()

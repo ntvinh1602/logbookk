@@ -8,7 +8,7 @@ import {
   ComboboxItem,
   ComboboxList,
 } from '@/components/ui/combobox'
-import { toFieldErrorMessages } from './field-errors'
+import { toFieldErrorMessages } from '@/components/form/field-errors'
 
 type ComboboxOption = {
   value: string | number

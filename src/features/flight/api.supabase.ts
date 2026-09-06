@@ -1,23 +1,18 @@
 import { createClient } from '@/lib/supabase/client'
-import type { Database } from '@/lib/supabase/supabase.types'
+import { localToUtc } from '@/lib/utils'
 import type {
   AircraftRow,
   AirlineRow,
   AirportRow,
-  Flight,
+  FlightsInsert,
+  FlightsQueryParams,
+  FlightsSummaryRow,
+  FlightUpsertInput,
   RoutesGeoJSON,
   StatsRow,
-  TicketClass,
-} from './types'
-import { localToUtc } from '@/lib/utils'
-import type { FlightUpsertInput } from '@/features/flight/form/flightsForm'
+} from '@/features/flight/types'
 
-export interface FlightsQueryParams {
-  year?: string | null
-  airline?: string | null
-  ticketClass?: TicketClass
-  search?: string
-}
+// Reads
 
 export async function getAircrafts() {
   const supabase = createClient()
@@ -101,14 +96,14 @@ export async function getFlights(params: FlightsQueryParams = {}) {
   })
 
   if (error) throw new Error(error.message)
-  return data as Flight[]
+  return data as FlightsSummaryRow[]
 }
 
 // Writes
 
 function toFlightColumns(
   input: FlightUpsertInput,
-): Omit<Database['dwd']['Tables']['flights']['Insert'], 'id' | 'user_id'> {
+): Omit<FlightsInsert, 'id' | 'user_id'> {
   return {
     airline_code: input.airlineCode,
     aircraft_type: input.aircraftType,

@@ -6,8 +6,8 @@ import {
   getFlights,
   getLifetimeStats,
   getRoutesGeoJSON,
-} from '@/lib/supabase/api/flight.supabase'
-import type { FlightsQueryParams } from '@/lib/supabase/api/flight.supabase'
+} from '@/features/flight/api.supabase'
+import type { FlightsQueryParams } from '@/features/flight/types'
 
 export const flightKeys = {
   all: ['flights'] as const,

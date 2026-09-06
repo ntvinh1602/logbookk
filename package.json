@@ -11,8 +11,8 @@
     "format": "prettier --write . && eslint --fix",
     "check": "prettier --check .",
     "db:types": "npx supabase gen types typescript --local > src/lib/supabase/supabase.types.ts",
-    "db:remote-dump": "npx supabase db dump --data-only -s flight,ods,dim,dwd,dws -f supabase/.seeds/data.sql",
-    "db:local-dump": "npx supabase db dump --data-only --local -s flight,ods,dim,dwd,dws -f supabase/.seeds/data.sql",
+    "db:remote-dump": "npx supabase db dump --data-only -s ods,dim,dwd,dws -f supabase/.seeds/data.sql",
+    "db:local-dump": "npx supabase db dump --data-only --local -s ods,dim,dwd,dws -f supabase/.seeds/data.sql",
     "db:squash": "npx supabase migration squash --linked"
   },
   "dependencies": {
@@ -33,7 +33,6 @@
     "cn": "^0.2.5",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
-    "embla-carousel-react": "^8.6.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.31.0",
     "nitro": "^3.0.260610-beta",

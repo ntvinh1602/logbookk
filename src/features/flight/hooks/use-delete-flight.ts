@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { deleteFlight } from '@/lib/supabase/api/flight.supabase'
-import { invalidateFlightQueries } from '../queries/invalidate'
+import { deleteFlight } from '@/features/flight/api.supabase'
+import { invalidateFlightQueries } from '@/features/flight/queries/invalidate'
 
 export function useDeleteFlight() {
   const queryClient = useQueryClient()

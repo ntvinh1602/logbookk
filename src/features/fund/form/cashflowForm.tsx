@@ -15,34 +15,17 @@ import {
 import { NumberField } from '@/components/form/number-field'
 import { DateTimeField } from '@/components/form/datetime-field'
 import { Field, FieldGroup } from '@/components/ui/field'
-import { cashflowSchema } from './schema'
+import { cashflowSchema } from '@/features/fund/form/schema'
 import { ToggleGroupField } from '@/components/form/toggle-group-field'
 import { SelectField } from '@/components/form/select-field'
-import { addCashflowEvent } from '../../../lib/supabase/api/fund.supabase'
-import { events } from '../queries/events'
-import { useAddFundEvent } from '../hooks/use-add-fund-event'
+import { addCashflowEvent } from '@/features/fund/api.supabase'
+import { events } from '@/features/fund/queries/events'
+import { useAddFundEvent } from '@/features/fund/hooks/use-add-fund-event'
+import { EVENT_CATEGORY, type CashflowOps } from '@/features/fund/config'
 
 const FORM_ID = 'cashflow-form'
 
-const CASHFLOW_MEMO = {
-  deposit: ['Cash deposit', 'EPF monthly contribution', 'Reconciliation'],
-  withdraw: ['Reconciliation', 'Cash withdrawal'],
-  income: [
-    'CASA balance interest',
-    'EPF dividend',
-    'Cash dividend from stock',
-    'Other reward/income',
-    'Loyalty program rewards',
-  ],
-  expense: ['Margin interest', 'Cash advance interest', 'Operational fees'],
-} as const
-
-const cashflowOps = [
-  { key: 'deposit', label: 'Deposit' },
-  { key: 'withdraw', label: 'Withdraw' },
-  { key: 'income', label: 'Income' },
-  { key: 'expense', label: 'Expense' },
-]
+const CASHFLOW_OPS = EVENT_CATEGORY.cashflow.operations
 
 export function CashflowForm() {
   const [open, setOpen] = useState(false)
@@ -72,7 +55,7 @@ export function CashflowForm() {
 
   const form = useForm({
     defaultValues: {
-      operation: 'expense' as 'deposit' | 'withdraw' | 'income' | 'expense',
+      operation: 'expense' as CashflowOps,
       created_at: '',
       asset: 0,
       quantity: 0,
@@ -109,7 +92,7 @@ export function CashflowForm() {
   const selectedAssetId = useSelector(form.store, (state) => state.values.asset)
 
   const filteredMemos = useMemo(() => {
-    return CASHFLOW_MEMO[operation].map((memo) => ({
+    return CASHFLOW_OPS[operation].memo.map((memo) => ({
       value: memo,
       label: memo,
     }))
@@ -159,7 +142,8 @@ export function CashflowForm() {
                 <ToggleGroupField
                   field={field}
                   label="Operation"
-                  options={cashflowOps}
+                  options={CASHFLOW_OPS}
+                  displayIcon={false}
                 />
               )}
             </form.Field>
