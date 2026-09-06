@@ -18,8 +18,8 @@ export type FlightsSummaryRow = NonNullableExcept<
 export type StatsRow = NonNullableExcept<
   Database['dws']['Views']['lifetime_stats']['Row']
 >
-export type RoutesGeoJSON = NonNullableExcept<
-  Database['dws']['Views']['routes_geojson']['Row']
+export type UniqueRoutes = NonNullableExcept<
+  Database['dws']['Views']['unique_routes']['Row']
 >
 
 // Front-end

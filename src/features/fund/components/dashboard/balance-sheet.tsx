@@ -38,7 +38,6 @@ export default function BalanceSheet({
         acc.liabilities.push(item)
       } else {
         const key = item.asset_class
-        if (!acc.groupedAssets[key]) acc.groupedAssets[key] = []
         acc.groupedAssets[key].push(item)
       }
 
@@ -78,7 +77,7 @@ export default function BalanceSheet({
         <CardContent className="px-4 flex flex-col gap-2">
           {Object.entries(groupedAssets).map(([assetClass, items]) => {
             const totalValue = items.reduce(
-              (sum, i) => sum + Math.max(i.total_value ?? 0, 0),
+              (sum, i) => sum + Math.max(i.total_value, 0),
               0,
             )
             return (

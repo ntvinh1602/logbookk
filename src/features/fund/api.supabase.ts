@@ -29,7 +29,7 @@ export async function getCurrentEquity() {
 
   if (error) throw new Error(error.message)
 
-  return Number(data?.[0]?.total_equity ?? 0)
+  return Number(data[0].total_equity)
 }
 
 export async function getPnl(startDate: string, endDate: string) {
@@ -124,7 +124,7 @@ export async function getBalanceSheet() {
 
   if (error) throw new Error(error.message)
 
-  const bsData = (data ?? []) as BSheetView[]
+  const bsData = data as BSheetView[]
   const fxVnd = bsData
     .filter((r) => r.ticker === 'FX.VND')
     .reduce((sum, r) => sum + r.total_value, 0)
@@ -171,7 +171,7 @@ export async function getNews() {
 
   if (error) throw new Error(error.message)
 
-  return (data ?? []) as NewsArticle[]
+  return data as NewsArticle[]
 }
 
 export async function getCashflow(
@@ -294,7 +294,7 @@ export async function getAssets(query: string, assetClass: string) {
     .limit(20)
 
   if (error) throw new Error(error.message)
-  return (data ?? []) as AssetSearchResult[]
+  return data as AssetSearchResult[]
 }
 
 export async function getCashAssets() {
@@ -316,7 +316,7 @@ export async function getCashAssets() {
     .in('asset_class', ['cash', 'fund'])
 
   if (error) throw new Error(error.message)
-  return (data ?? []) as AssetSearchResult[]
+  return data as AssetSearchResult[]
 }
 
 export async function addStockEvent(params: {
@@ -409,7 +409,7 @@ export async function getOutstandingDebts() {
 
   if (error) throw new Error(error.message)
 
-  return data ?? []
+  return data
 }
 
 export async function getHeldStockTickers(): Promise<string[]> {

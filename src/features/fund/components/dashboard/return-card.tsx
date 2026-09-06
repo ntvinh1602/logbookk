@@ -141,7 +141,7 @@ export function ReturnCard({
                   indicator="line"
                   labelKey="t"
                   labelFormatter={(_label, payload) => {
-                    const date = payload?.[0]?.payload?.t as string | undefined
+                    const date = payload[0].payload.t as string | undefined
                     return date ? format(new Date(date), 'dd MMM yyyy') : ''
                   }}
                 />

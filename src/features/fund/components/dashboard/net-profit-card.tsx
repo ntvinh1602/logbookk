@@ -108,7 +108,7 @@ export function NetProfitCard({
                 <ChartTooltipContent
                   labelKey="snapshot_date"
                   labelFormatter={(_label, payload) => {
-                    const date = payload?.[0]?.payload?.snapshot_date as
+                    const date = payload[0].payload.snapshot_date as
                       string | undefined
                     return date ? format(new Date(date), 'MMM yyyy') : ''
                   }}

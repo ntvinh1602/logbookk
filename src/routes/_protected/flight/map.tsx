@@ -9,8 +9,12 @@ export const Route = createFileRoute('/_protected/flight/map')({
 })
 
 function RouteComponent() {
-  const [geojsonQuery, airportsQuery, statsQuery] = useQueries({
-    queries: [flights.geojson(), flights.airports(), flights.lifetimeStats()],
+  const [uniqueRoutesQuery, airportsQuery, statsQuery] = useQueries({
+    queries: [
+      flights.uniqueRoutes(),
+      flights.airports(),
+      flights.lifetimeStats(),
+    ],
   })
 
   return (
@@ -20,7 +24,7 @@ function RouteComponent() {
       </div>
 
       <LeafletMap
-        data={geojsonQuery.data ?? []}
+        data={uniqueRoutesQuery.data ?? []}
         airports={airportsQuery.data ?? []}
       />
       <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-8">

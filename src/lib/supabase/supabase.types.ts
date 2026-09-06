@@ -241,9 +241,9 @@ export type Database = {
           flight_number: string
           id: number
           seat_number: string | null
-          seat_position: Database["flight"]["Enums"]["seat_position"] | null
+          seat_position: Database["dim"]["Enums"]["seat_position"] | null
           tail_number: string | null
-          ticket_class: Database["flight"]["Enums"]["ticket_class"]
+          ticket_class: Database["dim"]["Enums"]["ticket_class"]
           user_id: string
         }
         Insert: {
@@ -256,9 +256,9 @@ export type Database = {
           flight_number: string
           id?: number
           seat_number?: string | null
-          seat_position?: Database["flight"]["Enums"]["seat_position"] | null
+          seat_position?: Database["dim"]["Enums"]["seat_position"] | null
           tail_number?: string | null
-          ticket_class: Database["flight"]["Enums"]["ticket_class"]
+          ticket_class: Database["dim"]["Enums"]["ticket_class"]
           user_id: string
         }
         Update: {
@@ -271,9 +271,9 @@ export type Database = {
           flight_number?: string
           id?: number
           seat_number?: string | null
-          seat_position?: Database["flight"]["Enums"]["seat_position"] | null
+          seat_position?: Database["dim"]["Enums"]["seat_position"] | null
           tail_number?: string | null
-          ticket_class?: Database["flight"]["Enums"]["ticket_class"]
+          ticket_class?: Database["dim"]["Enums"]["ticket_class"]
           user_id?: string
         }
         Relationships: []
@@ -610,9 +610,9 @@ export type Database = {
           flight_number: string | null
           id: number | null
           seat_number: string | null
-          seat_position: Database["flight"]["Enums"]["seat_position"] | null
+          seat_position: Database["dim"]["Enums"]["seat_position"] | null
           tail_number: string | null
-          ticket_class: Database["flight"]["Enums"]["ticket_class"] | null
+          ticket_class: Database["dim"]["Enums"]["ticket_class"] | null
           user_id: string | null
         }
         Relationships: []
@@ -653,6 +653,18 @@ export type Database = {
           distance_km: number | null
           flights_by_direction: Json | null
           geometry: Json | null
+          route_frequency: number | null
+        }
+        Relationships: []
+      }
+      unique_routes: {
+        Row: {
+          airport_a_code: string | null
+          airport_a_lat: number | null
+          airport_a_lng: number | null
+          airport_b_code: string | null
+          airport_b_lat: number | null
+          airport_b_lng: number | null
           route_frequency: number | null
         }
         Relationships: []
@@ -766,318 +778,6 @@ export type Database = {
     }
     Enums: {
       [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-  flight: {
-    Tables: {
-      aircrafts: {
-        Row: {
-          icao_code: string
-          model: string | null
-        }
-        Insert: {
-          icao_code: string
-          model?: string | null
-        }
-        Update: {
-          icao_code?: string
-          model?: string | null
-        }
-        Relationships: []
-      }
-      airlines: {
-        Row: {
-          icao_code: string
-          logo: string | null
-          name: string
-        }
-        Insert: {
-          icao_code: string
-          logo?: string | null
-          name: string
-        }
-        Update: {
-          icao_code?: string
-          logo?: string | null
-          name?: string
-        }
-        Relationships: []
-      }
-      airports: {
-        Row: {
-          city: string
-          country: string
-          iata_code: string
-          icao_code: string | null
-          lat: number
-          lng: number
-          name: string
-          timezone: string
-        }
-        Insert: {
-          city: string
-          country: string
-          iata_code: string
-          icao_code?: string | null
-          lat: number
-          lng: number
-          name: string
-          timezone: string
-        }
-        Update: {
-          city?: string
-          country?: string
-          iata_code?: string
-          icao_code?: string | null
-          lat?: number
-          lng?: number
-          name?: string
-          timezone?: string
-        }
-        Relationships: []
-      }
-      flights: {
-        Row: {
-          aircraft_type: string | null
-          airline_code: string | null
-          arr_airport_iata: string | null
-          arrival_time: string | null
-          departure_time: string | null
-          dept_airport_iata: string | null
-          flight_number: string | null
-          id: string
-          notes: string | null
-          seat_number: string | null
-          seat_position: Database["flight"]["Enums"]["seat_position"] | null
-          tail_number: string | null
-          ticket_class: Database["flight"]["Enums"]["ticket_class"] | null
-          user_id: string | null
-        }
-        Insert: {
-          aircraft_type?: string | null
-          airline_code?: string | null
-          arr_airport_iata?: string | null
-          arrival_time?: string | null
-          departure_time?: string | null
-          dept_airport_iata?: string | null
-          flight_number?: string | null
-          id?: string
-          notes?: string | null
-          seat_number?: string | null
-          seat_position?: Database["flight"]["Enums"]["seat_position"] | null
-          tail_number?: string | null
-          ticket_class?: Database["flight"]["Enums"]["ticket_class"] | null
-          user_id?: string | null
-        }
-        Update: {
-          aircraft_type?: string | null
-          airline_code?: string | null
-          arr_airport_iata?: string | null
-          arrival_time?: string | null
-          departure_time?: string | null
-          dept_airport_iata?: string | null
-          flight_number?: string | null
-          id?: string
-          notes?: string | null
-          seat_number?: string | null
-          seat_position?: Database["flight"]["Enums"]["seat_position"] | null
-          tail_number?: string | null
-          ticket_class?: Database["flight"]["Enums"]["ticket_class"] | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "flights_aircraft_type_fkey"
-            columns: ["aircraft_type"]
-            isOneToOne: false
-            referencedRelation: "aircrafts"
-            referencedColumns: ["icao_code"]
-          },
-          {
-            foreignKeyName: "flights_airline_code_fkey"
-            columns: ["airline_code"]
-            isOneToOne: false
-            referencedRelation: "airlines"
-            referencedColumns: ["icao_code"]
-          },
-          {
-            foreignKeyName: "flights_arr_airport_iata_fkey"
-            columns: ["arr_airport_iata"]
-            isOneToOne: false
-            referencedRelation: "airports"
-            referencedColumns: ["iata_code"]
-          },
-          {
-            foreignKeyName: "flights_arr_airport_iata_fkey"
-            columns: ["arr_airport_iata"]
-            isOneToOne: false
-            referencedRelation: "flights_summary"
-            referencedColumns: ["arrival_code"]
-          },
-          {
-            foreignKeyName: "flights_arr_airport_iata_fkey"
-            columns: ["arr_airport_iata"]
-            isOneToOne: false
-            referencedRelation: "flights_summary"
-            referencedColumns: ["departure_code"]
-          },
-          {
-            foreignKeyName: "flights_arr_airport_iata_fkey"
-            columns: ["arr_airport_iata"]
-            isOneToOne: false
-            referencedRelation: "routes_geojson"
-            referencedColumns: ["airport_a_code"]
-          },
-          {
-            foreignKeyName: "flights_arr_airport_iata_fkey"
-            columns: ["arr_airport_iata"]
-            isOneToOne: false
-            referencedRelation: "routes_geojson"
-            referencedColumns: ["airport_b_code"]
-          },
-          {
-            foreignKeyName: "flights_dept_airport_iata_fkey"
-            columns: ["dept_airport_iata"]
-            isOneToOne: false
-            referencedRelation: "airports"
-            referencedColumns: ["iata_code"]
-          },
-          {
-            foreignKeyName: "flights_dept_airport_iata_fkey"
-            columns: ["dept_airport_iata"]
-            isOneToOne: false
-            referencedRelation: "flights_summary"
-            referencedColumns: ["arrival_code"]
-          },
-          {
-            foreignKeyName: "flights_dept_airport_iata_fkey"
-            columns: ["dept_airport_iata"]
-            isOneToOne: false
-            referencedRelation: "flights_summary"
-            referencedColumns: ["departure_code"]
-          },
-          {
-            foreignKeyName: "flights_dept_airport_iata_fkey"
-            columns: ["dept_airport_iata"]
-            isOneToOne: false
-            referencedRelation: "routes_geojson"
-            referencedColumns: ["airport_a_code"]
-          },
-          {
-            foreignKeyName: "flights_dept_airport_iata_fkey"
-            columns: ["dept_airport_iata"]
-            isOneToOne: false
-            referencedRelation: "routes_geojson"
-            referencedColumns: ["airport_b_code"]
-          },
-        ]
-      }
-    }
-    Views: {
-      flights_summary: {
-        Row: {
-          aircraft_type: string | null
-          airline_logo: string | null
-          airline_name: string | null
-          arrival_code: string | null
-          arrival_name: string | null
-          arrival_time: string | null
-          arrival_tz: string | null
-          departure_code: string | null
-          departure_name: string | null
-          departure_time: string | null
-          departure_tz: string | null
-          distance_km: number | null
-          duration: string | null
-          flight_number: string | null
-          id: string | null
-          seat_number: string | null
-          seat_position: Database["flight"]["Enums"]["seat_position"] | null
-          tail_number: string | null
-          ticket_class: Database["flight"]["Enums"]["ticket_class"] | null
-          user_id: string | null
-        }
-        Relationships: []
-      }
-      lifetime_stats: {
-        Row: {
-          airports_count: number | null
-          country_count: number | null
-          flights_count: number | null
-          total_distance: number | null
-          total_duration: number | null
-          type_count: number | null
-          user_id: string | null
-        }
-        Relationships: []
-      }
-      routes_geojson: {
-        Row: {
-          airport_a_city: string | null
-          airport_a_code: string | null
-          airport_a_country: string | null
-          airport_a_name: string | null
-          airport_b_city: string | null
-          airport_b_code: string | null
-          airport_b_country: string | null
-          airport_b_name: string | null
-          distance_km: number | null
-          flights_by_direction: Json | null
-          geometry: Json | null
-          id: string | null
-          route_frequency: number | null
-        }
-        Relationships: []
-      }
-    }
-    Functions: {
-      haversine_distance_km: {
-        Args: { lat1: number; lat2: number; lng1: number; lng2: number }
-        Returns: number
-      }
-      insert_flight_with_timezone: {
-        Args: {
-          p_aircraft_id?: string
-          p_airline_id: string
-          p_arrival_airport_id: string
-          p_arrival_local: string
-          p_departure_airport_id: string
-          p_departure_local: string
-          p_flight_number: string
-          p_notes?: string
-          p_seat_no?: string
-          p_seat_pos?: Database["flight"]["Enums"]["seat_position"]
-          p_tail_no?: string
-          p_ticket_class: Database["flight"]["Enums"]["ticket_class"]
-        }
-        Returns: undefined
-      }
-      update_flight_with_timezone: {
-        Args: {
-          p_aircraft_id?: string
-          p_airline_id: string
-          p_arrival_airport_id: string
-          p_arrival_local: string
-          p_departure_airport_id: string
-          p_departure_local: string
-          p_flight_id: string
-          p_flight_number: string
-          p_notes?: string
-          p_seat_no?: string
-          p_seat_pos?: Database["flight"]["Enums"]["seat_position"]
-          p_tail_no?: string
-          p_ticket_class: Database["flight"]["Enums"]["ticket_class"]
-        }
-        Returns: undefined
-      }
-    }
-    Enums: {
-      seat_position: "window" | "middle" | "aisle"
-      seat_type: "eco" | "biz"
-      ticket_class: "eco" | "biz"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1387,13 +1087,6 @@ export const Constants = {
   },
   dws: {
     Enums: {},
-  },
-  flight: {
-    Enums: {
-      seat_position: ["window", "middle", "aisle"],
-      seat_type: ["eco", "biz"],
-      ticket_class: ["eco", "biz"],
-    },
   },
   ods: {
     Enums: {},

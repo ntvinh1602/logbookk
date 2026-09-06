@@ -48,8 +48,7 @@ export function AssetCard({
   const [open, setOpen] = useState(false)
 
   if (isLoading) return <StatusLabel type="loading" />
-  if (!balanceSheet) return null
-
+  
   const sortedStocks = [...balanceSheet]
     .filter((a) => a.asset_class == 'stock' || a.asset_class == 'fund')
     .sort((a, b) => b.total_value - a.total_value)

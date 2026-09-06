@@ -8,8 +8,8 @@ import type {
   FlightsQueryParams,
   FlightsSummaryRow,
   FlightUpsertInput,
-  RoutesGeoJSON,
   StatsRow,
+  UniqueRoutes,
 } from '@/features/flight/types'
 
 // Reads
@@ -41,17 +41,17 @@ export async function getAirports() {
   return data as AirportRow[]
 }
 
-export async function getRoutesGeoJSON() {
+export async function getUniqueRoutes() {
   const supabase = createClient()
 
   const { data, error } = await supabase
     .schema('dws')
-    .from('routes_geojson')
+    .from('unique_routes')
     .select()
 
   if (error) throw new Error(error.message)
 
-  return data as RoutesGeoJSON[]
+  return data as UniqueRoutes[]
 }
 
 export async function getLifetimeStats(): Promise<StatsRow> {

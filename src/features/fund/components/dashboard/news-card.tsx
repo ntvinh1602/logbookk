@@ -55,10 +55,9 @@ function ArticleList({ articles }: { articles: NewsArticle[] }) {
             <ItemDescription className="flex gap-1 pt-1">
               <Badge variant="secondary" className="pointer-events-none">
                 <Clock />
-                {now &&
-                  formatDistance(new Date(article.published_at), now, {
-                    addSuffix: true,
-                  })}
+                {formatDistance(new Date(article.published_at), now, {
+                  addSuffix: true,
+                })}
               </Badge>
               <Badge variant="secondary" className="pointer-events-none">
                 <Newspaper />
@@ -72,11 +71,7 @@ function ArticleList({ articles }: { articles: NewsArticle[] }) {
   )
 }
 
-export function NewsCard({
-  balanceSheet,
-  news,
-  isLoading,
-}: NewsSectionProps) {
+export function NewsCard({ balanceSheet, news, isLoading }: NewsSectionProps) {
   const [selected, setSelected] = useState<'all' | 'related'>('all')
 
   if (isLoading) return <StatusLabel type="loading" />

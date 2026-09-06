@@ -12,8 +12,8 @@ import {
   CardHeader,
 } from '@/components/ui/card'
 import { YAxis, Area, AreaChart, XAxis } from 'recharts'
+import type { ChartConfig } from '@/components/ui/chart'
 import {
-  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -119,13 +119,7 @@ export function EquityCard({
                   fill={`url(#fill-${key})`}
                   dot={false}
                 />
-                <linearGradient
-                  id={`fill-${key}`}
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
+                <linearGradient id={`fill-${key}`} x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="0%"
                     stopColor={`var(--color-${key})`}
@@ -146,8 +140,11 @@ export function EquityCard({
                   <ChartTooltipContent
                     labelKey="t"
                     labelFormatter={(_label, payload) => {
-                      const timestamp = payload?.[0]?.payload?.t as number | undefined
-                      return timestamp ? format(new Date(timestamp), 'dd MMM yyyy') : ''
+                      const timestamp = payload[0].payload.t as
+                        number | undefined
+                      return timestamp
+                        ? format(new Date(timestamp), 'dd MMM yyyy')
+                        : ''
                     }}
                   />
                 }

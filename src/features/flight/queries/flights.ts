@@ -5,7 +5,7 @@ import {
   getAirports,
   getFlights,
   getLifetimeStats,
-  getRoutesGeoJSON,
+  getUniqueRoutes,
 } from '@/features/flight/api.supabase'
 import type { FlightsQueryParams } from '@/features/flight/types'
 
@@ -18,7 +18,7 @@ export const flightKeys = {
 
   airports: () => [...flightKeys.all, 'airports'] as const,
 
-  geojson: () => [...flightKeys.all, 'geojson'] as const,
+  uniqueRoutes: () => [...flightKeys.all, 'uniqueRoutes'] as const,
 
   lifetimeStats: () => [...flightKeys.all, 'lifetimeStats'] as const,
 
@@ -48,10 +48,10 @@ export const flights = {
     })
   },
 
-  geojson: () => {
+  uniqueRoutes: () => {
     return queryOptions({
-      queryKey: flightKeys.geojson(),
-      queryFn: () => getRoutesGeoJSON(),
+      queryKey: flightKeys.uniqueRoutes(),
+      queryFn: () => getUniqueRoutes(),
     })
   },
 
