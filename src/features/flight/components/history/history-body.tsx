@@ -79,6 +79,8 @@ export const columns = columnHelper.columns([
           <ItemMedia>
             <img
               src={airlineLogo(flight.airline_logo)}
+              width={28}
+              height={28}
               className="rounded-sm"
             />
           </ItemMedia>
