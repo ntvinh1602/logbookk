@@ -16,6 +16,9 @@ interface Props {
   isLoading: boolean
 }
 
+const airlineLogo = (logo: string) =>
+  `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/airline/${logo}`
+
 export function TopAirlinesCard({
   airlinesData,
   lifetimeStats,
@@ -37,7 +40,7 @@ export function TopAirlinesCard({
           <div key={a.airlines_logo} className="flex items-center gap-4">
             <span className="text-muted-foreground tabular-nums">{i + 1}</span>
             <img
-              src={a.airlines_logo}
+              src={airlineLogo(a.airlines_logo)}
               width={28}
               height={28}
               className="rounded-sm"
