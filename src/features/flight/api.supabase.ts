@@ -9,10 +9,46 @@ import type {
   FlightsSummaryRow,
   FlightUpsertInput,
   StatsRow,
+  TopAircrafts,
+  TopAirlines,
+  TopAirports,
+  TopRoutes,
   UniqueRoutes,
 } from '@/features/flight/types'
 
 // Reads
+
+export async function getFlights(params: FlightsQueryParams = {}) {
+  const supabase = createClient()
+  const { year, airline, isDomestic, search } = params
+
+  let query = supabase.schema('dws').from('flights_summary').select('*')
+
+  if (year) {
+    query = query
+      .gte('departure_time', `${year}-01-01`)
+      .lte('departure_time', `${year}-12-31`)
+  }
+
+  if (airline) {
+    query = query.eq('airline_name', airline)
+  }
+
+  if (isDomestic !== undefined) {
+    query = query.eq('is_domestic', isDomestic)
+  }
+
+  if (search) {
+    query = query.ilike('flight_number', `%${search}%`)
+  }
+
+  const { data, error } = await query.order('departure_time', {
+    ascending: false,
+  })
+
+  if (error) throw new Error(error.message)
+  return data as FlightsSummaryRow[]
+}
 
 export async function getAircrafts() {
   const supabase = createClient()
@@ -67,36 +103,48 @@ export async function getLifetimeStats(): Promise<StatsRow> {
   return data as StatsRow
 }
 
-export async function getFlights(params: FlightsQueryParams = {}) {
+export async function getTopAirports(): Promise<TopAirports[]> {
   const supabase = createClient()
-  const { year, airline, isDomestic, search } = params
 
-  let query = supabase.schema('dws').from('flights_summary').select('*')
-
-  if (year) {
-    query = query
-      .gte('departure_time', `${year}-01-01`)
-      .lte('departure_time', `${year}-12-31`)
-  }
-
-  if (airline) {
-    query = query.eq('airline_name', airline)
-  }
-
-  if (isDomestic !== undefined) {
-    query = query.eq('is_domestic', isDomestic)
-  }
-
-  if (search) {
-    query = query.ilike('flight_number', `%${search}%`)
-  }
-
-  const { data, error } = await query.order('departure_time', {
-    ascending: false,
-  })
+  const { data, error } = await supabase
+    .schema('dws')
+    .rpc('get_top_airports', {})
 
   if (error) throw new Error(error.message)
-  return data as FlightsSummaryRow[]
+  return data as TopAirports[]
+}
+
+export async function getTopAirlines(): Promise<TopAirlines[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dws')
+    .rpc('get_top_airlines', {})
+
+  if (error) throw new Error(error.message)
+  return data as TopAirlines[]
+}
+
+export async function getTopAircrafts(): Promise<TopAircrafts[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dws')
+    .rpc('get_top_aircrafts', {})
+
+  if (error) throw new Error(error.message)
+  return data as TopAircrafts[]
+}
+
+export async function getTopRoutes(): Promise<TopRoutes[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dws')
+    .rpc('get_top_routes', {})
+
+  if (error) throw new Error(error.message)
+  return data as TopRoutes[]
 }
 
 // Writes

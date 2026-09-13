@@ -5,66 +5,102 @@ import {
   getAirports,
   getFlights,
   getLifetimeStats,
+  getTopAircrafts,
+  getTopAirlines,
+  getTopAirports,
+  getTopRoutes,
   getUniqueRoutes,
 } from '@/features/flight/api.supabase'
 import type { FlightsQueryParams } from '@/features/flight/types'
 
-export const flightKeys = {
-  all: ['flights'] as const,
+export const flightDwdKeys = {
+  all: ['flightdwd'] as const,
 
-  aircrafts: () => [...flightKeys.all, 'aircrafts'] as const,
-
-  airlines: () => [...flightKeys.all, 'airlines'] as const,
-
-  airports: () => [...flightKeys.all, 'airports'] as const,
-
-  uniqueRoutes: () => [...flightKeys.all, 'uniqueRoutes'] as const,
-
-  lifetimeStats: () => [...flightKeys.all, 'lifetimeStats'] as const,
-
+  uniqueRoutes: () => [...flightDwdKeys.all, 'uniqueRoutes'] as const,
+  lifetimeStats: () => [...flightDwdKeys.all, 'lifetimeStats'] as const,
+  topAirports: () => [...flightDwdKeys.all, 'top-airport'] as const,
+  topAirlines: () => [...flightDwdKeys.all, 'top-airlines'] as const,
+  topAircrafts: () => [...flightDwdKeys.all, 'top-aircrafts'] as const,
+  topRoutes: () => [...flightDwdKeys.all, 'top-routes'] as const,
   list: (params: FlightsQueryParams) =>
-    [...flightKeys.all, 'list', params] as const,
+    [...flightDwdKeys.all, 'list', params] as const,
+}
+
+export const flightDimKeys = {
+  all: ['flightdim'] as const,
+
+  aircrafts: () => [...flightDimKeys.all, 'aircrafts'] as const,
+  airlines: () => [...flightDimKeys.all, 'airlines'] as const,
+  airports: () => [...flightDimKeys.all, 'airports'] as const,
 }
 
 export const flights = {
   aircrafts: () => {
     return queryOptions({
-      queryKey: flightKeys.aircrafts(),
+      queryKey: flightDimKeys.aircrafts(),
       queryFn: () => getAircrafts(),
     })
   },
 
   airlines: () => {
     return queryOptions({
-      queryKey: flightKeys.airlines(),
+      queryKey: flightDimKeys.airlines(),
       queryFn: () => getAirlines(),
     })
   },
 
   airports: () => {
     return queryOptions({
-      queryKey: flightKeys.airports(),
+      queryKey: flightDimKeys.airports(),
       queryFn: () => getAirports(),
     })
   },
 
   uniqueRoutes: () => {
     return queryOptions({
-      queryKey: flightKeys.uniqueRoutes(),
+      queryKey: flightDwdKeys.uniqueRoutes(),
       queryFn: () => getUniqueRoutes(),
     })
   },
 
   lifetimeStats: () => {
     return queryOptions({
-      queryKey: flightKeys.lifetimeStats(),
+      queryKey: flightDwdKeys.lifetimeStats(),
       queryFn: () => getLifetimeStats(),
+    })
+  },
+
+  topAirports: () => {
+    return queryOptions({
+      queryKey: flightDwdKeys.topAirports(),
+      queryFn: () => getTopAirports(),
+    })
+  },
+
+  topAirlines: () => {
+    return queryOptions({
+      queryKey: flightDwdKeys.topAirlines(),
+      queryFn: () => getTopAirlines(),
+    })
+  },
+
+  topAircrafts: () => {
+    return queryOptions({
+      queryKey: flightDwdKeys.topAircrafts(),
+      queryFn: () => getTopAircrafts(),
+    })
+  },
+
+  topRoutes: () => {
+    return queryOptions({
+      queryKey: flightDwdKeys.topRoutes(),
+      queryFn: () => getTopRoutes(),
     })
   },
 
   list: (params: FlightsQueryParams = {}) => {
     return queryOptions({
-      queryKey: flightKeys.list(params),
+      queryKey: flightDwdKeys.list(params),
       queryFn: () => getFlights(params),
       placeholderData: keepPreviousData,
     })

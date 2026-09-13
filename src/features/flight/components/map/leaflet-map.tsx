@@ -53,8 +53,13 @@ export default function LeafletMap({ data, airports }: Props) {
   }
 
   return (
-    <div className="h-180 w-full overflow-hidden isolate">
-      <MapContainer center={[15, 105]} zoom={4} className="h-full w-full">
+    <div className="h-150 w-full overflow-hidden isolate">
+      <MapContainer
+        center={[15, 105]}
+        zoom={4}
+        scrollWheelZoom={false}
+        className="h-full w-full"
+      >
         <Pane name="routes-hitbox" style={{ zIndex: 400 }} />
         <Pane name="routes" style={{ zIndex: 401 }} />
 

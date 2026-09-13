@@ -747,6 +747,37 @@ export type Database = {
         Args: { p_end_date: string; p_start_date: string; p_threshold?: number }
         Returns: Json
       }
+      get_top_aircrafts: {
+        Args: never
+        Returns: {
+          aircraft_model: string
+          count: number
+        }[]
+      }
+      get_top_airlines: {
+        Args: never
+        Returns: {
+          airlines_logo: string
+          airlines_name: string
+          count: number
+        }[]
+      }
+      get_top_airports: {
+        Args: never
+        Returns: {
+          airport_code: string
+          airport_name: string
+          count: number
+        }[]
+      }
+      get_top_routes: {
+        Args: never
+        Returns: {
+          airport_a_code: string
+          airport_b_code: string
+          frequency: number
+        }[]
+      }
       get_top_stocks: {
         Args: { p_end_date: string; p_start_date: string }
         Returns: {

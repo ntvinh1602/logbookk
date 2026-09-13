@@ -39,16 +39,16 @@ export const dashboardKeys = {
   news: () => [...dashboardKeys.all, 'news'] as const,
 
   pnl: () => [...dashboardKeys.all, 'pnl'] as const,
-  pnlMtd: () => [...dashboardKeys.pnl(), 'mtd'] as const,
-  pnlYtd: () => [...dashboardKeys.pnl(), 'ytd'] as const,
-  pnlLast12m: () => [...dashboardKeys.pnl(), 'last12m'] as const,
+  pnlMtd: () => [...dashboardKeys.pnl(), 'pnl-mtd'] as const,
+  pnlYtd: () => [...dashboardKeys.pnl(), 'pnl-ytd'] as const,
+  pnlLast12m: () => [...dashboardKeys.pnl(), 'pnl-last12m'] as const,
 
   twr: () => [...dashboardKeys.all, 'twr'] as const,
-  twrYtd: () => [...dashboardKeys.twr(), 'ytd'] as const,
-  twrLast1y: () => [...dashboardKeys.twr(), 'last1y'] as const,
+  twrYtd: () => [...dashboardKeys.twr(), 'twr-ytd'] as const,
+  twrLast1y: () => [...dashboardKeys.twr(), 'twr-last1y'] as const,
 
   vni: () => [...dashboardKeys.all, 'vni'] as const,
-  vniYtd: () => [...dashboardKeys.vni(), 'ytd'] as const,
+  vniYtd: () => [...dashboardKeys.vni(), 'vni-ytd'] as const,
 }
 
 export const dashboard = {

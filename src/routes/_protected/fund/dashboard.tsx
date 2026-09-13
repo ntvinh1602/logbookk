@@ -93,7 +93,7 @@ function Home() {
             benchmarkChart={benchmarkChartQuery.data}
             twrYtd={twrYtdQuery.data}
             vniYtd={vniYtdQuery.data}
-            isLoading={results.some((q) => q.isPending)}
+            isLoading={benchmarkChartQuery.isPending}
           />
           <AssetCard
             balanceSheet={balanceSheetQuery.data}

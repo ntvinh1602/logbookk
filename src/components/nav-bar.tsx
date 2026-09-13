@@ -1,10 +1,8 @@
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import { Link, useNavigate } from '@tanstack/react-router'
@@ -24,9 +22,12 @@ export function NavBar() {
     navigate({ to: '/auth/login' })
   }
   return (
-    <header className="sticky top-0 z-50 flex h-14 backdrop-blur-xl bg-transparent">
-      <div className="flex w-full max-w-screen-2xl mx-auto items-center backdrop-blur-xl bg-transparent gap-4">
-        <img src={logo} alt="Logo" className="h-10 w-auto" />
+    <header className="sticky top-0 z-50 flex h-14 backdrop-blur-xl bg-transparent border-b">
+      <div className="flex w-full px-8 items-center backdrop-blur-xl bg-transparent gap-4">
+        <div className="flex items-center gap-1">
+          <img src={logo} alt="Logo" className="h-10 w-auto" />
+          <h1 className="text-lg font-medium text-primary">Logbookk</h1>
+        </div>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -53,45 +54,30 @@ export function NavBar() {
             <NavigationMenuItem>
               <NavigationMenuLink
                 render={
-                  <Link
-                    to="/fund/events/$event"
-                    params={{ event: 'stock' }}
-                  />
+                  <Link to="/fund/events/$event" params={{ event: 'stock' }} />
                 }
                 className={navigationMenuTriggerStyle()}
               >
                 Events
               </NavigationMenuLink>
             </NavigationMenuItem>
-
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Flight</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[200px]">
-                  <li>
-                    <NavigationMenuLink
-                      render={
-                        <Link
-                          to="/flight/map"
-                          className="flex-row items-center gap-2"
-                        >
-                          Map
-                        </Link>
-                      }
-                    />
-                    <NavigationMenuLink
-                      render={
-                        <Link
-                          to="/flight/history"
-                          className="flex-row items-center gap-2"
-                        >
-                          History
-                        </Link>
-                      }
-                    />
-                  </li>
-                </ul>
-              </NavigationMenuContent>
+              <NavigationMenuLink
+                render={<Link to="/flight/map" params={{ event: 'stock' }} />}
+                className={navigationMenuTriggerStyle()}
+              >
+                Map
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                render={
+                  <Link to="/flight/history" params={{ event: 'stock' }} />
+                }
+                className={navigationMenuTriggerStyle()}
+              >
+                Flights
+              </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>

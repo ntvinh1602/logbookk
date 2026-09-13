@@ -22,6 +22,16 @@ export type UniqueRoutes = NonNullableExcept<
   Database['dws']['Views']['unique_routes']['Row']
 >
 
+// RPC functions
+export type TopAirports =
+  Database['dws']['Functions']['get_top_airports']['Returns'][number]
+export type TopAirlines =
+  Database['dws']['Functions']['get_top_airlines']['Returns'][number]
+export type TopAircrafts =
+  Database['dws']['Functions']['get_top_aircrafts']['Returns'][number]
+export type TopRoutes =
+  Database['dws']['Functions']['get_top_routes']['Returns'][number]
+
 // Front-end
 export type FlightScope = 'domestic' | 'international'
 
