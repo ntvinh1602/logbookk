@@ -22,13 +22,11 @@ import { addStockEvent } from '@/features/fund/api.supabase'
 import { events } from '@/features/fund/queries/events'
 import { useAddFundEvent } from '@/features/fund/hooks/use-add-fund-event'
 import { useDebouncedValue } from '@/hooks/use-debounced-value'
+import { EVENT_CATEGORY } from '@/features/fund/config'
 
 const FORM_ID = 'stock-form'
 
-const stockOps = [
-  { key: 'buy', label: 'Buy' },
-  { key: 'sell', label: 'Sell' },
-]
+const STOCK_OPS = EVENT_CATEGORY.stock.operations
 
 export function StockForm() {
   const [open, setOpen] = useState(false)
@@ -137,7 +135,7 @@ export function StockForm() {
                 <ToggleGroupField
                   field={field}
                   label="Operations"
-                  options={stockOps}
+                  options={STOCK_OPS}
                   onValueChange={(value) => {
                     if (value === 'buy') form.setFieldValue('tax', 0)
                   }}

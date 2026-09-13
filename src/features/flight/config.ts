@@ -1,4 +1,8 @@
-import type { FlightsSummaryRow, StatsRow } from '@/features/flight/types'
+import type {
+  FlightScope,
+  FlightsSummaryRow,
+  StatsRow,
+} from '@/features/flight/types'
 import { formatNum } from '@/lib/utils'
 import {
   BriefcaseBusiness,
@@ -13,7 +17,10 @@ import {
   PlaneTakeoff,
   Earth,
   Route,
+  House,
+  Globe,
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 export const FLIGHTS_START_YEAR = 2019
 
@@ -25,6 +32,21 @@ export const TICKET_CLASS = {
   biz: {
     label: 'Business',
     icon: BriefcaseBusiness,
+  },
+}
+
+/** Mirrors the `is_domestic` column of the flights_summary view. */
+export const FLIGHT_SCOPE: Record<
+  FlightScope,
+  { label: string; icon: LucideIcon }
+> = {
+  domestic: {
+    label: 'Domestic',
+    icon: House,
+  },
+  international: {
+    label: 'International',
+    icon: Globe,
   },
 }
 

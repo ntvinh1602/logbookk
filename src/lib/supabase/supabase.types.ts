@@ -609,6 +609,7 @@ export type Database = {
           duration: string | null
           flight_number: string | null
           id: number | null
+          is_domestic: boolean | null
           seat_number: string | null
           seat_position: Database["dim"]["Enums"]["seat_position"] | null
           tail_number: string | null

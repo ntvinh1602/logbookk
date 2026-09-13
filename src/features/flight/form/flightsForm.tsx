@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Sheet,
   SheetTrigger,
@@ -26,7 +27,6 @@ import { useAddFlight } from '@/features/flight/hooks/use-add-flight'
 import { useUpdateFlight } from '@/features/flight/hooks/use-update-flight'
 import { useFlightFormOptions } from '@/features/flight/hooks/use-flight-form-options'
 import { useFlightFormAdapter } from '@/features/flight/hooks/use-flight-form-adapter'
-import { Marker, MarkerContent } from '@/components/ui/marker'
 import type {
   FlightsSummaryRow,
   FlightUpsertInput,
@@ -170,118 +170,131 @@ function FlightDialog({
           void form.handleSubmit()
         }}
       >
-        <FieldGroup className="px-4">
-          <form.Field name="departureCode">
-            {(field) => (
-              <ComboboxField
-                field={field}
-                items={options.airportFormOptions}
-                label="Departure Airport"
-                placeholder="Select airport"
-                emptyPlaceholder="No airport found"
-              />
-            )}
-          </form.Field>
-          <form.Field name="departureTimeLocal">
-            {(field) => (
-              <DateTimeField
-                field={field}
-                label="Departure Time (in local time)"
-                placeholder="Select date & time"
-              />
-            )}
-          </form.Field>
-          <form.Field name="arrivalCode">
-            {(field) => (
-              <ComboboxField
-                field={field}
-                items={options.airportFormOptions}
-                label="Arrival Airport"
-                placeholder="Select airport"
-                emptyPlaceholder="No airport found"
-              />
-            )}
-          </form.Field>
-          <form.Field name="arrivalTimeLocal">
-            {(field) => (
-              <DateTimeField
-                field={field}
-                label="Arrival Time (in local time)"
-                placeholder="Select date & time"
-              />
-            )}
-          </form.Field>
-          <form.Field name="flightNumber">
-            {(field) => (
-              <TextField
-                field={field}
-                label="Flight Number"
-                placeholder="Input flight number"
-              />
-            )}
-          </form.Field>
-          <form.Field name="airlineCode">
-            {(field) => (
-              <SelectField
-                field={field}
-                options={options.airlineFormOptions}
-                label="Airline"
-                placeholder="Select airlines"
-              />
-            )}
-          </form.Field>
-          <form.Field name="ticketClass">
-            {(field) => (
-              <ToggleGroupField
-                field={field}
-                label="Ticket Class"
-                options={TICKET_CLASS}
-              />
-            )}
-          </form.Field>
+        <Tabs className="px-4 gap-6">
+          <TabsList>
+            <TabsTrigger value="flight">Flight Details</TabsTrigger>
+            <TabsTrigger value="ticket">Ticket Details</TabsTrigger>
+          </TabsList>
+          <TabsContent value="flight">
+            <FieldGroup>
+              <form.Field name="departureCode">
+                {(field) => (
+                  <ComboboxField
+                    field={field}
+                    items={options.airportFormOptions}
+                    label="From"
+                    placeholder="Select airport"
+                    emptyPlaceholder="No airport found"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="departureTimeLocal">
+                {(field) => (
+                  <DateTimeField
+                    field={field}
+                    label="Departure Time"
+                    placeholder="Select date & time"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="arrivalCode">
+                {(field) => (
+                  <ComboboxField
+                    field={field}
+                    items={options.airportFormOptions}
+                    label="To"
+                    placeholder="Select airport"
+                    emptyPlaceholder="No airport found"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="arrivalTimeLocal">
+                {(field) => (
+                  <DateTimeField
+                    field={field}
+                    label="Arrival Time"
+                    placeholder="Select date & time"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="flightNumber">
+                {(field) => (
+                  <TextField
+                    field={field}
+                    label="Flight Number"
+                    placeholder="Input flight number"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="airlineCode">
+                {(field) => (
+                  <SelectField
+                    field={field}
+                    options={options.airlineFormOptions}
+                    label="Airline"
+                    placeholder="Select airlines"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="aircraftCode">
+                {(field) => (
+                  <SelectField
+                    field={field}
+                    options={options.aircraftFormOptions}
+                    label="Aircraft"
+                    placeholder="Select aircraft type"
+                    description="Optional"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="tailNo">
+                {(field) => (
+                  <TextField
+                    field={field}
+                    label="Tail Number"
+                    placeholder="Input aircraft reg."
+                    description="Optional"
+                  />
+                )}
+              </form.Field>
+            </FieldGroup>
+          </TabsContent>
 
-          <Marker variant="separator" className="-mb-4">
-            <MarkerContent>Optional Inputs</MarkerContent>
-          </Marker>
+          <TabsContent value="ticket">
+            <FieldGroup>
+              <form.Field name="ticketClass">
+                {(field) => (
+                  <ToggleGroupField
+                    field={field}
+                    label="Ticket Class"
+                    options={TICKET_CLASS}
+                  />
+                )}
+              </form.Field>
 
-          <form.Field name="seatNo">
-            {(field) => (
-              <TextField
-                field={field}
-                label="Seat Number"
-                placeholder="Input seat number"
-              />
-            )}
-          </form.Field>
-          <form.Field name="seatPos">
-            {(field) => (
-              <ToggleGroupField
-                field={field}
-                label="Seat Position"
-                options={SEAT_POSITIONS}
-              />
-            )}
-          </form.Field>
-          <form.Field name="aircraftCode">
-            {(field) => (
-              <SelectField
-                field={field}
-                options={options.aircraftFormOptions}
-                label="Aircraft"
-                placeholder="Select aircraft type"
-              />
-            )}
-          </form.Field>
-          <form.Field name="tailNo">
-            {(field) => (
-              <TextField
-                field={field}
-                label="Tail Number"
-                placeholder="Input aircraft reg."
-              />
-            )}
-          </form.Field>
-        </FieldGroup>
+              <form.Field name="seatNo">
+                {(field) => (
+                  <TextField
+                    field={field}
+                    label="Seat Number"
+                    placeholder="Input seat number"
+                    description="Optional"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="seatPos">
+                {(field) => (
+                  <ToggleGroupField
+                    field={field}
+                    label="Seat Position"
+                    options={SEAT_POSITIONS}
+                    description="Optional"
+                  />
+                )}
+              </form.Field>
+            </FieldGroup>
+          </TabsContent>
+        </Tabs>
       </form>
       <SheetFooter>
         <Field>

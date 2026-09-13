@@ -6,7 +6,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import type { AnyFieldApi } from '@tanstack/react-form'
-import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { toFieldErrorMessages } from '@/components/form/field-errors'
 
 interface SelectOption {
@@ -18,6 +18,7 @@ interface SelectFieldProps {
   field: AnyFieldApi
   label: string
   placeholder?: string
+  description?: string
   options: SelectOption[]
   disabled?: boolean
   /** Called with the newly selected value after the field value is updated. */
@@ -28,6 +29,7 @@ export function SelectField({
   field,
   label,
   placeholder,
+  description,
   options,
   disabled,
   onValueChange,
@@ -58,6 +60,11 @@ export function SelectField({
           ))}
         </SelectContent>
       </Select>
+      {description && (
+        <FieldDescription className="text-right text-xs italic">
+          {description}
+        </FieldDescription>
+      )}
 
       {errors.length > 0 && <FieldError errors={errors} />}
     </Field>

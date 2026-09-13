@@ -23,17 +23,19 @@ export type UniqueRoutes = NonNullableExcept<
 >
 
 // Front-end
+export type FlightScope = 'domestic' | 'international'
+
 export interface FilterState {
   year: number | null // "all" or a year like 2024
   airline: string | null // "all" or an airline name
-  ticketClass: TicketClass // selected seat type value
+  scope: FlightScope | null // null means every flight
   search: string // flight number search
 }
 
 export interface FlightsQueryParams {
   year?: string | null
   airline?: string | null
-  ticketClass?: Database['dim']['Enums']['ticket_class']
+  isDomestic?: boolean
   search?: string
 }
 

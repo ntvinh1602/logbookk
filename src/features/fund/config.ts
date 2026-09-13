@@ -99,3 +99,6 @@ export type Events = keyof typeof EVENT_CATEGORY
 export type TimePresets = keyof typeof TIME_PRESET
 export type CashflowOps = keyof typeof EVENT_CATEGORY.cashflow.operations
 export type StockOps = keyof typeof EVENT_CATEGORY.stock.operations
+
+/** Default period for the events filter, and the route search schema fallback. */
+export const DEFAULT_TIME_PRESET: TimePresets = 'M3'

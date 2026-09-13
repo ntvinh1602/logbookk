@@ -1,30 +1,45 @@
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
-import { Users, Calendar } from 'lucide-react'
+import { Users, Calendar, Globe, X } from 'lucide-react'
 import { flights } from '@/features/flight/queries/flights'
 import { FilterSelect } from '@/components/filter/select-options'
-import { FilterToggleGroup } from '@/components/filter/toggle-options'
 import { FilterSearch } from '@/components/filter/text-search'
+import { Button } from '@/components/ui/button'
 import { FieldGroup } from '@/components/ui/field'
-import type { FilterState } from '@/features/flight/types'
-import { TICKET_CLASS, FLIGHTS_START_YEAR } from '@/features/flight/config'
+import type { FilterState, FlightScope } from '@/features/flight/types'
+import { FLIGHT_SCOPE, FLIGHTS_START_YEAR } from '@/features/flight/config'
 import { useYearOptions } from '@/hooks/use-year-options'
 
 const routeApi = getRouteApi('/_protected/flight/history')
 
 /**
  * Keeps the URL clean: undefined values are dropped by TanStack, so a filter is
- * only serialized once it differs from its default (all airlines/years, economy,
- * no text search).
+ * only serialized once it is set (all airlines/years/scopes, no text search).
  */
 function toSearch(filters: FilterState) {
   return {
     year: filters.year ?? undefined,
     airline: filters.airline ?? undefined,
-    ticketClass:
-      filters.ticketClass === 'eco' ? undefined : filters.ticketClass,
+    scope: filters.scope ?? undefined,
     search: filters.search || undefined,
   }
+}
+
+const DEFAULT_FILTERS: FilterState = {
+  year: null,
+  airline: null,
+  scope: null,
+  search: '',
+}
+
+/** True when the URL carries no filter, so there is nothing to reset. */
+function isDefaultFilters(filters: FilterState) {
+  return (
+    filters.year === DEFAULT_FILTERS.year &&
+    filters.airline === DEFAULT_FILTERS.airline &&
+    filters.scope === DEFAULT_FILTERS.scope &&
+    filters.search === DEFAULT_FILTERS.search
+  )
 }
 
 export function HistoryFilter() {
@@ -34,7 +49,7 @@ export function HistoryFilter() {
   const filters: FilterState = {
     year: search.year ?? null,
     airline: search.airline ?? null,
-    ticketClass: search.ticketClass ?? 'eco',
+    scope: search.scope ?? null,
     search: search.search ?? '',
   }
 
@@ -56,19 +71,22 @@ export function HistoryFilter() {
     })
   }
 
+  const isDefault = isDefaultFilters(filters)
+
+  // The defaults all serialize to undefined, so this clears every search key.
+  const resetFilters = () =>
+    navigate({ to: '/flight/history', search: toSearch(DEFAULT_FILTERS) })
+
   return (
     <FieldGroup className="gap-4">
-      <div className="w-full min-w-0 overflow-hidden border-b border-muted md:flex-1">
-        <FilterToggleGroup
-          value={filters.ticketClass}
-          onValueChange={(v) => {
-            if (v) setFilter('ticketClass', v as FilterState['ticketClass'])
-          }}
-          options={TICKET_CLASS}
-        />
-      </div>
-
       <div className="flex flex-col xl:flex-row gap-3 w-full">
+        {!isDefault && (
+          <Button variant="outline" onClick={resetFilters}>
+            <X />
+            Reset
+          </Button>
+        )}
+
         <FilterSearch
           placeholder="Flight number"
           value={filters.search}
@@ -76,8 +94,16 @@ export function HistoryFilter() {
         />
 
         <FilterSelect
+          icon={Globe}
+          placeholder="All flights"
+          value={filters.scope}
+          onValueChange={(v) => setFilter('scope', v as FlightScope)}
+          options={FLIGHT_SCOPE}
+        />
+
+        <FilterSelect
           icon={Users}
-          placeholder="Select an airline"
+          placeholder="All airlines"
           value={filters.airline}
           onValueChange={(v) => setFilter('airline', v)}
           options={airlineOptions}
@@ -85,7 +111,7 @@ export function HistoryFilter() {
 
         <FilterSelect
           icon={Calendar}
-          placeholder="Year"
+          placeholder="All years"
           value={filters.year === null ? null : String(filters.year)}
           onValueChange={(v) =>
             setFilter('year', v === null ? null : Number(v))

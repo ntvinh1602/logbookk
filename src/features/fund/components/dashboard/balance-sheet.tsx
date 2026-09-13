@@ -38,6 +38,7 @@ export default function BalanceSheet({
         acc.liabilities.push(item)
       } else {
         const key = item.asset_class
+        acc.groupedAssets[key] ??= []
         acc.groupedAssets[key].push(item)
       }
 

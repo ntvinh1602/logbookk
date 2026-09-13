@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react'
 import type { AnyFieldApi } from '@tanstack/react-form'
-import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { toFieldErrorMessages } from '@/components/form/field-errors'
 
@@ -16,6 +16,7 @@ interface ToggleGroupFieldProps {
   disabled?: boolean
   displayIcon?: boolean
   onValueChange?: (value: string) => void
+  description?: string
 }
 
 export function ToggleGroupField({
@@ -25,6 +26,7 @@ export function ToggleGroupField({
   disabled,
   displayIcon = true,
   onValueChange,
+  description,
 }: ToggleGroupFieldProps) {
   const errors = toFieldErrorMessages(field.state.meta.errors)
 
@@ -55,6 +57,11 @@ export function ToggleGroupField({
           )
         })}
       </ToggleGroup>
+      {description && (
+        <FieldDescription className="text-right text-xs italic">
+          {description}
+        </FieldDescription>
+      )}
 
       {errors.length > 0 && <FieldError errors={errors} />}
     </Field>

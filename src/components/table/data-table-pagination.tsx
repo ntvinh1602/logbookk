@@ -12,26 +12,29 @@ import type { DataTableFeatures } from './data-table-features'
 
 const PAGE_SIZES = [10, 20, 50]
 
+/** Rows per page a table starts on, until the user picks another size. */
+export const DEFAULT_PAGE_SIZE = 20
+
 interface DataTablePaginationProps<TData extends RowData> {
   table: ReactTable<DataTableFeatures, TData>
+  /** Noun for the total-rows label, e.g. `flights` -> "Found 42 flights". */
+  itemLabel?: string
 }
 
 /** Paged footer: rows info, rows-per-page selector, and Previous/Next. */
 export function DataTablePagination<TData extends RowData>({
   table,
+  itemLabel = 'events',
 }: DataTablePaginationProps<TData>) {
   const { pageIndex, pageSize } = table.state.pagination
   const total = table.getPrePaginatedRowModel().rows.length
-  const from = total === 0 ? 0 : pageIndex * pageSize + 1
-  const to = Math.min(total, (pageIndex + 1) * pageSize)
+  const totalPages = Math.ceil(total / pageSize)
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <p className="text-sm text-muted-foreground">
-        Showing <span className="text-foreground">{from}</span>-
-        <span className="text-foreground">{to}</span> of{' '}
-        <span className="text-foreground">{total}</span>
-      </p>
+    <div className="flex w-full items-center justify-between gap-3 px-2">
+      <span className="text-sm text-muted-foreground">
+        {`Found ${total} ${itemLabel}`}
+      </span>
 
       <div className="flex flex-wrap items-center gap-3">
         <Select
@@ -52,8 +55,7 @@ export function DataTablePagination<TData extends RowData>({
 
         <div className="flex items-center gap-2">
           <Button
-            variant="ghost"
-            size="sm"
+            variant="outline"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.previousPage()}
           >
@@ -64,9 +66,11 @@ export function DataTablePagination<TData extends RowData>({
             />
             Previous
           </Button>
+          <span className="text-sm text-muted-foreground px-4">
+            {`${pageIndex + 1} of ${totalPages}`}
+          </span>
           <Button
-            variant="ghost"
-            size="sm"
+            variant="outline"
             disabled={!table.getCanNextPage()}
             onClick={() => table.nextPage()}
           >

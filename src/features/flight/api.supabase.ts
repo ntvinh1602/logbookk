@@ -69,7 +69,7 @@ export async function getLifetimeStats(): Promise<StatsRow> {
 
 export async function getFlights(params: FlightsQueryParams = {}) {
   const supabase = createClient()
-  const { year, airline, ticketClass, search } = params
+  const { year, airline, isDomestic, search } = params
 
   let query = supabase.schema('dws').from('flights_summary').select('*')
 
@@ -83,8 +83,8 @@ export async function getFlights(params: FlightsQueryParams = {}) {
     query = query.eq('airline_name', airline)
   }
 
-  if (ticketClass) {
-    query = query.eq('ticket_class', ticketClass)
+  if (isDomestic !== undefined) {
+    query = query.eq('is_domestic', isDomestic)
   }
 
   if (search) {

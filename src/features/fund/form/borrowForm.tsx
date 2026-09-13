@@ -15,7 +15,7 @@ import {
 import { NumberField } from '@/components/form/number-field'
 import { TextField } from '@/components/form/text-field'
 import { DateTimeField } from '@/components/form/datetime-field'
-import { Field, FieldDescription, FieldGroup } from '@/components/ui/field'
+import { Field, FieldGroup } from '@/components/ui/field'
 import { borrowSchema } from '@/features/fund/form/schema'
 import { addBorrowEvent } from '@/features/fund/api.supabase'
 import { useAddFundEvent } from '@/features/fund/hooks/use-add-fund-event'
@@ -105,12 +105,10 @@ export function BorrowForm() {
                   field={field}
                   label="Lender"
                   placeholder="Lender name"
+                  description="Note: Add unique identifier for repeated lenders"
                 />
               )}
             </form.Field>
-            <FieldDescription className="text-right">
-              Note: Add unique identifier for repeated lenders
-            </FieldDescription>
 
             <form.Field name="principal">
               {(field) => (

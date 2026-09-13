@@ -1,0 +1,1 @@
+select * from dws.get_event_cashflow()

@@ -1,1 +1,0 @@
-select dws.get_top_stocks('2025-01-01','2026-12-31')

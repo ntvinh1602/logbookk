@@ -14,7 +14,8 @@ export function HistoryPage() {
     flights.list({
       year: search.year === undefined ? undefined : String(search.year),
       airline: search.airline,
-      ticketClass: search.ticketClass ?? 'eco',
+      isDomestic:
+        search.scope === undefined ? undefined : search.scope === 'domestic',
       search: search.search ?? '',
     }),
   )

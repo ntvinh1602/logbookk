@@ -6,10 +6,10 @@ import { EVENT_CATEGORY } from '@/features/fund/config'
 import type { Events } from '@/features/fund/config'
 import { getValidOp } from '@/features/fund/utils'
 import { useEventDateRange } from '@/features/fund/hooks/use-event-date-range'
-import { StockEventTable } from './stock-table'
-import { CashflowTransactions } from './cashflow-transactions'
-import { BorrowTransactions } from './borrow-transactions'
-import { RepayTransactions } from './repay-transactions'
+import { StockEventTable } from './table-stock'
+import { CashflowEventTable } from './table-cashflow'
+import { BorrowEventTable } from './table-borrow'
+import { RepayEventTable } from './table-repay'
 
 const routeApi = getRouteApi('/_protected/fund/events/$event')
 
@@ -37,7 +37,7 @@ function CashflowList() {
   const query = useQuery(events.cashflowTx(startISO, endISO, op))
 
   return (
-    <CashflowTransactions
+    <CashflowEventTable
       data={query.data ?? []}
       isLoading={query.isPending}
       error={query.error}
@@ -49,7 +49,7 @@ function BorrowList() {
   const query = useQuery(events.borrowTx())
 
   return (
-    <BorrowTransactions
+    <BorrowEventTable
       data={query.data ?? []}
       isLoading={query.isPending}
       error={query.error}
@@ -61,7 +61,7 @@ function RepayList() {
   const query = useQuery(events.repayTx())
 
   return (
-    <RepayTransactions
+    <RepayEventTable
       data={query.data ?? []}
       isLoading={query.isPending}
       error={query.error}
