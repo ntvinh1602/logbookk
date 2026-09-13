@@ -18,7 +18,8 @@ import {
 
 import { format } from 'date-fns'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { cn, compactNum, formatNum } from '@/lib/utils'
+import { compactNum, formatNum } from '@/lib/utils'
+import { cn } from "cn"
 
 interface NetProfitSectionProps {
   monthlyPnlChart: ProfitChartCols | undefined

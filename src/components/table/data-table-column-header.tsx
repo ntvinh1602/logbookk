@@ -2,7 +2,7 @@ import { useSelector } from '@tanstack/react-store'
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
 import type { CellData, Column, RowData, Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn } from "cn"
 import type { DataTableFeatures } from './data-table-features'
 
 interface DataTableColumnHeaderProps<

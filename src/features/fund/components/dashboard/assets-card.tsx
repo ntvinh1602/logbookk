@@ -16,7 +16,8 @@ import {
   ItemDescription,
 } from '@/components/ui/item'
 import { Progress } from '@/components/ui/progress'
-import { cn, compactNum, formatNum, pctNum } from '@/lib/utils'
+import { cn } from "cn"
+import { compactNum, formatNum, pctNum } from '@/lib/utils'
 import type { BSheetView } from '@/features/fund/types'
 import { Button } from '@/components/ui/button'
 import { ListOrdered } from 'lucide-react'

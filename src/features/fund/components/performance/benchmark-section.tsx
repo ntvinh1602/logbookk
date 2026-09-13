@@ -18,7 +18,8 @@ import {
 } from '@/components/ui/chart'
 import { format } from 'date-fns'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { cn, formatNum, pctNum } from '@/lib/utils'
+import { formatNum, pctNum } from '@/lib/utils'
+import { cn } from "cn"
 import { Badge } from '@/components/ui/badge'
 
 interface BenchmarkSectionProps {

@@ -1,4 +1,5 @@
-import { cn, compactNum } from '@/lib/utils'
+import { compactNum } from '@/lib/utils'
+import { cn } from "cn"
 import { Badge } from '@/components/ui/badge'
 import { MoveDownLeft, MoveUpRight } from 'lucide-react'
 import StatusLabel from '@/components/status-label'

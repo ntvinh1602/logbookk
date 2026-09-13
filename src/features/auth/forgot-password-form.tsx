@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { cn } from '@/lib/utils'
+import { cn } from "cn"
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import {

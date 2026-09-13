@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { CalendarIcon, ClockIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from "cn"
 import { toFieldErrorMessages } from '@/components/form/field-errors'
 
 type DateTimeFieldProps = {

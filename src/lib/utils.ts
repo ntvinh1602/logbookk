@@ -1,10 +1,5 @@
-import { clsx, type ClassValue } from 'clsx'
 import { fromZonedTime } from 'date-fns-tz'
-import { twMerge } from 'tailwind-merge'
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
 // --- Cached Intl.NumberFormat instances ---
 // Creating Intl.NumberFormat is expensive — cache by config key to avoid
 // re-instantiating on every call (these are called on every render tick).

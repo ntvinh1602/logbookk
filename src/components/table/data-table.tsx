@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { cn } from '@/lib/utils'
+import { cn } from "cn"
 import { DataTablePagination, DEFAULT_PAGE_SIZE } from './data-table-pagination'
 import type { DataTableFeatures } from './data-table-features'
 import { dataTableFeatures } from './data-table-features'

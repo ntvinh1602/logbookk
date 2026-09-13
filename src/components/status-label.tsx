@@ -5,7 +5,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { cn } from "@/lib/utils"
+import { cn } from "cn"
 import { Loader2, FileExclamationPoint, TriangleAlert } from "lucide-react"
 
 type StatusType = "loading" | "empty" | "error"
