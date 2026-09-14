@@ -1,3 +1,6 @@
+create view dws.lifetime_stats
+with
+  (security_invoker = on) as
 select
   count(*) as flights,
   sum(

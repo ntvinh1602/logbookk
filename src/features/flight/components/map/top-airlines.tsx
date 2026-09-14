@@ -46,7 +46,7 @@ export function TopAirlinesCard({
               className="rounded-sm"
             />
             <Progress
-              value={(a.count / lifetimeStats.flights_count) * 100}
+              value={(a.count / lifetimeStats.flights) * 100}
               className="w-full max-w-sm gap-1"
             >
               <ProgressLabel>{a.airlines_name}</ProgressLabel>

@@ -31,7 +31,7 @@ export function TopAircraftsCard({
           <div key={aircraft.aircraft_model} className="flex items-center gap-4">
             <span className="text-muted-foreground tabular-nums">{i + 1}</span>
             <Progress
-              value={(aircraft.count / lifetimeStats.flights_count) * 100}
+              value={(aircraft.count / lifetimeStats.flights) * 100}
               className="w-full max-w-sm gap-1"
             >
               <ProgressLabel>{aircraft.aircraft_model}</ProgressLabel>

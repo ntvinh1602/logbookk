@@ -4,6 +4,9 @@ import type {
   AircraftRow,
   AirlineRow,
   AirportRow,
+  FlightsByMonth,
+  FlightsByWeekday,
+  FlightsByYear,
   FlightsInsert,
   FlightsQueryParams,
   FlightsSummaryRow,
@@ -139,12 +142,43 @@ export async function getTopAircrafts(): Promise<TopAircrafts[]> {
 export async function getTopRoutes(): Promise<TopRoutes[]> {
   const supabase = createClient()
 
-  const { data, error } = await supabase
-    .schema('dws')
-    .rpc('get_top_routes', {})
+  const { data, error } = await supabase.schema('dws').rpc('get_top_routes', {})
 
   if (error) throw new Error(error.message)
   return data as TopRoutes[]
+}
+
+export async function getFlightsByYear(): Promise<FlightsByYear[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dws')
+    .rpc('get_flights_by_year', {})
+
+  if (error) throw new Error(error.message)
+  return data as FlightsByYear[]
+}
+
+export async function getFlightsByMonth(): Promise<FlightsByMonth[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dws')
+    .rpc('get_flights_by_month', {})
+
+  if (error) throw new Error(error.message)
+  return data as FlightsByMonth[]
+}
+
+export async function getFlightsByWeekday(): Promise<FlightsByWeekday[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .schema('dws')
+    .rpc('get_flights_by_weekday', {})
+
+  if (error) throw new Error(error.message)
+  return data as FlightsByWeekday[]
 }
 
 // Writes

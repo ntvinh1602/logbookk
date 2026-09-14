@@ -31,6 +31,12 @@ export type TopAircrafts =
   Database['dws']['Functions']['get_top_aircrafts']['Returns'][number]
 export type TopRoutes =
   Database['dws']['Functions']['get_top_routes']['Returns'][number]
+export type FlightsByYear =
+  Database['dws']['Functions']['get_flights_by_year']['Returns'][number]
+export type FlightsByMonth =
+  Database['dws']['Functions']['get_flights_by_month']['Returns'][number]
+export type FlightsByWeekday =
+  Database['dws']['Functions']['get_flights_by_weekday']['Returns'][number]
 
 // Front-end
 export type FlightScope = 'domestic' | 'international'

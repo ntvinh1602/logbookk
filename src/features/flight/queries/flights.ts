@@ -4,6 +4,9 @@ import {
   getAirlines,
   getAirports,
   getFlights,
+  getFlightsByMonth,
+  getFlightsByWeekday,
+  getFlightsByYear,
   getLifetimeStats,
   getTopAircrafts,
   getTopAirlines,
@@ -22,6 +25,9 @@ export const flightDwdKeys = {
   topAirlines: () => [...flightDwdKeys.all, 'top-airlines'] as const,
   topAircrafts: () => [...flightDwdKeys.all, 'top-aircrafts'] as const,
   topRoutes: () => [...flightDwdKeys.all, 'top-routes'] as const,
+  byYear: () => [...flightDwdKeys.all, 'by-year'] as const,
+  byMonth: () => [...flightDwdKeys.all, 'by-month'] as const,
+  byWeekday: () => [...flightDwdKeys.all, 'by-weekday'] as const,
   list: (params: FlightsQueryParams) =>
     [...flightDwdKeys.all, 'list', params] as const,
 }
@@ -95,6 +101,27 @@ export const flights = {
     return queryOptions({
       queryKey: flightDwdKeys.topRoutes(),
       queryFn: () => getTopRoutes(),
+    })
+  },
+
+  byYear: () => {
+    return queryOptions({
+      queryKey: flightDwdKeys.byYear(),
+      queryFn: () => getFlightsByYear(),
+    })
+  },
+
+  byMonth: () => {
+    return queryOptions({
+      queryKey: flightDwdKeys.byMonth(),
+      queryFn: () => getFlightsByMonth(),
+    })
+  },
+
+  byWeekday: () => {
+    return queryOptions({
+      queryKey: flightDwdKeys.byWeekday(),
+      queryFn: () => getFlightsByWeekday(),
     })
   },
 

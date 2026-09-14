@@ -620,14 +620,14 @@ export type Database = {
       }
       lifetime_stats: {
         Row: {
-          airports_count: number | null
-          country_count: number | null
-          domestic_count: number | null
-          flights_count: number | null
-          total_distance: number | null
-          total_duration: number | null
-          type_count: number | null
-          user_id: string | null
+          aisle: number | null
+          distance: number | null
+          domestic: number | null
+          duration: number | null
+          flights: number | null
+          intl: number | null
+          middle: number | null
+          windows: number | null
         }
         Relationships: []
       }
@@ -737,6 +737,29 @@ export type Database = {
           tax: number
           ticker: string
           tx_id: number
+        }[]
+      }
+      get_flights_by_month: {
+        Args: never
+        Returns: {
+          flights: number
+          month: string
+          month_number: number
+        }[]
+      }
+      get_flights_by_weekday: {
+        Args: never
+        Returns: {
+          flights: number
+          weekday: string
+          weekday_number: number
+        }[]
+      }
+      get_flights_by_year: {
+        Args: never
+        Returns: {
+          flights: number
+          year: number
         }[]
       }
       get_monthly_pnl_chart: {

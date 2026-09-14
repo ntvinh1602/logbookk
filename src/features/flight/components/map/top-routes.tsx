@@ -34,7 +34,7 @@ export function TopRoutesCard({
           >
             <span className="text-muted-foreground tabular-nums">{i + 1}</span>
             <Progress
-              value={(route.frequency / lifetimeStats.flights_count) * 100}
+              value={(route.frequency / lifetimeStats.flights) * 100}
               className="w-full max-w-sm gap-1"
             >
               <ProgressLabel className="font-mono">

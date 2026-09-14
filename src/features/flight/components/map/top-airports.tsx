@@ -40,7 +40,7 @@ export function TopAirportsCard({
               {airport.airport_code}
             </span>
             <Progress
-              value={(airport.count / lifetimeStats.flights_count / 2) * 100}
+              value={(airport.count / lifetimeStats.flights / 2) * 100}
               className="w-full max-w-sm gap-1"
             >
               <ProgressLabel>{airport.airport_name}</ProgressLabel>
