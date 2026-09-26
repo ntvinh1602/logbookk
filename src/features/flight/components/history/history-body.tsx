@@ -5,12 +5,10 @@ import StatusLabel from '@/components/status-label'
 import { DataTable } from '@/components/table/data-table'
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header'
 import type { DataTableFeatures } from '@/components/table/data-table-features'
-import { Badge } from '@/components/ui/badge'
 import type { FlightsSummaryRow } from '@/features/flight/types'
 import { FlightItemMenu } from './flight-item-menu'
 import { Item, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { formatNum } from '@/lib/utils'
-import { Clock } from 'lucide-react'
 
 interface HistoryBodyProps {
   data: FlightsSummaryRow[]
@@ -40,14 +38,9 @@ function Endpoint({
   return (
     <div className="flex flex-col gap-1 min-w-40">
       <span>{name}</span>
-      <span className="text-xs text-muted-foreground gap-1 flex items-center">
-        <Badge variant="outline" className="font-mono">
-          {code}
-        </Badge>
-        <Badge variant="outline" className="font-mono">
-          <Clock/>{formatInTimeZone(time, tz, 'HH:mm')}
-        </Badge>
-      </span>
+      <div className="text-xs text-muted-foreground gap-1 flex items-center">
+        <span>{`${code} — ${formatInTimeZone(time, tz, 'HH:mm')}`}</span>
+      </div>
     </div>
   )
 }
@@ -75,7 +68,7 @@ export const columns = columnHelper.columns([
       const flight = row.original
       const isUpcoming = new Date(flight.departure_time) > new Date()
       return (
-        <Item size="xs" className="min-w-30">
+        <Item size="xs" className="min-w-30 px-0">
           <ItemMedia>
             <img
               src={airlineLogo(flight.airline_logo)}
@@ -88,7 +81,7 @@ export const columns = columnHelper.columns([
             {!isUpcoming ? (
               flight.flight_number
             ) : (
-              <Badge variant="destructive">{flight.flight_number}</Badge>
+              <span className='text-destructive'>{flight.flight_number}</span>
             )}
           </ItemTitle>
         </Item>

@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import { cn } from "cn"
 
 function Card({
@@ -73,7 +72,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-content"
-      className={cn("px-(--card-spacing)", className)}
+      className={cn("flex flex-col gap-3 px-(--card-spacing)", className)}
       {...props}
     />
   )

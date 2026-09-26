@@ -1,6 +1,6 @@
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQueries } from '@tanstack/react-query'
-import LeafletMap from '@/features/flight/components/map/leaflet-map'
 import { flights } from '@/features/flight/queries/flights'
 import { TopAirportsCard } from '@/features/flight/components/map/top-airports'
 import { TopAirlinesCard } from '@/features/flight/components/map/top-airlines'
@@ -12,6 +12,35 @@ import { FlightByWeekday } from '@/features/flight/components/map/flight-by-week
 import TotalFlights from '@/features/flight/components/map/total-flights'
 import TotalDistance from '@/features/flight/components/map/total-distance'
 import { SeatCard } from '@/features/flight/components/map/seat'
+import type { AirportRow, UniqueRoutes } from '@/features/flight/types'
+
+const LeafletMap = lazy(
+  () => import('@/features/flight/components/map/leaflet-map'),
+)
+
+function ClientOnlyMap({
+  data,
+  airports,
+}: {
+  data: UniqueRoutes[]
+  airports: AirportRow[]
+}) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return <div className="h-150 w-full" />
+  }
+
+  return (
+    <Suspense fallback={<div className="h-150 w-full" />}>
+      <LeafletMap data={data} airports={airports} />
+    </Suspense>
+  )
+}
 
 export const Route = createFileRoute('/_protected/flight/map')({
   component: RouteComponent,
@@ -46,7 +75,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-8 pb-15">
-      <LeafletMap
+      <ClientOnlyMap
         data={uniqueRoutesQuery.data ?? []}
         airports={airportsQuery.data ?? []}
       />

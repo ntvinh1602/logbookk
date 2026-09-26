@@ -13,7 +13,7 @@ import type { DataTableFeatures } from './data-table-features'
 const PAGE_SIZES = [10, 20, 50]
 
 /** Rows per page a table starts on, until the user picks another size. */
-export const DEFAULT_PAGE_SIZE = 20
+export const DEFAULT_PAGE_SIZE = 10
 
 interface DataTablePaginationProps<TData extends RowData> {
   table: ReactTable<DataTableFeatures, TData>

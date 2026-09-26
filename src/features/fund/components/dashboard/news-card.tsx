@@ -3,7 +3,6 @@ import StatusLabel from '@/components/status-label'
 import type { BSheetView, NewsArticle } from '@/features/fund/types'
 import {
   Item,
-  ItemContent,
   ItemDescription,
   ItemGroup,
   ItemTitle,
@@ -35,36 +34,34 @@ function ArticleList({ articles }: { articles: NewsArticle[] }) {
   return (
     <ItemGroup className="gap-0 px-2">
       {articles.map((article) => (
-        <Item key={article.id}>
-          <ItemContent className="w-full">
-            <ItemTitle
-              className="cursor-pointer hover:text-primary transition-colors line-clamp-1"
-              onClick={() => window.open(article.url, '_blank')}
+        <Item key={article.id} className='gap-2'>
+          <ItemTitle
+            className="cursor-pointer hover:text-primary transition-colors"
+            onClick={() => window.open(article.url, '_blank')}
+          >
+            {article.title}
+          </ItemTitle>
+          <ItemDescription className="text-xs">
+            {article.excerpt}
+          </ItemDescription>
+          <ItemDescription className="flex gap-1 pt-1">
+            <Badge
+              variant="default"
+              className="self-start text-xs pointer-events-none font-mono"
             >
-              <Badge
-                variant="default"
-                className="self-start text-xs pointer-events-none font-mono mr-2"
-              >
-                {article.related_stocks[0]}
-              </Badge>
-              {article.title}
-            </ItemTitle>
-            <ItemDescription className="text-xs">
-              {article.excerpt}
-            </ItemDescription>
-            <ItemDescription className="flex gap-1 pt-1">
-              <Badge variant="secondary" className="pointer-events-none">
-                <Clock />
-                {formatDistance(new Date(article.published_at), now, {
-                  addSuffix: true,
-                })}
-              </Badge>
-              <Badge variant="secondary" className="pointer-events-none">
-                <Newspaper />
-                {article.source}
-              </Badge>
-            </ItemDescription>
-          </ItemContent>
+              {article.related_stocks[0]}
+            </Badge>
+            <Badge variant="outline" className="pointer-events-none">
+              <Clock />
+              {formatDistance(new Date(article.published_at), now, {
+                addSuffix: true,
+              })}
+            </Badge>
+            <Badge variant="outline" className="pointer-events-none">
+              <Newspaper />
+              {article.source}
+            </Badge>
+          </ItemDescription>
         </Item>
       ))}
     </ItemGroup>

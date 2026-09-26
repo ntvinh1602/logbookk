@@ -10,7 +10,6 @@ import { Moon, Sun } from 'lucide-react'
 
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import logo from '@/assets/logo.webp'
 import { useTheme } from '@/components/theme-provider'
 
 export function NavBar() {
@@ -22,12 +21,8 @@ export function NavBar() {
     navigate({ to: '/auth/login' })
   }
   return (
-    <header className="sticky top-0 z-50 flex h-14 backdrop-blur-xl bg-transparent border-b">
+    <header className="sticky top-0 z-50 flex h-14 backdrop-blur-xl bg-transparent">
       <div className="flex w-full px-8 items-center backdrop-blur-xl bg-transparent gap-4">
-        <div className="flex items-center gap-1">
-          <img src={logo} alt="Logo" className="h-10 w-auto" />
-          <h1 className="text-lg font-medium text-primary">Logbookk</h1>
-        </div>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
