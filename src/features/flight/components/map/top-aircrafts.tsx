@@ -19,9 +19,9 @@ export function TopAircraftsCard({
   if (!aircraftsData || !lifetimeStats) return null
 
   return (
-    <Card>
+    <Card className="border">
       <CardHeader>
-        <CardTitle>Top 5 Aircraft Models</CardTitle>
+        <CardTitle>Top Aircrafts</CardTitle>
         <CardAction>
           <Plane className='size-5'/>
         </CardAction>

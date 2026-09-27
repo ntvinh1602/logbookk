@@ -34,7 +34,7 @@ export function CashflowSection({ data, isLoading }: CashflowSectionProps) {
   ]
 
   return (
-    <Card>
+    <Card className="border">
       <CardHeader>
         <CardDescription>Cashflow</CardDescription>
         <CardTitle className="text-xl">{formatNum(netflow)}</CardTitle>

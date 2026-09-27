@@ -58,7 +58,7 @@ export function NetProfitCard({
   const dataKeys = Object.keys(chartConfig)
 
   return (
-    <Card className="gap-3 pb-0">
+    <Card className="pb-0 border">
       <CardHeader>
         <CardDescription>Net Profit</CardDescription>
         <CardTitle className="text-xl sm:text-2xl flex gap-1 items-baseline">

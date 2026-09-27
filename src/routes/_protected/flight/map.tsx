@@ -80,6 +80,7 @@ function RouteComponent() {
         airports={airportsQuery.data ?? []}
       />
       <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-4">
+        <h1 className="text-2xl font-bold pt-4 pb-8">Flight Statistics</h1>
         <div className="grid grid-cols-3 gap-2">
           <TotalFlights
             data={statsQuery.data}

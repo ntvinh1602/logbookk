@@ -24,25 +24,6 @@ const OpsConfig = EVENT_CATEGORY.cashflow.operations
 const columnHelper = createColumnHelper<DataTableFeatures, CashflowEvents>()
 
 export const columns = columnHelper.columns([
-  columnHelper.accessor('operation', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Operation" />
-    ),
-    cell: ({ getValue }) => {
-      const operation = getValue()
-      const op = OpsConfig[operation as CashflowOps]
-      return (
-        <Badge className={cn(op.color, 'capitalize rounded-sm')}>
-          {operation}
-        </Badge>
-      )
-    },
-  }),
-  columnHelper.accessor('memo', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Memo" />
-    ),
-  }),
   columnHelper.accessor('created_at', {
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} label="Time" />
@@ -56,10 +37,23 @@ export const columns = columnHelper.columns([
       )
     },
   }),
+  columnHelper.accessor('operation', {
+    header: "Operation",
+    cell: ({ getValue }) => {
+      const operation = getValue()
+      const op = OpsConfig[operation as CashflowOps]
+      return (
+        <Badge className={cn(op.color, 'capitalize rounded-sm')}>
+          {operation}
+        </Badge>
+      )
+    },
+  }),
+  columnHelper.accessor('memo', {
+    header: "Event",
+  }),
   columnHelper.accessor('quantity', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Quantity" />
-    ),
+    header: "Quantity",
     // Cash-only rows carry no traded quantity, so they read as an explicit blank.
     cell: ({ row }) =>
       row.original.ticker === 'FX.VND' ? (
@@ -70,9 +64,7 @@ export const columns = columnHelper.columns([
     meta: { align: 'right' },
   }),
   columnHelper.accessor('net_proceed', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Amount" />
-    ),
+    header: "Amount",
     cell: ({ getValue }) => {
       return <span>{formatNum(getValue())}</span>
     },

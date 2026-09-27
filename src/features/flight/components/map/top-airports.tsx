@@ -25,9 +25,9 @@ export function TopAirportsCard({
   if (!airportData || !lifetimeStats) return null
 
   return (
-    <Card>
+    <Card className="border">
       <CardHeader>
-        <CardTitle>Top 5 Visited Airports</CardTitle>
+        <CardTitle>Top Airports</CardTitle>
         <CardAction>
           <PlaneTakeoff className="size-5" />
         </CardAction>

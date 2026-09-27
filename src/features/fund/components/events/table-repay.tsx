@@ -19,11 +19,6 @@ interface Props {
 const columnHelper = createColumnHelper<DataTableFeatures, RepayEvents>()
 
 export const columns = columnHelper.columns([
-  columnHelper.accessor('lender', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Lender" />
-    ),
-  }),
   columnHelper.accessor('created_at', {
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} label="Time" />
@@ -37,19 +32,18 @@ export const columns = columnHelper.columns([
       )
     },
   }),
+  columnHelper.accessor('lender', {
+    header: 'Lender',
+  }),
   columnHelper.accessor('interest', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Interest" />
-    ),
+    header: "Interest",
     cell: ({ getValue }) => {
       return <span>{formatNum(getValue())}</span>
     },
     meta: { align: 'right' },
   }),
   columnHelper.accessor('principal', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Principal" />
-    ),
+    header: "Principal",
     cell: ({ getValue }) => {
       return <span>{formatNum(getValue())}</span>
     },

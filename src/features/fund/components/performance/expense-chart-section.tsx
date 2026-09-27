@@ -43,7 +43,7 @@ export function ExpenseChartSection({
   ]
 
   return (
-    <Card>
+    <Card className="border">
       <CardHeader>
         <CardDescription>Total Expenses</CardDescription>
         <CardTitle className="text-xl">{formatNum(totalExpenses)}</CardTitle>

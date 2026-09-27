@@ -1,13 +1,11 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
-@import "@fontsource-variable/manrope";
+@import '@fontsource-variable/manrope';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: 'Manrope Variable', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -39,8 +37,9 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  --color-positive: var(--color-green-700);
-  --color-negative: var(--color-red-700);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --color-transparent: transparent;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -48,7 +47,6 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-  --color-transparent: transparent;
   --radius-xs: calc(var(--radius) - 6px);
   --shadow-2xs: var(--shadow-2xs);
   --shadow-xs: var(--shadow-xs);
@@ -63,6 +61,8 @@
   --font-display: var(--font-display);
   --font-text: var(--font-text);
   --font-handwriting: var(--font-handwriting);
+  --font-heading: var(--font-sans);
+  --font-sans: 'Manrope Variable', sans-serif;
 }
 
 :root {
@@ -84,11 +84,11 @@
   --border: oklch(0.922 0.005 34.3);
   --input: oklch(0.922 0.005 34.3);
   --ring: oklch(0.714 0.014 41.2);
-  --chart-1: oklch(0.905 0.182 98.111);
-  --chart-2: oklch(0.795 0.184 86.047);
-  --chart-3: oklch(0.681 0.162 75.834);
-  --chart-4: oklch(0.554 0.135 66.442);
-  --chart-5: oklch(0.476 0.114 61.907);
+  --chart-1: oklch(0.795 0.184 86.047);
+  --chart-2: oklch(62.426% 0.16074 51.878);
+  --chart-3: oklch(55.317% 0.20756 32.357);
+  --chart-4: oklch(59.783% 0.13747 116.735);
+  --chart-5: oklch(0.986 0.002 67.8);
   --radius: 0.45rem;
   --sidebar: oklch(0.986 0.002 67.8);
   --sidebar-foreground: oklch(0.147 0.004 49.3);
@@ -98,20 +98,8 @@
   --sidebar-accent-foreground: oklch(0.214 0.009 43.1);
   --sidebar-border: oklch(0.922 0.005 34.3);
   --sidebar-ring: oklch(0.714 0.014 41.2);
-  --font-sans: 'Manrope Variable', sans-serif;
-  --font-serif: Playfair Display, Source Serif 4, serif;
-  --font-mono: "IBM Plex Mono", monospace;
-  --font-display: 'Manrope Variable', sans-serif;
-  --font-text: 'Manrope Variable', sans-serif;
-  --shadow-2xs: 0px 4px 8px -1px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0px 4px 8px -1px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 1px 2px -2px hsl(0 0% 0% / 0.10);
-  --shadow: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 1px 2px -2px hsl(0 0% 0% / 0.10);
-  --shadow-md: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 2px 4px -2px hsl(0 0% 0% / 0.10);
-  --shadow-lg: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 4px 6px -2px hsl(0 0% 0% / 0.10);
-  --shadow-xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 8px 10px -2px hsl(0 0% 0% / 0.10);
-  --shadow-2xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.25);
-  --font-handwriting: "Caveat", cursive;
+  --positive: var(--color-green-700);
+  --negative: var(--color-red-700);
 }
 
 .dark {
@@ -133,11 +121,11 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.547 0.021 43.1);
-  --chart-1: oklch(0.905 0.182 98.111);
-  --chart-2: oklch(0.795 0.184 86.047);
-  --chart-3: oklch(0.681 0.162 75.834);
-  --chart-4: oklch(0.554 0.135 66.442);
-  --chart-5: oklch(0.476 0.114 61.907);
+  --chart-1: oklch(0.795 0.184 86.047);
+  --chart-2: oklch(62.426% 0.16074 51.878);
+  --chart-3: oklch(55.317% 0.20756 32.357);
+  --chart-4: oklch(59.783% 0.13747 116.735);
+  --chart-5: oklch(0.986 0.002 67.8);
   --sidebar: oklch(0.214 0.009 43.1);
   --sidebar-foreground: oklch(0.986 0.002 67.8);
   --sidebar-primary: oklch(0.795 0.184 86.047);
@@ -146,6 +134,8 @@
   --sidebar-accent-foreground: oklch(0.986 0.002 67.8);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.547 0.021 43.1);
+  --positive: var(--color-green-500);
+  --negative: var(--color-red-500);
 }
 
 @layer base {
@@ -155,28 +145,9 @@
   body {
     @apply bg-background text-foreground;
   }
-  html {
-    @apply font-sans;
-  }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-display);
-  }
-  body,
-  p {
-    font-family: var(--font-text);
-  }
-  code,
-  pre {
-    font-family: var(--font-mono);
-  }
 }
 
 @utility container {
-    margin-inline: auto;
-    padding-inline: 2rem;
+  margin-inline: auto;
+  padding-inline: 2rem;
 }

@@ -19,11 +19,6 @@ interface Props {
 const columnHelper = createColumnHelper<DataTableFeatures, BorrowEvents>()
 
 export const columns = columnHelper.columns([
-  columnHelper.accessor('lender', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Lender" />
-    ),
-  }),
   columnHelper.accessor('created_at', {
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} label="Time" />
@@ -37,19 +32,18 @@ export const columns = columnHelper.columns([
       )
     },
   }),
+  columnHelper.accessor('lender', {
+    header: "Lender",
+  }),
   columnHelper.accessor('rate', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Rate" />
-    ),
+    header: "Rate",
     cell: ({ getValue }) => {
       return <span>{formatNum(getValue(), 2)}%</span>
     },
     meta: { align: 'right' },
   }),
   columnHelper.accessor('principal', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Amount" />
-    ),
+    header: "Principal",
     cell: ({ getValue }) => {
       return <span>{formatNum(getValue())}</span>
     },

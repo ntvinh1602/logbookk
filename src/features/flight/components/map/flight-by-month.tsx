@@ -29,7 +29,7 @@ export function FlightByMonth({ data, isLoading }: Props) {
   if (!data) return null
 
   return (
-    <Card>
+    <Card className="border">
       <CardHeader>
         <CardTitle>Flights by Month</CardTitle>
         <CardAction>

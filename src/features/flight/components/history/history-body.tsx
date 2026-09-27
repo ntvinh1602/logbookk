@@ -61,9 +61,7 @@ export const columns = columnHelper.columns([
     ),
   }),
   columnHelper.accessor('flight_number', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Flight" />
-    ),
+    header: "Flight No.",
     cell: ({ row }) => {
       const flight = row.original
       const isUpcoming = new Date(flight.departure_time) > new Date()
@@ -89,9 +87,7 @@ export const columns = columnHelper.columns([
     },
   }),
   columnHelper.accessor('departure_name', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="From" />
-    ),
+    header: "Departure",
     cell: ({ row }) => (
       <Endpoint
         code={row.original.departure_code}
@@ -102,9 +98,7 @@ export const columns = columnHelper.columns([
     ),
   }),
   columnHelper.accessor('arrival_name', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="To" />
-    ),
+    header: "Arrival",
     cell: ({ row }) => (
       <Endpoint
         code={row.original.arrival_code}
@@ -114,23 +108,8 @@ export const columns = columnHelper.columns([
       />
     ),
   }),
-  columnHelper.accessor('distance_km', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Distance" />
-    ),
-    cell: ({ row }) => (
-      <div className="flex flex-col items-start gap-1 whitespace-nowrap">
-        <span>{formatNum(row.original.distance_km)} km</span>
-        <span className="text-muted-foreground text-xs">
-          {row.original.duration}
-        </span>
-      </div>
-    ),
-  }),
   columnHelper.accessor('aircraft_type', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Aircraft" />
-    ),
+    header: "Aircraft",
     cell: ({ row }) => (
       <div className="flex flex-col items-start gap-1 whitespace-nowrap">
         <span>{row.original.aircraft_type}</span>
@@ -139,6 +118,17 @@ export const columns = columnHelper.columns([
             {row.original.tail_number}
           </span>
         )}
+      </div>
+    ),
+  }),
+  columnHelper.accessor('distance_km', {
+    header: "Distance",
+    cell: ({ row }) => (
+      <div className="flex flex-col items-start gap-1 whitespace-nowrap">
+        <span>{formatNum(row.original.distance_km)} km</span>
+        <span className="text-muted-foreground text-xs">
+          {row.original.duration}
+        </span>
       </div>
     ),
   }),

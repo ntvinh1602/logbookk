@@ -34,7 +34,7 @@ export function TopStocksSection({ data, isLoading }: TopStocksSectionProps) {
     .slice(0, 10)
 
   return (
-    <Card className="pb-4">
+    <Card className="pb-4 border">
       <CardHeader>
         <CardTitle>Top Performers</CardTitle>
         <CardDescription>Based on total realized P/L</CardDescription>
@@ -47,7 +47,7 @@ export function TopStocksSection({ data, isLoading }: TopStocksSectionProps) {
           {sortedStocks.map((stock) => (
             <div>
               <ItemSeparator />
-              <Item size="xs" className="px-0">
+              <Item className="px-0">
                 <ItemMedia variant="image">
                   <img
                     src={`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logo/stock/${stock.logo_url}`}

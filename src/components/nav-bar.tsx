@@ -21,8 +21,8 @@ export function NavBar() {
     navigate({ to: '/auth/login' })
   }
   return (
-    <header className="sticky top-0 z-50 flex h-14 backdrop-blur-xl bg-transparent">
-      <div className="flex w-full px-8 items-center backdrop-blur-xl bg-transparent gap-4">
+    <header className="sticky top-0 z-50 flex h-14 bg-background">
+      <div className="flex w-full px-8 items-center gap-4">
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>

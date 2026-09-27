@@ -85,7 +85,7 @@ export function NewsCard({ balanceSheet, news, isLoading }: NewsSectionProps) {
 
   const articles = selected === 'all' ? news : portfolioNews
   return (
-    <Card className="h-140 pb-0">
+    <Card className="h-140 pb-0 border">
       <CardHeader>
         <CardTitle>News</CardTitle>
         <CardAction>

@@ -29,7 +29,7 @@ export function FlightByWeekday({ data, isLoading }: Props) {
   if (!data) return null
 
   return (
-    <Card>
+    <Card className="border">
       <CardHeader>
         <CardTitle>Flights by Weekday</CardTitle>
         <CardAction>

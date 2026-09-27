@@ -58,7 +58,7 @@ export function AssetCard({
   const leverage = (asset - equity) / equity
 
   return (
-    <Card className="pb-3 gap-3">
+    <Card className="pb-3 border">
       <CardHeader>
         <CardDescription>Assets</CardDescription>
         <CardTitle className="text-2xl gap-2 flex items-baseline">

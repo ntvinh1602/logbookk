@@ -57,7 +57,7 @@ export function ReturnCard({
   )
 
   return (
-    <Card className="gap-3 pb-0">
+    <Card className="pb-0 border">
       <CardHeader>
         <CardDescription>Return</CardDescription>
         <CardTitle className="text-2xl flex gap-1 items-baseline">

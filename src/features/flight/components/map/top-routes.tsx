@@ -19,9 +19,9 @@ export function TopRoutesCard({
   if (!routesData || !lifetimeStats) return null
 
   return (
-    <Card>
+    <Card className="border">
       <CardHeader>
-        <CardTitle>Top 5 Routes</CardTitle>
+        <CardTitle>Top Routes</CardTitle>
         <CardAction>
           <Route className='size-5'/>
         </CardAction>

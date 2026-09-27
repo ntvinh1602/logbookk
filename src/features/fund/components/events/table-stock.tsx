@@ -23,33 +23,6 @@ const OpsConfig = EVENT_CATEGORY.stock.operations
 const columnHelper = createColumnHelper<DataTableFeatures, StockEvents>()
 
 export const columns = columnHelper.columns([
-  columnHelper.accessor('name', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Stock" />
-    ),
-    cell: ({ row }) => (
-      <span className="inline-flex items-center gap-2">
-        <Badge variant="secondary" className="font-mono">
-          {row.original.ticker}
-        </Badge>
-        {row.original.name}
-      </span>
-    ),
-  }),
-  columnHelper.accessor('operation', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Operation" />
-    ),
-    cell: ({ getValue }) => {
-      const operation = getValue()
-      const op = OpsConfig[operation as StockOps]
-      return (
-        <Badge className={cn(op.color, 'capitalize rounded-sm')}>
-          {operation}
-        </Badge>
-      )
-    },
-  }),
   columnHelper.accessor('created_at', {
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} label="Time" />
@@ -63,28 +36,45 @@ export const columns = columnHelper.columns([
       )
     },
   }),
-  columnHelper.accessor('fee', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Fee" />
+  columnHelper.accessor('operation', {
+    header: "Operation",
+    cell: ({ getValue }) => {
+      const operation = getValue()
+      const op = OpsConfig[operation as StockOps]
+      return (
+        <Badge className={cn(op.color, 'capitalize rounded-sm')}>
+          {operation}
+        </Badge>
+      )
+    },
+  }),
+  columnHelper.accessor('name', {
+    header: "Stock",
+    cell: ({ row }) => (
+      <span className="inline-flex items-center gap-2">
+        <Badge variant="secondary" className="font-mono">
+          {row.original.ticker}
+        </Badge>
+        {row.original.name}
+      </span>
     ),
+  }),
+  columnHelper.accessor('fee', {
+    header: "Fee",
     cell: ({ getValue }) => {
       return <span>{formatNum(getValue())}</span>
     },
     meta: { align: 'right' },
   }),
   columnHelper.accessor('tax', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Tax" />
-    ),
+    header: "Tax",
     cell: ({ getValue }) => {
       return <span>{formatNum(getValue())}</span>
     },
     meta: { align: 'right' },
   }),
   columnHelper.accessor('net_proceed', {
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} label="Value" />
-    ),
+    header: "Value",
     cell: ({ getValue }) => {
       return <span>{formatNum(getValue())}</span>
     },

@@ -105,7 +105,11 @@ function Home() {
 
         <div className="flex flex-col gap-4 w-1/2 ">
           <div className="w-full bg-card h-21 border rounded-xl overflow-hidden">
-            <TradingViewTickerTape symbols={miniChartSymbols} />
+            <TradingViewTickerTape
+              symbols={miniChartSymbols}
+              hideChart={false}
+              colorTheme='dark'
+            />
           </div>
           <NewsCard
             balanceSheet={balanceSheetQuery.data}
