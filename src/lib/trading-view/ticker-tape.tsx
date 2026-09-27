@@ -4,7 +4,7 @@ interface TradingViewTickerTapeProps {
   symbols: string[]
   direction?: 'horizontal' | 'vertical'
   itemSize?: 'compact' | 'normal'
-  hoverType?: 'performance-grid' | 'default'
+  hoverType?: 'performance-grid' | 'chart-performance-grid'
   colorTheme?: 'light' | 'dark'
   isTransparent?: boolean
   showHover?: boolean
@@ -30,7 +30,7 @@ function loadTradingView() {
   }
 
   scriptPromise = new Promise<void>((resolve, reject) => {
-    const src = 'https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js'
+    const src = 'https://widgets.tradingview-widget.com/w/en/tv-tickers.js'
 
     const existing = document.querySelector<HTMLScriptElement>(
       `script[src="${src}"]`,
@@ -61,7 +61,7 @@ export function TradingViewTickerTape({
   symbols,
   direction = 'horizontal',
   itemSize = 'normal',
-  hoverType = 'performance-grid',
+  hoverType = 'chart-performance-grid',
   colorTheme,
   isTransparent = true,
   showHover = true,
@@ -83,7 +83,7 @@ export function TradingViewTickerTape({
 
     container.innerHTML = ''
 
-    const ticker = document.createElement('tv-ticker-tape')
+    const ticker = document.createElement('tv-tickers')
 
     ticker.setAttribute('symbols', symbols.join(','))
     ticker.setAttribute('direction', direction)
@@ -113,7 +113,18 @@ export function TradingViewTickerTape({
     return () => {
       container.innerHTML = ''
     }
-  }, [symbols, direction, itemSize, hoverType, colorTheme, isTransparent, showHover, hideChart, width, height])
+  }, [
+    symbols,
+    direction,
+    itemSize,
+    hoverType,
+    colorTheme,
+    isTransparent,
+    showHover,
+    hideChart,
+    width,
+    height,
+  ])
 
   return <div ref={containerRef} className={className} />
 }

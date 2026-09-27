@@ -42,7 +42,7 @@ function Performance() {
   ] = results
 
   return (
-    <div className="flex flex-col max-w-screen-2xl mx-auto py-15 gap-8">
+    <div className="flex flex-col max-w-screen-sm lg:max-w-screen-lg px-2 md:px-0 mx-auto py-15 gap-8">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Annual Performance</h1>
         <div className="w-50">
@@ -59,8 +59,21 @@ function Performance() {
         </div>
       </div>
 
-      <div className="flex gap-4">
-        <div className="flex flex-col w-1/3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="flex flex-col w-full gap-4">
+          <BenchmarkSection
+            benchmarkChart={benchmarkChartQuery.data}
+            twrYear={twrYearQuery.data}
+            vniYear={vniYearQuery.data}
+            isLoading={results.some((q) => q.isPending)}
+          />
+          <TopStocksSection
+            data={topStocksQuery.data}
+            isLoading={results.some((q) => q.isPending)}
+          />
+        </div>
+
+        <div className="flex flex-col w-full gap-4">
           <CashflowSection
             data={cashflowSummaryQuery.data}
             isLoading={results.some((q) => q.isPending)}
@@ -69,24 +82,8 @@ function Performance() {
             monthlyPnlChart={monthlyPnlChartQuery.data}
             isLoading={results.some((q) => q.isPending)}
           />
-        </div>
-
-        <div className="flex flex-col w-1/3 gap-4">
-          <BenchmarkSection
-            benchmarkChart={benchmarkChartQuery.data}
-            twrYear={twrYearQuery.data}
-            vniYear={vniYearQuery.data}
-            isLoading={results.some((q) => q.isPending)}
-          />
           <NetProfitSection
             monthlyPnlChart={monthlyPnlChartQuery.data}
-            isLoading={results.some((q) => q.isPending)}
-          />
-        </div>
-
-        <div className="flex flex-col w-1/3 gap-4">
-          <TopStocksSection
-            data={topStocksQuery.data}
             isLoading={results.some((q) => q.isPending)}
           />
         </div>

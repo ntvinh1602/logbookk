@@ -79,7 +79,7 @@ export function EquityCard({
   const dataKeys = Object.keys(equityChartConfig)
 
   return (
-    <div className="h-50 w-full flex rounded-xl border bg-card items-center">
+    <div className="h-fit w-full flex rounded-xl border bg-card items-center">
       <Card className="h-full min-w-50 border-0 ring-0 shadow-none">
         <CardHeader>
           <CardDescription>Equity</CardDescription>

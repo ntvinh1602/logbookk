@@ -59,7 +59,7 @@ function Home() {
   const miniChartSymbols = ['CAPITALCOM:XAUUSD', 'BINANCE:BTCUSDT', 'TVC:UKOIL']
 
   return (
-    <div className="flex flex-col max-w-screen-2xl mx-auto py-15 gap-8">
+    <div className="flex flex-col max-w-screen-sm lg:max-w-screen-lg px-2 md:px-0 mx-auto py-15 gap-8">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <Button
@@ -72,8 +72,8 @@ function Home() {
         </Button>
       </div>
 
-      <div className="flex gap-4">
-        <div className="flex flex-col gap-4 w-1/2 ">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-4 w-full ">
           <EquityCard
             balanceSheet={balanceSheetQuery.data}
             equity={equity}
@@ -82,13 +82,6 @@ function Home() {
             equityChart={equityChartQuery.data}
             isLoading={balanceSheetQuery.isPending}
           />
-          <NetProfitCard
-            monthlyPnlChart={monthlyPnlChartQuery.data}
-            isLoading={monthlyPnlChartQuery.isPending}
-          />
-        </div>
-
-        <div className="flex flex-col gap-4 w-1/2">
           <ReturnCard
             benchmarkChart={benchmarkChartQuery.data}
             twrYtd={twrYtdQuery.data}
@@ -103,7 +96,11 @@ function Home() {
           />
         </div>
 
-        <div className="flex flex-col gap-4 w-1/2 ">
+        <div className="flex flex-col gap-4 w-full">
+          <NetProfitCard
+            monthlyPnlChart={monthlyPnlChartQuery.data}
+            isLoading={monthlyPnlChartQuery.isPending}
+          />
           <div className="w-full bg-card h-21 border rounded-xl overflow-hidden">
             <TradingViewTickerTape
               symbols={miniChartSymbols}
