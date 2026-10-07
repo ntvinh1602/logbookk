@@ -4,11 +4,8 @@ import { ReturnCard } from '@/features/fund/components/dashboard/return-card'
 import { AssetCard } from '@/features/fund/components/dashboard/assets-card'
 import { NewsCard } from '@/features/fund/components/dashboard/news-card'
 import { NetProfitCard } from '@/features/fund/components/dashboard/net-profit-card'
-import { Button } from '@/components/ui/button'
-import { RefreshCw } from 'lucide-react'
 import { useQueries } from '@tanstack/react-query'
 import { dashboard } from '@/features/fund/queries/dashboard'
-import { useRefreshPrices } from '@/features/fund/hooks/use-refresh-prices'
 import { TradingViewTickerTape } from '@/lib/trading-view/ticker-tape'
 
 export const Route = createFileRoute('/_protected/fund/dashboard')({
@@ -16,8 +13,6 @@ export const Route = createFileRoute('/_protected/fund/dashboard')({
 })
 
 function Home() {
-  const { refreshPrices, isPending } = useRefreshPrices()
-
   const results = useQueries({
     queries: [
       dashboard.balanceSheet(),
@@ -62,14 +57,6 @@ function Home() {
     <div className="flex flex-col max-w-screen-sm lg:max-w-screen-lg px-2 md:px-0 mx-auto py-15 gap-8">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Dashboard</h1>
-        <Button
-          variant="outline"
-          onClick={() => void refreshPrices()}
-          disabled={isPending}
-        >
-          <RefreshCw className={isPending ? 'animate-spin' : ''} />
-          Update Prices
-        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

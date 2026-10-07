@@ -43,8 +43,6 @@ export type BSheetView = NonNullableExcept<
 
 // Tables
 export type NewsArticle = Database['ods']['Tables']['news_articles']['Row']
-export type DailyAssetCloseInsert =
-  Database['dwd']['Tables']['daily_asset_close']['Insert']
 
 // Front-end
 export type AssetSearchResult = {

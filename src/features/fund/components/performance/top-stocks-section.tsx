@@ -45,7 +45,7 @@ export function TopStocksSection({ data, isLoading }: TopStocksSectionProps) {
       <CardContent>
         <ItemGroup className="gap-0">
           {sortedStocks.map((stock) => (
-            <div>
+            <div key={stock.ticker}>
               <ItemSeparator />
               <Item className="px-0">
                 <ItemMedia variant="image">

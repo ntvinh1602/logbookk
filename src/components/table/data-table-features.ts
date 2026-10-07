@@ -3,6 +3,7 @@ import {
   createSortedRowModel,
   rowPaginationFeature,
   rowSortingFeature,
+  sortFn_alphanumeric,
   tableFeatures,
 } from '@tanstack/react-table'
 import type { CellData, RowData, TableFeatures } from '@tanstack/react-table'
@@ -27,6 +28,7 @@ declare module '@tanstack/table-core' {
 export const dataTableFeatures = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
+  sortFns: { alphanumeric: sortFn_alphanumeric },
   rowPaginationFeature,
   paginatedRowModel: createPaginatedRowModel(),
 })

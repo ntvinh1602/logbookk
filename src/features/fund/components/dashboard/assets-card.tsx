@@ -104,7 +104,7 @@ export function AssetCard({
         {sortedStocks.length > 0 ? (
           <ItemGroup className="gap-0">
             {sortedStocks.map((bs) => (
-              <Item className="px-0">
+              <Item key={bs.ticker} className="px-0">
                 <ItemMedia variant="image">
                   {bs.logo_url && (
                     <img

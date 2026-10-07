@@ -8,7 +8,6 @@ import type {
   ProfitChartCols,
   TopStocks,
   AssetSearchResult,
-  DailyAssetCloseInsert,
   StockEvents,
   CashflowEvents,
   BorrowEvents,
@@ -410,48 +409,4 @@ export async function getOutstandingDebts() {
   if (error) throw new Error(error.message)
 
   return data
-}
-
-export async function getHeldStockTickers(): Promise<string[]> {
-  const supabase = createClient()
-
-  const { data, error } = await supabase
-    .schema('dws')
-    .from('balance_sheet')
-    .select('ticker')
-    .eq('asset_class', 'stock')
-    .gt('quantity', 0)
-
-  if (error) throw new Error(error.message)
-
-  return data.map((row) => row.ticker)
-}
-
-export async function getAssetIdsByTicker(
-  tickers: string[],
-): Promise<{ id: number; ticker: string }[]> {
-  const supabase = createClient()
-
-  const { data, error } = await supabase
-    .schema('dim')
-    .from('asset')
-    .select('id, ticker')
-    .in('ticker', tickers)
-
-  if (error) throw new Error(error.message)
-
-  return data
-}
-
-// Write
-
-export async function upsertDailyAssetClose(rows: DailyAssetCloseInsert[]) {
-  const supabase = createClient()
-
-  const { error } = await supabase
-    .schema('dwd')
-    .from('daily_asset_close')
-    .upsert(rows, { onConflict: 'asset_id,date' })
-
-  if (error) throw new Error(error.message)
 }

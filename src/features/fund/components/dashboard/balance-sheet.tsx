@@ -97,7 +97,7 @@ export default function BalanceSheet({
                 <ItemSeparator />
                 <ItemGroup>
                   {items.map((item) => (
-                    <Item size="xs" className="px-0 py-1">
+                    <Item key={item.ticker} size="xs" className="px-0 py-1">
                       <ItemContent>
                         <ItemTitle>{item.name}</ItemTitle>
                         {item.ticker !== 'FX.VND' && (

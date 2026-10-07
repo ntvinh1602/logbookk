@@ -44,7 +44,11 @@ export function CashflowSection({ data, isLoading }: CashflowSectionProps) {
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
         {items.map(({ label, value }) => (
-          <Progress value={(value / totalflow) * 100} className="w-full">
+          <Progress
+            key={label}
+            value={(value / totalflow) * 100}
+            className="w-full"
+          >
             <ProgressLabel>{label}</ProgressLabel>
             <ProgressValue />
             {`(${formatNum(value)})`}
