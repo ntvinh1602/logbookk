@@ -55,7 +55,7 @@ export function AssetCard({
     .sort((a, b) => b.total_value - a.total_value)
 
   const asset = equity + liability
-  const leverage = (asset - equity) / equity
+  const leverage = equity === 0 ? 0 : (asset - equity) / equity
 
   return (
     <Card className="pb-3 border">

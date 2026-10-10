@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "supabase": {
+      "type": "remote",
+      "url": "http://127.0.0.1:54321/mcp?read_only=true",
+      "enabled": true
+    }
+  },
+  "permission": {
+    "bash": {
+      "*": "allow",
+      "supabase *": "ask",
+      "*rm -rf*": "ask"
+    }
+  }
+}

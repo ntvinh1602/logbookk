@@ -3,7 +3,11 @@ import type {
   EquityChartCols,
 } from '@/features/fund/types'
 
-export function BenchmarkChartConvert({ d, p, v }: BenchmarkChartCols) {
+export function BenchmarkChartConvert({
+  d = [],
+  p = [],
+  v = [],
+}: Partial<BenchmarkChartCols> = {}) {
   const out = new Array(d.length)
   for (let i = 0; i < d.length; i++) {
     out[i] = {
@@ -15,7 +19,11 @@ export function BenchmarkChartConvert({ d, p, v }: BenchmarkChartCols) {
   return out
 }
 
-export function EquityChartConvert({ d, e, c }: EquityChartCols) {
+export function EquityChartConvert({
+  d = [],
+  e = [],
+  c = [],
+}: Partial<EquityChartCols> = {}) {
   const out = new Array(d.length)
   for (let i = 0; i < d.length; i++) {
     out[i] = {

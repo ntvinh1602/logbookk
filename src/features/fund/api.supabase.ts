@@ -28,7 +28,7 @@ export async function getCurrentEquity() {
 
   if (error) throw new Error(error.message)
 
-  return Number(data[0].total_equity)
+  return data.length > 0 ? Number(data[0].total_equity) : 0
 }
 
 export async function getPnl(startDate: string, endDate: string) {
@@ -82,7 +82,13 @@ export async function getEquityChart(startDate: string, endDate: string) {
 
   if (error) throw new Error(error.message)
 
-  return data ?? ({} as EquityChartCols)
+  const chart = data as EquityChartCols | null
+
+  return {
+    d: chart?.d ?? [],
+    e: chart?.e ?? [],
+    c: chart?.c ?? [],
+  }
 }
 
 export async function getBenchmarkChart(startDate: string, endDate: string) {
@@ -95,7 +101,13 @@ export async function getBenchmarkChart(startDate: string, endDate: string) {
 
   if (error) throw new Error(error.message)
 
-  return data ?? ({} as BenchmarkChartCols)
+  const chart = data as BenchmarkChartCols | null
+
+  return {
+    d: chart?.d ?? [],
+    p: chart?.p ?? [],
+    v: chart?.v ?? [],
+  }
 }
 
 export async function getMonthlyPnlChart(startDate: string, endDate: string) {
@@ -110,7 +122,15 @@ export async function getMonthlyPnlChart(startDate: string, endDate: string) {
 
   if (error) throw new Error(error.message)
 
-  return data ?? ({} as ProfitChartCols)
+  const chart = data as ProfitChartCols | null
+
+  return {
+    snapshot_date: chart?.snapshot_date ?? [],
+    revenue: chart?.revenue ?? [],
+    fee: chart?.fee ?? [],
+    interest: chart?.interest ?? [],
+    tax: chart?.tax ?? [],
+  }
 }
 
 export async function getBalanceSheet() {
